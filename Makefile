@@ -12,30 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-REGISTRY_NAME=quay.io/k8scsi
-IMAGE_NAME=iscsiplugin
-IMAGE_VERSION=canary
-IMAGE_TAG=$(REGISTRY_NAME)/$(IMAGE_NAME):$(IMAGE_VERSION)
-REV=$(shell git describe --long --tags --dirty)
+# TODO:
+# - add a Dockerfile
+# - uncomment the following lines
+# - remove the "all: build-iscsiplugin" line
+# CMDS=iscsiplugin
+# all: build
 
-.PHONY: all iscsi clean iscsi-container
+all: build-iscsiplugin
 
-all: iscsi
-
-test:
-	go test github.com/kubernetes-csi/drivers/pkg/... -cover
-	go vet github.com/kubernetes-csi/drivers/pkg/...
-
-iscsi:
-	if [ ! -d ./vendor ]; then dep ensure -vendor-only; fi
-	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o _output/iscsiplugin ./app/
-
-iscsi-container: iscsi
-	docker build -t $(IMAGE_TAG) -f ./app/iscsiplugin/Dockerfile .
-
-push: iscsi-container
-	docker push $(IMAGE_TAG)
-
-clean:
-	go clean -r -x
-	-rm -rf _output
+include release-tools/build.make
