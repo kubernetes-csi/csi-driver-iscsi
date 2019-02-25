@@ -12,13 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# TODO:
-# - add a Dockerfile
-# - uncomment the following lines
-# - remove the "all: build-iscsiplugin" line
-# CMDS=iscsiplugin
-# all: build
+CMDS=iscsiplugin
 
-all: build-iscsiplugin
+all: build
 
 include release-tools/build.make
