@@ -65,15 +65,15 @@ func getISCSIInfo(req *csi.NodePublishVolumeRequest) (*iscsiDisk, error) {
 	}
 
 	return &iscsiDisk{
-		VolName:        volName,
-		Portals:        bkportal,
-		Iqn:            iqn,
-		lun:            lun,
-		Iface:          iface,
-		chap_discovery: chapDiscovery,
-		chap_session:   chapSession,
-		secret:         secret,
-		InitiatorName:  initiatorName}, nil
+		VolName:       volName,
+		Portals:       bkportal,
+		Iqn:           iqn,
+		lun:           lun,
+		Iface:         iface,
+		chapDiscovery: chapDiscovery,
+		chapSession:   chapSession,
+		secret:        secret,
+		InitiatorName: initiatorName}, nil
 }
 
 func getISCSIDiskMounter(iscsiInfo *iscsiDisk, req *csi.NodePublishVolumeRequest) *iscsiDiskMounter {
@@ -119,15 +119,15 @@ func parseSecret(secretParams string) map[string]string {
 }
 
 type iscsiDisk struct {
-	Portals        []string
-	Iqn            string
-	lun            string
-	Iface          string
-	chap_discovery bool
-	chap_session   bool
-	secret         map[string]string
-	InitiatorName  string
-	VolName        string
+	Portals       []string
+	Iqn           string
+	lun           string
+	Iface         string
+	chapDiscovery bool
+	chapSession   bool
+	secret        map[string]string
+	InitiatorName string
+	VolName       string
 }
 
 type iscsiDiskMounter struct {
