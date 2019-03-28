@@ -20,7 +20,7 @@ $ csc identity plugin-info --endpoint tcp://127.0.0.1:10000
 ```
 $ export ISCSI_TARGET="iSCSI Target Server IP (Ex: 10.10.10.10)"
 $ export IQN="Target IQN"
-$ csc node publish --endpoint tcp://127.0.0.1:10000 --target-path /mnt/iscsi --attrib targetPortal=$ISCSI_TARGET --attrib iqn=$IQN --attrib lun=<lun-id> iscsitestvol
+$ csc node publish --endpoint tcp://127.0.0.1:10000 --target-path /mnt/iscsi --attrib portals=$ISCSI_TARGET --attrib iqn=$IQN --attrib lun=<lun-id> --log-level=debug iscsitestvol
 iscsitestvol
 ```
 

@@ -27,8 +27,9 @@ import (
 )
 
 var (
-	endpoint string
-	nodeID   string
+	endpoint        string
+	nodeID          string
+	iscsiPersistDir string
 )
 
 func init() {
@@ -55,6 +56,9 @@ func main() {
 	cmd.PersistentFlags().StringVar(&endpoint, "endpoint", "", "CSI endpoint")
 	cmd.MarkPersistentFlagRequired("endpoint")
 
+	cmd.PersistentFlags().StringVar(&iscsiPersistDir, "iscsiPersistDir", "/var/lib/kubernetes/iscsi-persist", "directory to write iscsi connection persistence file")
+	cmd.ParseFlags(os.Args[1:])
+
 	if err := cmd.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "%s", err.Error())
 		os.Exit(1)
@@ -65,5 +69,5 @@ func main() {
 
 func handle() {
 	d := iscsi.NewDriver(nodeID, endpoint)
-	d.Run()
+	d.Run(iscsiPersistDir)
 }

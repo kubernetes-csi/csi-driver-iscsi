@@ -17,6 +17,8 @@ limitations under the License.
 package iscsi
 
 import (
+	"os"
+
 	"github.com/container-storage-interface/spec/lib/go/csi"
 	"github.com/golang/glog"
 
@@ -39,7 +41,8 @@ const (
 )
 
 var (
-	version = "1.0.0-rc2"
+	version         = "1.0.0-rc2"
+	iscsiPersistDir = "/var/lib/kubernetes/iscsi-persist"
 )
 
 func NewDriver(nodeID, endpoint string) *driver {
@@ -63,6 +66,10 @@ func NewNodeServer(d *driver) *nodeServer {
 	}
 }
 
-func (d *driver) Run() {
+func (d *driver) Run(persistFiles string) {
+	if persistFiles == "" {
+		iscsiPersistDir = persistFiles
+		os.MkdirAll(iscsiPersistDir, 0750)
+	}
 	csicommon.RunNodePublishServer(d.endpoint, d.csiDriver, NewNodeServer(d))
 }
