@@ -1,11 +1,11 @@
-# See the OWNERS docs: https://git.k8s.io/community/contributors/guide/owners.md
+# See the OWNERS docs at https://go.k8s.io/owners
 
 approvers:
-- saad-ali
 - msau42
 - pohly
+- saad-ali
 
 reviewers:
-- saad-ali
 - msau42
 - pohly
+- saad-ali
