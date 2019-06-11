@@ -53,7 +53,10 @@ func NewDriver(nodeID, endpoint string) *driver {
 	}
 
 	d.AddVolumeCapabilityAccessModes([]csi.VolumeCapability_AccessMode_Mode{csi.VolumeCapability_AccessMode_SINGLE_NODE_WRITER})
-	d.AddVolumeCapabilityAccessModes([]csi.VolumeCapability_AccessMode_Mode{csi.VolumeCapability_AccessMode_SINGLE_NODE_WRITER})
+	// iSCSI plugin does not support ControllerServiceCapability now.
+	// If support is added, it should set to appropriate
+	// ControllerServiceCapability RPC types.
+	d.AddControllerServiceCapabilities([]csi.ControllerServiceCapability_RPC_Type{csi.ControllerServiceCapability_RPC_UNKNOWN})
 
 	return d
 }
