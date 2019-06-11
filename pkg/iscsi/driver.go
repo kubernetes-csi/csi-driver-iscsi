@@ -28,7 +28,6 @@ type driver struct {
 
 	endpoint string
 
-	//ids *csicommon.DefaultIdentityServer
 	ns *nodeServer
 
 	cap   []*csi.VolumeCapability_AccessMode
