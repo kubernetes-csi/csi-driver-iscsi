@@ -117,6 +117,12 @@
   version = "1.0.1"
 
 [[projects]]
+  name = "github.com/powerman/rpc-codec"
+  packages = ["jsonrpc2"]
+  revision = "c72a4f8142c5cba1107b0973aedb0ab6f5513d9a"
+  version = "v1.1.2"
+
+[[projects]]
   name = "github.com/prometheus/client_golang"
   packages = [
     "prometheus",
@@ -618,6 +624,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6150221cd71f06d608b019cfb84207b6b370b414ceb86ddd7a8417771e267555"
+  inputs-digest = "60b81b80da06906bdbd1ebe034934c8e138a92015b51fe98542c227cc2d71bd4"
   solver-name = "gps-cdcl"
   solver-version = 1

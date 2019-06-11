@@ -1,0 +1,13 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+   name: csi-iscsi-targetd-sc
+provisioner: ISCSI
+parameters:
+  targetd-scheme: "http"
+  targetd-address: "192.168.122.113"
+  targetd-port: "18700"
+  targetd-pool: "vg-targetd"
+  csi.storage.k8s.io/provisioner-secret-name: csi-iscsi-targetd-secret
+  csi.storage.k8s.io/provisioner-secret-namespace: default
+reclaimPolicy: Delete

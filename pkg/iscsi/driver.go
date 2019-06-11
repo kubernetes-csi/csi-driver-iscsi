@@ -26,7 +26,8 @@ type driver struct {
 	nodeID  string
 	version string
 
-	endpoint string
+	endpoint         string
+	controllerPlugin string
 
 	ns *nodeServer
 
@@ -42,21 +43,29 @@ var (
 	version = "1.0.0-rc2"
 )
 
-func NewDriver(nodeID, endpoint string) *driver {
+func NewDriver(nodeID, endpoint, controllerPlugin string) *driver {
 	glog.Infof("Driver: %v version: %v", driverName, version)
 
 	d := &driver{
-		name:     driverName,
-		version:  version,
-		nodeID:   nodeID,
-		endpoint: endpoint,
+		name:             driverName,
+		version:          version,
+		nodeID:           nodeID,
+		endpoint:         endpoint,
+		controllerPlugin: controllerPlugin,
 	}
 
 	d.AddVolumeCapabilityAccessModes([]csi.VolumeCapability_AccessMode_Mode{csi.VolumeCapability_AccessMode_SINGLE_NODE_WRITER})
-	// iSCSI plugin does not support ControllerServiceCapability now.
-	// If support is added, it should set to appropriate
-	// ControllerServiceCapability RPC types.
-	d.AddControllerServiceCapabilities([]csi.ControllerServiceCapability_RPC_Type{csi.ControllerServiceCapability_RPC_UNKNOWN})
+	glog.Infof("controllerPlugin: %s", d.controllerPlugin)
+	glog.Infof("CreateVolume: %v, DeleteVolume: %v", isSupported(d.controllerPlugin, "CreateVolume"), isSupported(d.controllerPlugin, "DeleteVolume"))
+	createVolume, _ := lookupSymbol(d.controllerPlugin, "CreateVolume")
+	deleteVolume, _ := lookupSymbol(d.controllerPlugin, "DeleteVolume")
+	glog.Infof("CreateVolume: %v, DeleteVolume: %v", createVolume, deleteVolume)
+
+	if isSupported(d.controllerPlugin, "CreateVolume") && isSupported(d.controllerPlugin, "DeleteVolume") {
+		d.AddControllerServiceCapabilities([]csi.ControllerServiceCapability_RPC_Type{csi.ControllerServiceCapability_RPC_CREATE_DELETE_VOLUME})
+	} else {
+		d.AddControllerServiceCapabilities([]csi.ControllerServiceCapability_RPC_Type{csi.ControllerServiceCapability_RPC_UNKNOWN})
+	}
 
 	return d
 }

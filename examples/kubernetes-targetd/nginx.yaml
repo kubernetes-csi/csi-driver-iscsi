@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-iscsi-targetd-plugin
+spec:
+  containers:
+  - image: maersk/nginx
+    imagePullPolicy: Always
+    name: nginx
+    ports:
+    - containerPort: 80
+      protocol: TCP
+    volumeMounts:
+      - mountPath: /var/www
+        name: data-iscsi-targetd-plugin 
+  volumes:
+  - name: data-iscsi-targetd-plugin
+    persistentVolumeClaim:
+      claimName: data-iscsi-targetd-plugin 

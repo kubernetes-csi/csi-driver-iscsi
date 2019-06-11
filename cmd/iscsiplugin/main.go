@@ -27,8 +27,9 @@ import (
 )
 
 var (
-	endpoint string
-	nodeID   string
+	endpoint         string
+	nodeID           string
+	controllerPlugin string
 )
 
 func init() {
@@ -55,6 +56,8 @@ func main() {
 	cmd.PersistentFlags().StringVar(&endpoint, "endpoint", "", "CSI endpoint")
 	cmd.MarkPersistentFlagRequired("endpoint")
 
+	cmd.PersistentFlags().StringVar(&controllerPlugin, "controllerPlugin", "", "Controller plugin")
+
 	if err := cmd.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "%s", err.Error())
 		os.Exit(1)
@@ -64,6 +67,6 @@ func main() {
 }
 
 func handle() {
-	d := iscsi.NewDriver(nodeID, endpoint)
+	d := iscsi.NewDriver(nodeID, endpoint, controllerPlugin)
 	d.Run()
 }

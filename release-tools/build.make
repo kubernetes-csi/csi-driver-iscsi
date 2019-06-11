@@ -62,7 +62,9 @@ endif
 
 build-%:
 	mkdir -p bin
-	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-X main.version=$(REV) -extldflags "-static"' -o ./bin/$* ./cmd/$*
+#	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-X main.version=$(REV) -extldflags "-static"' -o ./bin/$* ./cmd/$*
+	CGO_ENABLED=1 GOOS=linux go build -a -ldflags '-X main.version=$(REV)' -o ./bin/$* ./cmd/$*
+	CGO_ENABLED=1 GOOS=linux go build -tags targetd -buildmode=plugin -o targetd/bin/plugin.so targetd/plugin.go
 
 container-%: build-%
 	docker build -t $*:latest -f $(shell if [ -e ./cmd/$*/Dockerfile ]; then echo ./cmd/$*/Dockerfile; else echo Dockerfile; fi) --label revision=$(REV) .
@@ -90,7 +92,7 @@ container: $(CMDS:%=container-%)
 push: $(CMDS:%=push-%)
 
 clean:
-	-rm -rf bin
+	-rm -rf bin targetd/bin
 
 test:
 
