@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/container-storage-interface/spec/lib/go/csi"
@@ -46,7 +47,7 @@ func CreateVolume(cs *iscsi.ControllerServer, ctx context.Context, req *csi.Crea
 func DeleteVolume(cs *iscsi.ControllerServer, ctx context.Context, req *csi.DeleteVolumeRequest) (*csi.DeleteVolumeResponse, error) {
 	glog.Infof("plugin.DeleteVolume called")
 
-	v, err := genVolInfoFromDeleteVolumeRequest(req)
+	v, err := genVolInfo(req.GetVolumeId(), req.GetSecrets())
 	if err != nil {
 		glog.Warningf("Generating volInfo from %v failed: %v", req, err)
 		return nil, status.Error(codes.Internal, err.Error())
@@ -60,6 +61,77 @@ func DeleteVolume(cs *iscsi.ControllerServer, ctx context.Context, req *csi.Dele
 	}
 
 	return &csi.DeleteVolumeResponse{}, nil
+}
+
+func ControllerPublishVolume(cs *iscsi.ControllerServer, ctx context.Context, req *csi.ControllerPublishVolumeRequest) (*csi.ControllerPublishVolumeResponse, error) {
+	glog.Infof("plugin.ControllerPublishVolume called")
+
+	v, err := genVolInfo(req.GetVolumeId(), req.GetSecrets())
+	if err != nil {
+		glog.Warningf("Generating volInfo from %v failed: %v", req, err)
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	nodeID := req.GetNodeId()
+	if nodeID == "" {
+		return nil, status.Error(codes.InvalidArgument, "Empty nodeID in request")
+	}
+
+	cl := NewtargetdClient(genTargetdURL(*v))
+
+	exportList1, err := cl.exportList()
+	if err != nil {
+		glog.Warningf("Failed to get export list: %v", err)
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	lun, err := getFirstAvailableLun(exportList1)
+	if err != nil {
+		glog.Warningf("Failed to get first available lun: %v", err)
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	// TODO: Improve initiator name generation logic
+	initiatorPrefix := "iqn.2019-06.com.csi-driver-iscsi.example"
+	initiator := fmt.Sprintf("%s:%s", initiatorPrefix, nodeID)
+
+	err = cl.exportCreate(v.volID, lun, v.pool, initiator)
+	if err != nil {
+		glog.Warningf("Failed to create export for volume %v: %v", v, err)
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &csi.ControllerPublishVolumeResponse{
+		PublishContext: map[string]string{"lun": fmt.Sprint(lun)},
+	}, nil
+}
+
+func ControllerUnpublishVolume(cs *iscsi.ControllerServer, ctx context.Context, req *csi.ControllerUnpublishVolumeRequest) (*csi.ControllerUnpublishVolumeResponse, error) {
+	glog.Infof("plugin.ControllerUnpublishVolume called")
+
+	v, err := genVolInfo(req.GetVolumeId(), req.GetSecrets())
+	if err != nil {
+		glog.Warningf("Generating volInfo from %v failed: %v", req, err)
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	nodeID := req.GetNodeId()
+	if nodeID == "" {
+		return nil, status.Error(codes.InvalidArgument, "Empty nodeID in request")
+	}
+
+	// TODO: Improve initiator name generation logic
+	initiatorPrefix := "iqn.2019-06.com.csi-driver-iscsi.example"
+	initiator := fmt.Sprintf("%s:%s", initiatorPrefix, nodeID)
+
+	cl := NewtargetdClient(genTargetdURL(*v))
+	err = cl.exportDestroy(v.volID, v.pool, initiator)
+	if err != nil {
+		glog.Warningf("Failed to delete volume %v: %v", v, err)
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &csi.ControllerUnpublishVolumeResponse{}, nil
 }
 
 func ValidateVolumeCapabilities(cs *iscsi.ControllerServer, ctx context.Context, req *csi.ValidateVolumeCapabilitiesRequest) (*csi.ValidateVolumeCapabilitiesResponse, error) {
@@ -131,8 +203,7 @@ func genVolInfoFromCreateVolumeRequest(req *csi.CreateVolumeRequest) (*volInfo, 
 	return v, nil
 }
 
-func genVolInfoFromDeleteVolumeRequest(req *csi.DeleteVolumeRequest) (*volInfo, error) {
-	volID := req.GetVolumeId()
+func genVolInfo(volID string, secrets map[string]string) (*volInfo, error) {
 	if volID == "" {
 		return nil, fmt.Errorf("Empty volume ID in request")
 	}
@@ -143,10 +214,10 @@ func genVolInfoFromDeleteVolumeRequest(req *csi.DeleteVolumeRequest) (*volInfo, 
 	v.volID = volID
 
 	var ok bool
-	if v.username, ok = req.GetSecrets()["targetd-username"]; !ok {
+	if v.username, ok = secrets["targetd-username"]; !ok {
 		return nil, fmt.Errorf("missing targetd-username in secrets")
 	}
-	if v.password, ok = req.GetSecrets()["targetd-password"]; !ok {
+	if v.password, ok = secrets["targetd-password"]; !ok {
 		return nil, fmt.Errorf("missing targetd-password in secrets")
 	}
 
@@ -245,6 +316,18 @@ type export struct {
 
 type exportList []export
 
+func (slice exportList) Len() int {
+	return len(slice)
+}
+
+func (slice exportList) Less(i, j int) bool {
+	return slice[i].Lun < slice[j].Lun
+}
+
+func (slice exportList) Swap(i, j int) {
+	slice[i], slice[j] = slice[j], slice[i]
+}
+
 type volCreateArgs struct {
 	Pool string `json:"pool"`
 	Name string `json:"name"`
@@ -271,6 +354,45 @@ type exportDestroyArgs struct {
 
 func genTargetdURL(v volInfo) string {
 	return fmt.Sprintf("%s://%s:%s@%s:%s/targetrpc", v.scheme, v.username, v.password, v.address, v.port)
+}
+
+// getFirstAvailableLun gets first available Lun.
+func getFirstAvailableLun(exportList exportList) (int32, error) {
+	sort.Sort(exportList)
+	glog.Infof("sorted export List: ", exportList)
+	//this is sloppy way to remove duplicates
+	uniqueExport := make(map[int32]export)
+	for _, export := range exportList {
+		uniqueExport[export.Lun] = export
+	}
+	glog.Infof("unique luns sorted export List: ", uniqueExport)
+
+	//this is a sloppy way to get the list of luns
+	luns := make([]int, len(uniqueExport), len(uniqueExport))
+	i := 0
+	for _, export := range uniqueExport {
+		luns[i] = int(export.Lun)
+		i++
+	}
+	glog.Infof("lun list: ", luns)
+
+	if len(luns) >= 255 {
+		return -1, errors.New("255 luns allocated no more luns available")
+	}
+
+	var sluns sort.IntSlice
+	sluns = luns[0:]
+	sort.Sort(sluns)
+	glog.Infof("sorted lun list: ", sluns)
+
+	lun := int32(len(sluns))
+	for i, clun := range sluns {
+		if i < int(clun) {
+			lun = int32(i)
+			break
+		}
+	}
+	return lun, nil
 }
 
 // volDestroy removes calls vol_destroy targetd API to remove volume.

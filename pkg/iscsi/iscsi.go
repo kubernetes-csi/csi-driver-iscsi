@@ -30,7 +30,11 @@ func getISCSIInfo(req *csi.NodePublishVolumeRequest) (*iscsiDisk, error) {
 	volName := req.GetVolumeId()
 	tp := req.GetVolumeContext()["targetPortal"]
 	iqn := req.GetVolumeContext()["iqn"]
-	lun := req.GetVolumeContext()["lun"]
+	lun := req.GetPublishContext()["lun"]
+	if lun == "" {
+		lun = req.GetVolumeContext()["lun"]
+	}
+
 	if tp == "" || iqn == "" || lun == "" {
 		return nil, fmt.Errorf("iSCSI target information is missing")
 	}

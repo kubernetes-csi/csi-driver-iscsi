@@ -57,15 +57,20 @@ func NewDriver(nodeID, endpoint, controllerPlugin string) *driver {
 	d.AddVolumeCapabilityAccessModes([]csi.VolumeCapability_AccessMode_Mode{csi.VolumeCapability_AccessMode_SINGLE_NODE_WRITER})
 	glog.Infof("controllerPlugin: %s", d.controllerPlugin)
 	glog.Infof("CreateVolume: %v, DeleteVolume: %v", isSupported(d.controllerPlugin, "CreateVolume"), isSupported(d.controllerPlugin, "DeleteVolume"))
-	createVolume, _ := lookupSymbol(d.controllerPlugin, "CreateVolume")
-	deleteVolume, _ := lookupSymbol(d.controllerPlugin, "DeleteVolume")
-	glog.Infof("CreateVolume: %v, DeleteVolume: %v", createVolume, deleteVolume)
+	glog.Infof("ControllerPublishVolume: %v, ControllerUnpublishVolume: %v", isSupported(d.controllerPlugin, "ControllerPublishVolume"), isSupported(d.controllerPlugin, "ControllerUnpublishVolume"))
 
+	csc := []csi.ControllerServiceCapability_RPC_Type{}
 	if isSupported(d.controllerPlugin, "CreateVolume") && isSupported(d.controllerPlugin, "DeleteVolume") {
-		d.AddControllerServiceCapabilities([]csi.ControllerServiceCapability_RPC_Type{csi.ControllerServiceCapability_RPC_CREATE_DELETE_VOLUME})
-	} else {
-		d.AddControllerServiceCapabilities([]csi.ControllerServiceCapability_RPC_Type{csi.ControllerServiceCapability_RPC_UNKNOWN})
+		csc = append(csc, csi.ControllerServiceCapability_RPC_CREATE_DELETE_VOLUME)
 	}
+	if isSupported(d.controllerPlugin, "ControllerPublishVolume") && isSupported(d.controllerPlugin, "ControllerUnpublishVolume") {
+		csc = append(csc, csi.ControllerServiceCapability_RPC_PUBLISH_UNPUBLISH_VOLUME)
+	}
+	if len(csc) == 0 {
+		csc = append(csc, csi.ControllerServiceCapability_RPC_UNKNOWN)
+	}
+
+	d.AddControllerServiceCapabilities(csc)
 
 	return d
 }

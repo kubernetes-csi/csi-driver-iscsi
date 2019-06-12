@@ -10,4 +10,12 @@ parameters:
   targetd-pool: "vg-targetd"
   csi.storage.k8s.io/provisioner-secret-name: csi-iscsi-targetd-secret
   csi.storage.k8s.io/provisioner-secret-namespace: default
+  csi.storage.k8s.io/controller-publish-secret-name: csi-iscsi-targetd-secret
+  csi.storage.k8s.io/controller-publish-secret-namespace: default
+  targetPortal: "192.168.122.113:3260"
+  portals: "[]"
+  iqn: "iqn.2003-01.org.linux-iscsi.minishift:targetd"
+  iscsiInterface: "default"
+  discoveryCHAPAuth: "false"
+  sessionCHAPAuth: "false"
 reclaimPolicy: Delete

@@ -79,10 +79,28 @@ func (cs *ControllerServer) DeleteVolume(ctx context.Context, req *csi.DeleteVol
 }
 
 func (cs *ControllerServer) ControllerPublishVolume(ctx context.Context, req *csi.ControllerPublishVolumeRequest) (*csi.ControllerPublishVolumeResponse, error) {
+	glog.Infof("ControllerPublishVolume called")
+	symbol, err := lookupSymbol(cs.Driver.controllerPlugin, "ControllerPublishVolume")
+	if err == nil && symbol != nil {
+		controllerPublishVolume, ok := symbol.(func(cs *ControllerServer, ctx context.Context, req *csi.ControllerPublishVolumeRequest) (*csi.ControllerPublishVolumeResponse, error))
+		if ok {
+			return controllerPublishVolume(cs, ctx, req)
+		}
+	}
+
 	return nil, status.Error(codes.Unimplemented, "")
 }
 
 func (cs *ControllerServer) ControllerUnpublishVolume(ctx context.Context, req *csi.ControllerUnpublishVolumeRequest) (*csi.ControllerUnpublishVolumeResponse, error) {
+	glog.Infof("ControllerUnpublishVolume called")
+	symbol, err := lookupSymbol(cs.Driver.controllerPlugin, "ControllerUnpublishVolume")
+	if err == nil && symbol != nil {
+		controllerUnpublishVolume, ok := symbol.(func(cs *ControllerServer, ctx context.Context, req *csi.ControllerUnpublishVolumeRequest) (*csi.ControllerUnpublishVolumeResponse, error))
+		if ok {
+			return controllerUnpublishVolume(cs, ctx, req)
+		}
+	}
+
 	return nil, status.Error(codes.Unimplemented, "")
 }
 
