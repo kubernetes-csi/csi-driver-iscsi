@@ -19,16 +19,16 @@ package iscsi
 import (
 	"github.com/container-storage-interface/spec/lib/go/csi"
 	"github.com/golang/glog"
-
-	csicommon "github.com/kubernetes-csi/drivers/pkg/csi-common"
 )
 
 type driver struct {
-	csiDriver *csicommon.CSIDriver
-	endpoint  string
+	name    string
+	nodeID  string
+	version string
 
-	ids *csicommon.DefaultIdentityServer
-	ns  *nodeServer
+	endpoint string
+
+	ns *nodeServer
 
 	cap   []*csi.VolumeCapability_AccessMode
 	cscap []*csi.ControllerServiceCapability
@@ -45,24 +45,58 @@ var (
 func NewDriver(nodeID, endpoint string) *driver {
 	glog.Infof("Driver: %v version: %v", driverName, version)
 
-	d := &driver{}
+	d := &driver{
+		name:     driverName,
+		version:  version,
+		nodeID:   nodeID,
+		endpoint: endpoint,
+	}
 
-	d.endpoint = endpoint
-
-	csiDriver := csicommon.NewCSIDriver(driverName, version, nodeID)
-	csiDriver.AddVolumeCapabilityAccessModes([]csi.VolumeCapability_AccessMode_Mode{csi.VolumeCapability_AccessMode_SINGLE_NODE_WRITER})
-
-	d.csiDriver = csiDriver
+	d.AddVolumeCapabilityAccessModes([]csi.VolumeCapability_AccessMode_Mode{csi.VolumeCapability_AccessMode_SINGLE_NODE_WRITER})
+	// iSCSI plugin does not support ControllerServiceCapability now.
+	// If support is added, it should set to appropriate
+	// ControllerServiceCapability RPC types.
+	d.AddControllerServiceCapabilities([]csi.ControllerServiceCapability_RPC_Type{csi.ControllerServiceCapability_RPC_UNKNOWN})
 
 	return d
 }
 
 func NewNodeServer(d *driver) *nodeServer {
 	return &nodeServer{
-		DefaultNodeServer: csicommon.NewDefaultNodeServer(d.csiDriver),
+		Driver: d,
 	}
 }
 
 func (d *driver) Run() {
-	csicommon.RunNodePublishServer(d.endpoint, d.csiDriver, NewNodeServer(d))
+	s := NewNonBlockingGRPCServer()
+	s.Start(d.endpoint,
+		NewDefaultIdentityServer(d),
+		// iSCSI plugin has not implemented ControllerServer
+		// using default controllerserver.
+		NewControllerServer(d),
+		NewNodeServer(d))
+	s.Wait()
+}
+
+func (d *driver) AddVolumeCapabilityAccessModes(vc []csi.VolumeCapability_AccessMode_Mode) []*csi.VolumeCapability_AccessMode {
+	var vca []*csi.VolumeCapability_AccessMode
+	for _, c := range vc {
+		glog.Infof("Enabling volume access mode: %v", c.String())
+		vca = append(vca, &csi.VolumeCapability_AccessMode{Mode: c})
+	}
+	d.cap = vca
+	return vca
+}
+
+func (d *driver) AddControllerServiceCapabilities(cl []csi.ControllerServiceCapability_RPC_Type) {
+	var csc []*csi.ControllerServiceCapability
+
+	for _, c := range cl {
+		glog.Infof("Enabling controller service capability: %v", c.String())
+		csc = append(csc, NewControllerServiceCapability(c))
+	}
+
+	d.cscap = csc
+
+	return
 }
