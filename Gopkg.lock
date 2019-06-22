@@ -93,6 +93,12 @@
   version = "v1.1.5"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/kubernetes-csi/csi-lib-iscsi"
+  packages = ["iscsi"]
+  revision = "c545557492f4c010327f964dd98a7ae72fb9bb30"
+
+[[projects]]
   name = "github.com/kubernetes-csi/csi-lib-utils"
   packages = ["protosanitizer"]
   revision = "5853414e1d4771302e0df10d1870c444c2135799"
@@ -618,6 +624,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6150221cd71f06d608b019cfb84207b6b370b414ceb86ddd7a8417771e267555"
+  inputs-digest = "90ccf1b778ece0e26e1b1d2660970d28f7d8ad7c00351f88a0236a97f8612829"
   solver-name = "gps-cdcl"
   solver-version = 1
