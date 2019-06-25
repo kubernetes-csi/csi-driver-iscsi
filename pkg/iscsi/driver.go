@@ -35,7 +35,7 @@ type driver struct {
 }
 
 const (
-	driverName = "ISCSI"
+	driverName = "csi-iscsiplugin"
 )
 
 var (
