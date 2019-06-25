@@ -42,7 +42,7 @@ spec:
             capabilities:
               add: ["SYS_ADMIN"]
             allowPrivilegeEscalation: true
-          image: iscsiplugin:latest
+          image: quay.io/k8scsi/iscsiplugin:v1.0.0
           args :
             - "--nodeid=$(NODE_ID)"
             - "--endpoint=$(CSI_ENDPOINT)"
