@@ -17,7 +17,6 @@ import (
 	"k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/kubernetes/test/e2e/framework"
-	"k8s.io/kubernetes/test/e2e/framework/volume"
 	"k8s.io/kubernetes/test/e2e/storage/testpatterns"
 	"k8s.io/kubernetes/test/e2e/storage/testsuites"
 )
@@ -90,7 +89,7 @@ func (i *iSCSIDriver) GetPersistentVolumeSource(readOnly bool, fsType string, vo
 			Driver:       i.driverInfo.Name,
 			VolumeHandle: "iscsi-vol",
 			VolumeAttributes: map[string]string{
-				"targetPortal":      "127.0.0.1:3260",
+				"targetPortal":      iv.serverIP + ":3260",
 				"portals":           "[]",
 				"iqn":               iv.iqn,
 				"lun":               "0",
@@ -123,18 +122,18 @@ func (i *iSCSIDriver) CreateVolume(config *testsuites.PerTestConfig, volType tes
 	cs := f.ClientSet
 	ns := f.Namespace
 
-	iscsiConfig, serverPod, serverIP, iqn := volume.NewISCSIServer(cs, ns.Name)
+	iscsiConfig, serverPod, serverIP := framework.NewISCSIServer(cs, ns.Name)
 	config.ServerConfig = &iscsiConfig
-	config.ClientNodeName = iscsiConfig.ClientNodeName
 
 	return &iSCSIVolume{
 		serverPod: serverPod,
 		serverIP:  serverIP,
-		iqn:       iqn,
-		f:         f,
+		// from k8s test/images/volume/iscsi/initiatorname.iscsi
+		iqn: "iqn.2003-01.org.linux-iscsi.f21.x8664:sn.4b0aae584f7c",
+		f:   f,
 	}
 }
 
 func (v *iSCSIVolume) DeleteVolume() {
-	volume.CleanUpVolumeServer(v.f, v.serverPod)
+	framework.CleanUpVolumeServer(v.f, v.serverPod)
 }
