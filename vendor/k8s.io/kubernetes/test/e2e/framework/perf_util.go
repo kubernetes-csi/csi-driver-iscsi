@@ -19,20 +19,19 @@ package framework
 import (
 	"fmt"
 
-	e2elog "k8s.io/kubernetes/test/e2e/framework/log"
 	"k8s.io/kubernetes/test/e2e/perftype"
 )
 
 // TODO(random-liu): Change the tests to actually use PerfData from the beginning instead of
 // translating one to the other here.
 
-// currentAPICallMetricsVersion is the current apicall performance metrics version. We should
+// currentApiCallMetricsVersion is the current apicall performance metrics version. We should
 // bump up the version each time we make incompatible change to the metrics.
-const currentAPICallMetricsVersion = "v1"
+const currentApiCallMetricsVersion = "v1"
 
-// APICallToPerfData transforms APIResponsiveness to PerfData.
-func APICallToPerfData(apicalls *APIResponsiveness) *perftype.PerfData {
-	perfData := &perftype.PerfData{Version: currentAPICallMetricsVersion}
+// ApiCallToPerfData transforms APIResponsiveness to PerfData.
+func ApiCallToPerfData(apicalls *APIResponsiveness) *perftype.PerfData {
+	perfData := &perftype.PerfData{Version: currentApiCallMetricsVersion}
 	for _, apicall := range apicalls.APICalls {
 		item := perftype.DataItem{
 			Data: map[string]float64{
@@ -71,7 +70,7 @@ func latencyToPerfData(l LatencyMetric, name string) perftype.DataItem {
 
 // PodStartupLatencyToPerfData transforms PodStartupLatency to PerfData.
 func PodStartupLatencyToPerfData(latency *PodStartupLatency) *perftype.PerfData {
-	perfData := &perftype.PerfData{Version: currentAPICallMetricsVersion}
+	perfData := &perftype.PerfData{Version: currentApiCallMetricsVersion}
 	perfData.DataItems = append(perfData.DataItems, latencyToPerfData(latency.CreateToScheduleLatency, "create_to_schedule"))
 	perfData.DataItems = append(perfData.DataItems, latencyToPerfData(latency.ScheduleToRunLatency, "schedule_to_run"))
 	perfData.DataItems = append(perfData.DataItems, latencyToPerfData(latency.RunToWatchLatency, "run_to_watch"))
@@ -101,7 +100,7 @@ func CPUUsageToPerfData(usagePerNode NodesCPUSummary) *perftype.PerfData {
 func PrintPerfData(p *perftype.PerfData) {
 	// Notice that we must make sure the perftype.PerfResultEnd is in a new line.
 	if str := PrettyPrintJSON(p); str != "" {
-		e2elog.Logf("%s %s\n%s", perftype.PerfResultTag, str, perftype.PerfResultEnd)
+		Logf("%s %s\n%s", perftype.PerfResultTag, str, perftype.PerfResultEnd)
 	}
 }
 

@@ -23,6 +23,7 @@ import (
 	api "k8s.io/kubernetes/pkg/apis/core"
 )
 
+// +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // StatefulSet represents a set of pods with consistent identities.
@@ -226,6 +227,7 @@ type StatefulSetList struct {
 	Items []StatefulSet
 }
 
+// +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ControllerRevision implements an immutable snapshot of state data. Clients
@@ -260,6 +262,7 @@ type ControllerRevisionList struct {
 	Items []ControllerRevision
 }
 
+// +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type Deployment struct {
@@ -641,6 +644,7 @@ type DaemonSetCondition struct {
 	Message string
 }
 
+// +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // DaemonSet represents the configuration of a daemon set.
@@ -687,6 +691,7 @@ type DaemonSetList struct {
 	Items []DaemonSet
 }
 
+// +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ReplicaSet ensures that a specified number of pod replicas are running at any given time.

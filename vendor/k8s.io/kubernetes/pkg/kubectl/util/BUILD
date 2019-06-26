@@ -72,7 +72,6 @@ filegroup(
         "//pkg/kubectl/util/fieldpath:all-srcs",
         "//pkg/kubectl/util/hash:all-srcs",
         "//pkg/kubectl/util/i18n:all-srcs",
-        "//pkg/kubectl/util/interrupt:all-srcs",
         "//pkg/kubectl/util/logs:all-srcs",
         "//pkg/kubectl/util/podutils:all-srcs",
         "//pkg/kubectl/util/printers:all-srcs",

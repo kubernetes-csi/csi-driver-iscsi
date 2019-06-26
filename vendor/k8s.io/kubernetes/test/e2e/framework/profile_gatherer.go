@@ -25,13 +25,10 @@ import (
 	"strings"
 	"sync"
 	"time"
-
-	e2elog "k8s.io/kubernetes/test/e2e/framework/log"
-	e2essh "k8s.io/kubernetes/test/e2e/framework/ssh"
 )
 
 const (
-	// DefaultCPUProfileSeconds is default value for how long the CPU profile is gathered for.
+	// Default value for how long the CPU profile is gathered for.
 	DefaultCPUProfileSeconds = 30
 )
 
@@ -96,7 +93,7 @@ func gatherProfile(componentName, profileBaseName, profileKind string) error {
 
 	// Get the profile data over SSH.
 	getCommand := fmt.Sprintf("curl -s localhost:%v/debug/pprof/%s", profilePort, profileKind)
-	sshResult, err := e2essh.SSH(getCommand, GetMasterHost()+":22", TestContext.Provider)
+	sshResult, err := SSH(getCommand, GetMasterHost()+":22", TestContext.Provider)
 	if err != nil {
 		return fmt.Errorf("Failed to execute curl command on master through SSH: %v", err)
 	}
@@ -171,28 +168,25 @@ func gatherProfile(componentName, profileBaseName, profileKind string) error {
 // that the function finishes. There's also a polling-based gatherer utility for
 // CPU profiles available below.
 
-// GatherCPUProfile gathers CPU profile.
 func GatherCPUProfile(componentName string, profileBaseName string, wg *sync.WaitGroup) {
 	GatherCPUProfileForSeconds(componentName, profileBaseName, DefaultCPUProfileSeconds, wg)
 }
 
-// GatherCPUProfileForSeconds gathers CPU profile for specified seconds.
 func GatherCPUProfileForSeconds(componentName string, profileBaseName string, seconds int, wg *sync.WaitGroup) {
 	if wg != nil {
 		defer wg.Done()
 	}
 	if err := gatherProfile(componentName, profileBaseName, fmt.Sprintf("profile?seconds=%v", seconds)); err != nil {
-		e2elog.Logf("Failed to gather %v CPU profile: %v", componentName, err)
+		Logf("Failed to gather %v CPU profile: %v", componentName, err)
 	}
 }
 
-// GatherMemoryProfile gathers memory profile.
 func GatherMemoryProfile(componentName string, profileBaseName string, wg *sync.WaitGroup) {
 	if wg != nil {
 		defer wg.Done()
 	}
 	if err := gatherProfile(componentName, profileBaseName, "heap"); err != nil {
-		e2elog.Logf("Failed to gather %v memory profile: %v", componentName, err)
+		Logf("Failed to gather %v memory profile: %v", componentName, err)
 	}
 }
 

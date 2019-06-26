@@ -21,7 +21,7 @@ import (
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
-	volumescheduling "k8s.io/kubernetes/pkg/controller/volume/scheduling"
+	"k8s.io/kubernetes/pkg/controller/volume/persistentvolume"
 )
 
 const (
@@ -192,16 +192,6 @@ var (
 			Help:      "Total preemption attempts in the cluster till now",
 		})
 
-	pendingPods = prometheus.NewGaugeVec(
-		prometheus.GaugeOpts{
-			Subsystem: SchedulerSubsystem,
-			Name:      "pending_pods",
-			Help:      "Number of pending pods, by the queue type. 'active' means number of pods in activeQ; 'backoff' means number of pods in backoffQ; 'unschedulable' means number of pods in unschedulableQ.",
-		}, []string{"queue"})
-	ActivePods        = pendingPods.With(prometheus.Labels{"queue": "active"})
-	BackoffPods       = pendingPods.With(prometheus.Labels{"queue": "backoff"})
-	UnschedulablePods = pendingPods.With(prometheus.Labels{"queue": "unschedulable"})
-
 	metricsList = []prometheus.Collector{
 		scheduleAttempts,
 		SchedulingLatency,
@@ -220,7 +210,6 @@ var (
 		DeprecatedSchedulingAlgorithmPremptionEvaluationDuration,
 		PreemptionVictims,
 		PreemptionAttempts,
-		pendingPods,
 	}
 )
 
@@ -234,7 +223,7 @@ func Register() {
 			prometheus.MustRegister(metric)
 		}
 
-		volumescheduling.RegisterVolumeSchedulingMetrics()
+		persistentvolume.RegisterVolumeSchedulingMetrics()
 	})
 }
 

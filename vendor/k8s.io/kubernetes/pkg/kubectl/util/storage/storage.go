@@ -28,7 +28,7 @@ import (
 // marks a class as the default StorageClass
 const IsDefaultStorageClassAnnotation = "storageclass.kubernetes.io/is-default-class"
 
-// BetaIsDefaultStorageClassAnnotation is the beta version of IsDefaultStorageClassAnnotation.
+// BetaIsDefaultStorageClassAnnotation is the beta version of BetaIsDefaultStorageClassAnnotation.
 const BetaIsDefaultStorageClassAnnotation = "storageclass.beta.kubernetes.io/is-default-class"
 
 // IsDefaultAnnotationText returns a pretty Yes/No String if

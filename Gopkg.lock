@@ -2,12 +2,6 @@
 
 
 [[projects]]
-  name = "github.com/Microsoft/go-winio"
-  packages = ["."]
-  revision = "1a8911d1ed007260465c3bfbbc785ac6915a0bb8"
-  version = "v0.4.12"
-
-[[projects]]
   name = "github.com/PuerkitoBio/purell"
   packages = ["."]
   revision = "44968752391892e1b0d0b821ee79e9a85fa13049"
@@ -74,12 +68,6 @@
   packages = ["."]
   revision = "44e46d280b43ec1531bb25252440e34f1b800b65"
   version = "v1.0.0"
-
-[[projects]]
-  name = "github.com/fsnotify/fsnotify"
-  packages = ["."]
-  revision = "629574ca2a5df945712d3079857300b5e4da0236"
-  version = "v1.4.2"
 
 [[projects]]
   name = "github.com/ghodss/yaml"
@@ -154,18 +142,6 @@
   packages = ["."]
   revision = "4030bb1f1f0c35b30ca7009e9ebd06849dd45306"
   version = "v1.0.0"
-
-[[projects]]
-  name = "github.com/google/go-cmp"
-  packages = [
-    "cmp",
-    "cmp/internal/diff",
-    "cmp/internal/flags",
-    "cmp/internal/function",
-    "cmp/internal/value"
-  ]
-  revision = "6f77996f0c42f7b84e5a2b252227263f93432e9b"
-  version = "v0.3.0"
 
 [[projects]]
   branch = "master"
@@ -394,15 +370,6 @@
   revision = "185b4288413d2a0dd0806f78c90dde719829e5ae"
 
 [[projects]]
-  name = "github.com/spf13/afero"
-  packages = [
-    ".",
-    "mem"
-  ]
-  revision = "588a75ec4f32903aa5e39a2619ba6a4631e28424"
-  version = "v1.2.2"
-
-[[projects]]
   name = "github.com/spf13/cobra"
   packages = ["."]
   revision = "ef82de70bb3f60c65fb8eebacbb2d122ef517385"
@@ -606,6 +573,7 @@
   version = "v2.2.1"
 
 [[projects]]
+  branch = "release-1.14"
   name = "k8s.io/api"
   packages = [
     "admission/v1beta1",
@@ -647,17 +615,15 @@
     "storage/v1alpha1",
     "storage/v1beta1"
   ]
-  revision = "7cf5895f2711098d7d9527db0a4a49fb0dff7de2"
-  version = "kubernetes-1.15.0"
+  revision = "40a48860b5abbba9aa891b02b32da429b08d96a0"
 
 [[projects]]
+  branch = "release-1.14"
   name = "k8s.io/apiextensions-apiserver"
   packages = ["pkg/features"]
-  revision = "14e95df34f1f469647f494f5185a036e26fddcab"
-  version = "kubernetes-1.15.0"
+  revision = "53c4693659ed354d76121458fb819202dd1635fa"
 
 [[projects]]
-  branch = "release-1.15"
   name = "k8s.io/apimachinery"
   packages = [
     "pkg/api/equality",
@@ -716,7 +682,8 @@
     "third_party/forked/golang/netutil",
     "third_party/forked/golang/reflect"
   ]
-  revision = "1799e75a07195de9460b8ef7300883499f12127b"
+  revision = "d7deff9243b165ee192f5551710ea4285dcfd615"
+  version = "kubernetes-1.14.0"
 
 [[projects]]
   name = "k8s.io/apiserver"
@@ -733,14 +700,13 @@
     "pkg/features",
     "pkg/storage",
     "pkg/storage/etcd",
-    "pkg/storage/names",
     "pkg/util/feature"
   ]
-  revision = "47dc9a115b1874c96c20cea91d02b36e4faa1bb1"
-  version = "kubernetes-1.15.0"
+  revision = "8b27c41bdbb11ff103caa673315e097bf0289171"
+  version = "kubernetes-1.14.0"
 
 [[projects]]
-  branch = "master"
+  branch = "release-1.14"
   name = "k8s.io/cli-runtime"
   packages = [
     "pkg/genericclioptions",
@@ -756,18 +722,15 @@
     "pkg/printers",
     "pkg/resource"
   ]
-  revision = "7e27a1316a7c0d37dc64bae6abbe71b2a00e468d"
+  revision = "2899ed30580fdbc8286718edb4382b529463099d"
 
 [[projects]]
-  branch = "release-12.0"
   name = "k8s.io/client-go"
   packages = [
     "discovery",
     "discovery/cached/disk",
     "discovery/cached/memory",
     "dynamic",
-    "dynamic/dynamicinformer",
-    "dynamic/dynamiclister",
     "informers",
     "informers/admissionregistration",
     "informers/admissionregistration/v1beta1",
@@ -931,33 +894,38 @@
     "util/retry",
     "util/workqueue"
   ]
-  revision = "e4cdb82809fc633fe1c8deb9ad52f201a6bf1470"
+  revision = "6ee68ca5fd8355d024d02f9db0b3b667e8357a0f"
+  version = "v11.0.0"
 
 [[projects]]
-  branch = "release-1.15"
+  branch = "release-1.14"
   name = "k8s.io/cloud-provider"
   packages = [
     ".",
-    "service/helpers",
+    "features",
     "volume",
+    "volume/errors",
     "volume/helpers"
   ]
-  revision = "5fc8952cc2ce71be609fbc8fd7dc9c2bb34dc76d"
+  revision = "c892ea32361a3655e7bd8c06f2d02dd8ce73dd78"
 
 [[projects]]
   branch = "master"
+  name = "k8s.io/cluster-bootstrap"
+  packages = [
+    "token/api",
+    "token/util"
+  ]
+  revision = "cd8eb24ea488465e76316449b52f483dd505d7c3"
+
+[[projects]]
+  branch = "release-1.14"
   name = "k8s.io/component-base"
   packages = [
     "cli/flag",
-    "featuregate"
+    "config"
   ]
-  revision = "dd74dcc4bb914094d3ba37135b086467a761bd7d"
-
-[[projects]]
-  branch = "master"
-  name = "k8s.io/cri-api"
-  packages = ["pkg/apis/runtime/v1alpha2"]
-  revision = "8a10675a4b1e6b246958bd5bdea51c63039526c4"
+  revision = "4a91899592f42b2f5859587cc5a676a5b94d2ee3"
 
 [[projects]]
   branch = "master"
@@ -975,6 +943,20 @@
   version = "v0.1.0"
 
 [[projects]]
+  name = "k8s.io/kube-aggregator"
+  packages = [
+    "pkg/apis/apiregistration",
+    "pkg/apis/apiregistration/v1",
+    "pkg/apis/apiregistration/v1beta1",
+    "pkg/client/clientset_generated/clientset",
+    "pkg/client/clientset_generated/clientset/scheme",
+    "pkg/client/clientset_generated/clientset/typed/apiregistration/v1",
+    "pkg/client/clientset_generated/clientset/typed/apiregistration/v1beta1"
+  ]
+  revision = "da8327669ac57b6e6a06676eeb7de19c9780f76d"
+  version = "kubernetes-1.14.0"
+
+[[projects]]
   branch = "master"
   name = "k8s.io/kube-openapi"
   packages = [
@@ -984,15 +966,53 @@
   revision = "c59034cc13d587f5ef4e85ca0ade0c1866ae8e1d"
 
 [[projects]]
+  branch = "release-1.14"
   name = "k8s.io/kubernetes"
   packages = [
+    "cmd/kubeadm/app/apis/kubeadm",
+    "cmd/kubeadm/app/constants",
+    "cmd/kubeadm/app/util",
     "pkg/api/legacyscheme",
+    "pkg/api/ref",
     "pkg/api/service",
     "pkg/api/v1/pod",
+    "pkg/apis/admissionregistration",
+    "pkg/apis/admissionregistration/install",
+    "pkg/apis/admissionregistration/v1beta1",
     "pkg/apis/apps",
+    "pkg/apis/apps/install",
+    "pkg/apis/apps/v1",
+    "pkg/apis/apps/v1beta1",
+    "pkg/apis/apps/v1beta2",
     "pkg/apis/apps/validation",
+    "pkg/apis/auditregistration",
+    "pkg/apis/auditregistration/install",
+    "pkg/apis/auditregistration/v1alpha1",
+    "pkg/apis/authentication",
+    "pkg/apis/authentication/install",
+    "pkg/apis/authentication/v1",
+    "pkg/apis/authentication/v1beta1",
+    "pkg/apis/authorization",
+    "pkg/apis/authorization/install",
+    "pkg/apis/authorization/v1",
+    "pkg/apis/authorization/v1beta1",
     "pkg/apis/autoscaling",
+    "pkg/apis/autoscaling/install",
+    "pkg/apis/autoscaling/v1",
+    "pkg/apis/autoscaling/v2beta1",
+    "pkg/apis/autoscaling/v2beta2",
     "pkg/apis/batch",
+    "pkg/apis/batch/install",
+    "pkg/apis/batch/v1",
+    "pkg/apis/batch/v1beta1",
+    "pkg/apis/batch/v2alpha1",
+    "pkg/apis/certificates",
+    "pkg/apis/certificates/install",
+    "pkg/apis/certificates/v1beta1",
+    "pkg/apis/coordination",
+    "pkg/apis/coordination/install",
+    "pkg/apis/coordination/v1",
+    "pkg/apis/coordination/v1beta1",
     "pkg/apis/core",
     "pkg/apis/core/helper",
     "pkg/apis/core/install",
@@ -1001,22 +1021,75 @@
     "pkg/apis/core/v1/helper",
     "pkg/apis/core/v1/helper/qos",
     "pkg/apis/core/validation",
+    "pkg/apis/events",
+    "pkg/apis/events/install",
+    "pkg/apis/events/v1beta1",
     "pkg/apis/extensions",
+    "pkg/apis/extensions/install",
+    "pkg/apis/extensions/v1beta1",
     "pkg/apis/networking",
+    "pkg/apis/networking/install",
+    "pkg/apis/networking/v1",
+    "pkg/apis/networking/v1beta1",
+    "pkg/apis/node",
+    "pkg/apis/node/install",
+    "pkg/apis/node/v1alpha1",
+    "pkg/apis/node/v1beta1",
     "pkg/apis/policy",
+    "pkg/apis/policy/install",
+    "pkg/apis/policy/v1beta1",
     "pkg/apis/policy/validation",
+    "pkg/apis/rbac",
+    "pkg/apis/rbac/install",
+    "pkg/apis/rbac/v1",
+    "pkg/apis/rbac/v1alpha1",
+    "pkg/apis/rbac/v1beta1",
     "pkg/apis/scheduling",
-    "pkg/apis/storage/v1/util",
+    "pkg/apis/scheduling/install",
+    "pkg/apis/scheduling/v1",
+    "pkg/apis/scheduling/v1alpha1",
+    "pkg/apis/scheduling/v1beta1",
+    "pkg/apis/settings",
+    "pkg/apis/settings/install",
+    "pkg/apis/settings/v1alpha1",
+    "pkg/apis/storage",
+    "pkg/apis/storage/install",
+    "pkg/apis/storage/v1",
+    "pkg/apis/storage/v1alpha1",
+    "pkg/apis/storage/v1beta1",
     "pkg/capabilities",
+    "pkg/client/clientset_generated/internalclientset",
+    "pkg/client/clientset_generated/internalclientset/scheme",
+    "pkg/client/clientset_generated/internalclientset/typed/admissionregistration/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/apps/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/auditregistration/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/authentication/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/authorization/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/autoscaling/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/batch/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/certificates/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/coordination/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/core/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/events/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/extensions/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/networking/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/node/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/policy/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/rbac/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/scheduling/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/settings/internalversion",
+    "pkg/client/clientset_generated/internalclientset/typed/storage/internalversion",
     "pkg/client/conditions",
     "pkg/controller",
     "pkg/controller/deployment/util",
+    "pkg/controller/job",
     "pkg/controller/nodelifecycle",
     "pkg/controller/nodelifecycle/scheduler",
     "pkg/controller/service",
     "pkg/controller/util/node",
-    "pkg/controller/volume/persistentvolume/util",
-    "pkg/controller/volume/scheduling",
+    "pkg/controller/volume/events",
+    "pkg/controller/volume/persistentvolume",
+    "pkg/controller/volume/persistentvolume/metrics",
     "pkg/features",
     "pkg/fieldpath",
     "pkg/kubectl",
@@ -1037,27 +1110,20 @@
     "pkg/kubectl/util/storage",
     "pkg/kubelet/apis",
     "pkg/kubelet/apis/config",
+    "pkg/kubelet/apis/cri/runtime/v1alpha2",
     "pkg/kubelet/apis/stats/v1alpha1",
-    "pkg/kubelet/checkpoint",
-    "pkg/kubelet/checkpointmanager",
-    "pkg/kubelet/checkpointmanager/checksum",
-    "pkg/kubelet/checkpointmanager/errors",
-    "pkg/kubelet/configmap",
     "pkg/kubelet/container",
     "pkg/kubelet/dockershim/metrics",
     "pkg/kubelet/events",
     "pkg/kubelet/lifecycle",
     "pkg/kubelet/metrics",
-    "pkg/kubelet/pod",
-    "pkg/kubelet/secret",
     "pkg/kubelet/sysctl",
     "pkg/kubelet/types",
-    "pkg/kubelet/util",
     "pkg/kubelet/util/format",
-    "pkg/kubelet/util/manager",
-    "pkg/kubelet/util/store",
     "pkg/master/ports",
+    "pkg/proxy/apis/config",
     "pkg/registry/core/service/allocator",
+    "pkg/registry/core/service/ipallocator",
     "pkg/registry/core/service/portallocator",
     "pkg/scheduler/algorithm",
     "pkg/scheduler/algorithm/predicates",
@@ -1072,7 +1138,8 @@
     "pkg/security/podsecuritypolicy/util",
     "pkg/serviceaccount",
     "pkg/ssh",
-    "pkg/util/filesystem",
+    "pkg/util/goroutinemap",
+    "pkg/util/goroutinemap/exponentialbackoff",
     "pkg/util/hash",
     "pkg/util/labels",
     "pkg/util/metrics",
@@ -1080,27 +1147,21 @@
     "pkg/util/node",
     "pkg/util/parsers",
     "pkg/util/resizefs",
-    "pkg/util/slice",
     "pkg/util/system",
     "pkg/util/taints",
+    "pkg/version",
     "pkg/volume",
     "pkg/volume/util",
     "pkg/volume/util/fs",
-    "pkg/volume/util/quota",
-    "pkg/volume/util/quota/common",
     "pkg/volume/util/recyclerclient",
     "pkg/volume/util/subpath",
     "pkg/volume/util/types",
     "pkg/volume/util/volumepathhandler",
     "test/e2e/framework",
-    "test/e2e/framework/auth",
     "test/e2e/framework/ginkgowrapper",
-    "test/e2e/framework/log",
     "test/e2e/framework/metrics",
     "test/e2e/framework/podlogs",
-    "test/e2e/framework/ssh",
     "test/e2e/framework/testfiles",
-    "test/e2e/framework/volume",
     "test/e2e/manifest",
     "test/e2e/perftype",
     "test/e2e/storage/testpatterns",
@@ -1110,8 +1171,7 @@
     "test/utils/image",
     "third_party/forked/golang/expansion"
   ]
-  revision = "e8462b5b5dc2584fdcd18e6bcfe9f1e4d970a529"
-  version = "v1.15.0"
+  revision = "2d20b5759406ded89f8b25cf085ff4733b144ba5"
 
 [[projects]]
   branch = "master"
@@ -1169,6 +1229,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "08c6730b961258c1a1304edefdfb84e9702dc0fd9c95e05916be802184acddea"
+  inputs-digest = "88eee083bba454a04f025423573b38aedc6de3a318f6fc18d16bb5bf6225cd2b"
   solver-name = "gps-cdcl"
   solver-version = 1

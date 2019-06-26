@@ -21,6 +21,7 @@ import (
 	api "k8s.io/kubernetes/pkg/apis/core"
 )
 
+// +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // Job represents the configuration of a single job.
@@ -183,7 +184,6 @@ type JobStatus struct {
 	Failed int32
 }
 
-// JobConditionType is a valid value for JobCondition.Type
 type JobConditionType string
 
 // These are valid conditions of a job.
@@ -214,6 +214,7 @@ type JobCondition struct {
 	Message string
 }
 
+// +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // CronJob represents the configuration of a single cron job.

@@ -26,8 +26,6 @@ import (
 	"time"
 
 	clientset "k8s.io/client-go/kubernetes"
-	e2elog "k8s.io/kubernetes/test/e2e/framework/log"
-	e2essh "k8s.io/kubernetes/test/e2e/framework/ssh"
 )
 
 const (
@@ -77,20 +75,16 @@ type LogsSizeVerifier struct {
 	workers       []*LogSizeGatherer
 }
 
-// SingleLogSummary is a structure for handling average generation rate and number of probes.
 type SingleLogSummary struct {
 	AverageGenerationRate int
 	NumberOfProbes        int
 }
 
-// LogSizeDataTimeseries is map of timestamped size.
 type LogSizeDataTimeseries map[string]map[string][]TimestampedSize
 
-// LogsSizeDataSummary is map of log summary.
 // node -> file -> data
 type LogsSizeDataSummary map[string]map[string]SingleLogSummary
 
-// PrintHumanReadable returns string of log size data summary.
 // TODO: make sure that we don't need locking here
 func (s *LogsSizeDataSummary) PrintHumanReadable() string {
 	buf := &bytes.Buffer{}
@@ -106,17 +100,14 @@ func (s *LogsSizeDataSummary) PrintHumanReadable() string {
 	return buf.String()
 }
 
-// PrintJSON returns the summary of log size data with JSON format.
 func (s *LogsSizeDataSummary) PrintJSON() string {
 	return PrettyPrintJSON(*s)
 }
 
-// SummaryKind returns the summary of log size data summary.
 func (s *LogsSizeDataSummary) SummaryKind() string {
 	return "LogSizeSummary"
 }
 
-// LogsSizeData is a structure for handling timeseries of log size data and lock.
 type LogsSizeData struct {
 	data LogSizeDataTimeseries
 	lock sync.Mutex
@@ -142,7 +133,7 @@ func prepareData(masterAddress string, nodeAddresses []string) *LogsSizeData {
 	}
 }
 
-func (d *LogsSizeData) addNewData(ip, path string, timestamp time.Time, size int) {
+func (d *LogsSizeData) AddNewData(ip, path string, timestamp time.Time, size int) {
 	d.lock.Lock()
 	defer d.lock.Unlock()
 	d.data[ip][path] = append(
@@ -156,7 +147,7 @@ func (d *LogsSizeData) addNewData(ip, path string, timestamp time.Time, size int
 
 // NewLogsVerifier creates a new LogsSizeVerifier which will stop when stopChannel is closed
 func NewLogsVerifier(c clientset.Interface, stopChannel chan bool) *LogsSizeVerifier {
-	nodeAddresses, err := e2essh.NodeSSHHosts(c)
+	nodeAddresses, err := NodeSSHHosts(c)
 	ExpectNoError(err)
 	masterAddress := GetMasterHost() + ":22"
 
@@ -206,27 +197,26 @@ func (s *LogsSizeVerifier) GetSummary() *LogsSizeDataSummary {
 }
 
 // Run starts log size gathering. It starts a gorouting for every worker and then blocks until stopChannel is closed
-func (s *LogsSizeVerifier) Run() {
-	s.workChannel <- WorkItem{
-		ip:                s.masterAddress,
+func (v *LogsSizeVerifier) Run() {
+	v.workChannel <- WorkItem{
+		ip:                v.masterAddress,
 		paths:             masterLogsToCheck,
 		backoffMultiplier: 1,
 	}
-	for _, node := range s.nodeAddresses {
-		s.workChannel <- WorkItem{
+	for _, node := range v.nodeAddresses {
+		v.workChannel <- WorkItem{
 			ip:                node,
 			paths:             nodeLogsToCheck,
 			backoffMultiplier: 1,
 		}
 	}
-	for _, worker := range s.workers {
+	for _, worker := range v.workers {
 		go worker.Run()
 	}
-	<-s.stopChannel
-	s.wg.Wait()
+	<-v.stopChannel
+	v.wg.Wait()
 }
 
-// Run starts log size gathering.
 func (g *LogSizeGatherer) Run() {
 	for g.Work() {
 	}
@@ -252,16 +242,16 @@ func (g *LogSizeGatherer) Work() bool {
 		return false
 	case workItem = <-g.workChannel:
 	}
-	sshResult, err := e2essh.SSH(
+	sshResult, err := SSH(
 		fmt.Sprintf("ls -l %v | awk '{print $9, $5}' | tr '\n' ' '", strings.Join(workItem.paths, " ")),
 		workItem.ip,
 		TestContext.Provider,
 	)
 	if err != nil {
-		e2elog.Logf("Error while trying to SSH to %v, skipping probe. Error: %v", workItem.ip, err)
+		Logf("Error while trying to SSH to %v, skipping probe. Error: %v", workItem.ip, err)
 		// In case of repeated error give up.
 		if workItem.backoffMultiplier >= 128 {
-			e2elog.Logf("Failed to ssh to a node %v multiple times in a row. Giving up.", workItem.ip)
+			Logf("Failed to ssh to a node %v multiple times in a row. Giving up.", workItem.ip)
 			g.wg.Done()
 			return false
 		}
@@ -277,10 +267,10 @@ func (g *LogSizeGatherer) Work() bool {
 		path := results[i]
 		size, err := strconv.Atoi(results[i+1])
 		if err != nil {
-			e2elog.Logf("Error during conversion to int: %v, skipping data. Error: %v", results[i+1], err)
+			Logf("Error during conversion to int: %v, skipping data. Error: %v", results[i+1], err)
 			continue
 		}
-		g.data.addNewData(workItem.ip, path, now, size)
+		g.data.AddNewData(workItem.ip, path, now, size)
 	}
 	go g.pushWorkItem(workItem)
 	return true
