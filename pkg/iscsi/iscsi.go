@@ -24,8 +24,9 @@ import (
 
 	"github.com/container-storage-interface/spec/lib/go/csi"
 	iscsi_lib "github.com/kubernetes-csi/csi-lib-iscsi/iscsi"
-	"k8s.io/kubernetes/pkg/util/mount"
 	"k8s.io/kubernetes/pkg/volume/util"
+	"k8s.io/utils/exec"
+	"k8s.io/utils/mount"
 )
 
 func getISCSIInfo(req *csi.NodePublishVolumeRequest) (*iscsiDisk, error) {
@@ -125,8 +126,8 @@ func getISCSIDiskMounter(iscsiInfo *iscsiDisk, req *csi.NodePublishVolumeRequest
 		fsType:       fsType,
 		readOnly:     readOnly,
 		mountOptions: mountOptions,
-		mounter:      &mount.SafeFormatAndMount{Interface: mount.New(""), Exec: mount.NewOsExec()},
-		exec:         mount.NewOsExec(),
+		mounter:      &mount.SafeFormatAndMount{Interface: mount.New(""), Exec: exec.New()},
+		exec:         exec.New(),
 		targetPath:   req.GetTargetPath(),
 		deviceUtil:   util.NewDeviceHandler(util.NewIOHandler()),
 		connector:    buildISCSIConnector(iscsiInfo),
@@ -139,7 +140,7 @@ func getISCSIDiskUnmounter(req *csi.NodeUnpublishVolumeRequest) *iscsiDiskUnmoun
 			VolName: req.GetVolumeId(),
 		},
 		mounter: mount.New(""),
-		exec:    mount.NewOsExec(),
+		exec:    exec.New(),
 	}
 }
 
@@ -228,7 +229,7 @@ type iscsiDiskMounter struct {
 	fsType       string
 	mountOptions []string
 	mounter      *mount.SafeFormatAndMount
-	exec         mount.Exec
+	exec         exec.Interface
 	deviceUtil   util.DeviceUtil
 	targetPath   string
 	connector    *iscsi_lib.Connector
@@ -237,5 +238,5 @@ type iscsiDiskMounter struct {
 type iscsiDiskUnmounter struct {
 	*iscsiDisk
 	mounter mount.Interface
-	exec    mount.Exec
+	exec    exec.Interface
 }
