@@ -22,6 +22,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"k8s.io/klog/v2"
 
 	"github.com/kubernetes-csi/csi-driver-iscsi/pkg/iscsi"
 )
@@ -46,6 +47,8 @@ func main() {
 			handle()
 		},
 	}
+
+	klog.InitFlags(nil)
 
 	cmd.Flags().AddGoFlagSet(flag.CommandLine)
 

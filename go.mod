@@ -4,13 +4,13 @@ go 1.13
 
 require (
 	github.com/container-storage-interface/spec v1.2.0
-	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20190415173011-c545557492f4
 	github.com/kubernetes-csi/csi-lib-utils v0.2.0
 	github.com/onsi/gomega v1.8.1 // indirect
 	github.com/spf13/cobra v1.0.0
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381
 	google.golang.org/grpc v1.27.0
+	k8s.io/klog/v2 v2.2.0
 	k8s.io/kubernetes v1.19.4
 	k8s.io/utils v0.0.0-20200729134348-d5654de09c73
 )
