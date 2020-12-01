@@ -23,7 +23,7 @@ import (
 
 	"github.com/golang/glog"
 	iscsi_lib "github.com/kubernetes-csi/csi-lib-iscsi/iscsi"
-	"k8s.io/kubernetes/pkg/util/mount"
+	"k8s.io/utils/mount"
 )
 
 type ISCSIUtil struct{}
