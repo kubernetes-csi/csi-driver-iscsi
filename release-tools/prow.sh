@@ -1,5 +1,5 @@
 #! /bin/bash
-#
+
 # Copyright 2019 The Kubernetes Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -65,6 +65,18 @@ get_versioned_variable () {
     echo "$value"
 }
 
+# This takes a version string like CSI_PROW_KUBERNETES_VERSION and
+# maps it to the corresponding git tag, branch or commit.
+version_to_git () {
+    version="$1"
+    shift
+    case "$version" in
+        latest) echo "master";;
+        release-*) echo "$version";;
+        *) echo "v$version";;
+    esac
+}
+
 configvar CSI_PROW_BUILD_PLATFORMS "linux amd64; windows amd64 .exe; linux ppc64le -ppc64le; linux s390x -s390x; linux arm64 -arm64" "Go target platforms (= GOOS + GOARCH) and file suffix of the resulting binaries"
 
 # If we have a vendor directory, then use it. We must be careful to only
@@ -73,7 +85,7 @@ configvar CSI_PROW_BUILD_PLATFORMS "linux amd64; windows amd64 .exe; linux ppc64
 # which is disabled with GOFLAGS=-mod=vendor).
 configvar GOFLAGS_VENDOR "$( [ -d vendor ] && echo '-mod=vendor' )" "Go flags for using the vendor directory"
 
-# Go versions can be specified seperately for different tasks
+# Go versions can be specified separately for different tasks
 # If the pre-installed Go is missing or a different
 # version, the required version here will get installed
 # from https://golang.org/dl/.
@@ -208,16 +220,7 @@ configvar CSI_PROW_DRIVER_CANARY_REGISTRY "gcr.io/k8s-staging-sig-storage" "regi
 # all generated files are present.
 #
 # CSI_PROW_E2E_REPO=none disables E2E testing.
-tag_from_version () {
-    version="$1"
-    shift
-    case "$version" in
-        latest) echo "master";;
-        release-*) echo "$version";;
-        *) echo "v$version";;
-    esac
-}
-configvar CSI_PROW_E2E_VERSION "$(tag_from_version "${CSI_PROW_KUBERNETES_VERSION}")"  "E2E version"
+configvar CSI_PROW_E2E_VERSION "$(version_to_git "${CSI_PROW_KUBERNETES_VERSION}")"  "E2E version"
 configvar CSI_PROW_E2E_REPO "https://github.com/kubernetes/kubernetes" "E2E repo"
 configvar CSI_PROW_E2E_IMPORT_PATH "k8s.io/kubernetes" "E2E package"
 
@@ -227,8 +230,8 @@ configvar CSI_PROW_E2E_IMPORT_PATH "k8s.io/kubernetes" "E2E package"
 # of the cluster. The alternative would have been to (cross-)compile csi-sanity
 # and install it inside the cluster, which is not necessarily easier.
 configvar CSI_PROW_SANITY_REPO https://github.com/kubernetes-csi/csi-test "csi-test repo"
-configvar CSI_PROW_SANITY_VERSION 5421d9f3c37be3b95b241b44a094a3db11bee789 "csi-test version" # latest master
-configvar CSI_PROW_SANITY_IMPORT_PATH github.com/kubernetes-csi/csi-test "csi-test package"
+configvar CSI_PROW_SANITY_VERSION v4.0.2 "csi-test version" # v4.0.2
+configvar CSI_PROW_SANITY_PACKAGE_PATH github.com/kubernetes-csi/csi-test "csi-test package"
 configvar CSI_PROW_SANITY_SERVICE "hostpath-service" "Kubernetes TCP service name that exposes csi.sock"
 configvar CSI_PROW_SANITY_POD "csi-hostpathplugin-0" "Kubernetes pod with CSI driver"
 configvar CSI_PROW_SANITY_CONTAINER "hostpath" "Kubernetes container with CSI driver"
@@ -293,7 +296,7 @@ configvar CSI_PROW_E2E_FOCUS_LATEST '\[Feature:VolumeSnapshotDataSource\]' "non-
 configvar CSI_PROW_E2E_FOCUS "$(get_versioned_variable CSI_PROW_E2E_FOCUS "${csi_prow_kubernetes_version_suffix}")" "non-alpha, feature-tagged tests"
 
 # Serial vs. parallel is always determined by these regular expressions.
-# Individual regular expressions are seperated by spaces for readability
+# Individual regular expressions are separated by spaces for readability
 # and expected to not contain spaces. Use dots instead. The complete
 # regex for Ginkgo will be created by joining the individual terms.
 configvar CSI_PROW_E2E_SERIAL '\[Serial\] \[Disruptive\]' "tags for serial E2E tests"
@@ -465,20 +468,22 @@ git_checkout () {
 
 # This clones a repo ("https://github.com/kubernetes/kubernetes")
 # in a certain location ("$GOPATH/src/k8s.io/kubernetes") at
-# a the head of a specific branch (i.e., release-1.13, master).
-# The directory cannot exist.
-git_clone_branch () {
-    local repo path branch parent
+# a the head of a specific branch (i.e., release-1.13, master),
+# tag (v1.20.0) or commit.
+#
+# The directory must not exist.
+git_clone () {
+    local repo path name parent
     repo="$1"
     shift
     path="$1"
     shift
-    branch="$1"
+    name="$1"
     shift
 
     parent="$(dirname "$path")"
     mkdir -p "$parent"
-    (cd "$parent" && run git clone --single-branch --branch "$branch" "$repo" "$path") || die "cloning $repo" failed
+    (cd "$parent" && run git clone --single-branch --branch "$name" "$repo" "$path") || die "cloning $repo" failed
     # This is useful for local testing or when switching between different revisions in the same
     # repo.
     (cd "$path" && run git clean -fdx) || die "failed to clean $path"
@@ -567,7 +572,7 @@ start_cluster () {
             else
                 type="docker"
             fi
-            git_clone_branch https://github.com/kubernetes/kubernetes "${CSI_PROW_WORK}/src/kubernetes" "$version" || die "checking out Kubernetes $version failed"
+            git_clone https://github.com/kubernetes/kubernetes "${CSI_PROW_WORK}/src/kubernetes" "$(version_to_git "$version")" || die "checking out Kubernetes $version failed"
 
             go_version="$(go_version_for_kubernetes "${CSI_PROW_WORK}/src/kubernetes" "$version")" || die "cannot proceed without knowing Go version for Kubernetes"
             # Changing into the Kubernetes source code directory is a workaround for https://github.com/kubernetes-sigs/kind/issues/1910
@@ -700,6 +705,10 @@ install_csi_driver () {
 install_snapshot_crds() {
   # Wait until volumesnapshot CRDs are in place.
   CRD_BASE_DIR="https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/${CSI_SNAPSHOTTER_VERSION}/client/config/crd"
+  if [[ ${REPO_DIR} == *"external-snapshotter"* ]]; then
+      CRD_BASE_DIR="${REPO_DIR}/client/config/crd"
+  fi
+  echo "Installing snapshot CRDs from ${CRD_BASE_DIR}"
   kubectl apply -f "${CRD_BASE_DIR}/snapshot.storage.k8s.io_volumesnapshotclasses.yaml" --validate=false
   kubectl apply -f "${CRD_BASE_DIR}/snapshot.storage.k8s.io_volumesnapshots.yaml" --validate=false
   kubectl apply -f "${CRD_BASE_DIR}/snapshot.storage.k8s.io_volumesnapshotcontents.yaml" --validate=false
@@ -719,7 +728,16 @@ install_snapshot_crds() {
 
 # Install snapshot controller and associated RBAC, retrying until the pod is running.
 install_snapshot_controller() {
-  kubectl apply -f "https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/${CSI_SNAPSHOTTER_VERSION}/deploy/kubernetes/snapshot-controller/rbac-snapshot-controller.yaml"
+  CONTROLLER_DIR="https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/${CSI_SNAPSHOTTER_VERSION}"
+  if [[ ${REPO_DIR} == *"external-snapshotter"* ]]; then
+      CONTROLLER_DIR="${REPO_DIR}"
+  fi
+  SNAPSHOT_RBAC_YAML="${CONTROLLER_DIR}/deploy/kubernetes/snapshot-controller/rbac-snapshot-controller.yaml"
+  echo "kubectl apply -f ${SNAPSHOT_RBAC_YAML}"
+  # Ignore: Double quote to prevent globbing and word splitting.
+  # shellcheck disable=SC2086
+  kubectl apply -f ${SNAPSHOT_RBAC_YAML}
+
   cnt=0
   until kubectl get clusterrolebinding snapshot-controller-role; do
      if [ $cnt -gt 30 ]; then
@@ -733,14 +751,67 @@ install_snapshot_controller() {
     sleep 10   
   done
 
+  SNAPSHOT_CONTROLLER_YAML="${CONTROLLER_DIR}/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml"
+  if [[ ${REPO_DIR} == *"external-snapshotter"* ]]; then
+      # snapshot-controller image built from the PR will get a "csiprow" tag.
+      # Load it into the "kind" cluster so that we can deploy it.
+      NEW_TAG="csiprow"
+      NEW_IMG="snapshot-controller:${NEW_TAG}"
+      echo "kind load docker-image --name csi-prow ${NEW_IMG}"
+      kind load docker-image --name csi-prow ${NEW_IMG} || die "could not load the snapshot-controller:csiprow image into the kind cluster"
 
-  kubectl apply -f "https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/${CSI_SNAPSHOTTER_VERSION}/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml"
+      # deploy snapshot-controller
+      echo "Deploying snapshot-controller"
+      # Replace image in SNAPSHOT_CONTROLLER_YAML with snapshot-controller:csiprow and deploy
+      # NOTE: This logic is similar to the logic here:
+      # https://github.com/kubernetes-csi/csi-driver-host-path/blob/v1.4.0/deploy/util/deploy-hostpath.sh#L155
+      # Ignore: Double quote to prevent globbing and word splitting.
+      # shellcheck disable=SC2086
+      # Ignore: Use find instead of ls to better handle non-alphanumeric filenames.
+      # shellcheck disable=SC2012
+      for i in $(ls ${SNAPSHOT_CONTROLLER_YAML} | sort); do
+          echo "   $i"
+          # Ignore: Useless cat. Consider 'cmd < file | ..' or 'cmd file | ..' instead.
+          # shellcheck disable=SC2002
+          # Ignore: See if you can use ${variable//search/replace} instead.
+          # shellcheck disable=SC2001
+          modified="$(cat "$i" | while IFS= read -r line; do
+              nocomments="$(echo "$line" | sed -e 's/ *#.*$//')"
+              if echo "$nocomments" | grep -q '^[[:space:]]*image:[[:space:]]*'; then
+                  # Split 'image: k8s.gcr.io/sig-storage/snapshot-controller:v3.0.0'
+                  # into image (snapshot-controller:v3.0.0),
+                  # name (snapshot-controller),
+                  # tag (v3.0.0).
+                  image=$(echo "$nocomments" | sed -e 's;.*image:[[:space:]]*;;')
+                  name=$(echo "$image" | sed -e 's;.*/\([^:]*\).*;\1;')
+                  tag=$(echo "$image" | sed -e 's;.*:;;')
+
+                  # Now replace registry and/or tag
+                  NEW_TAG="csiprow"
+                  line="$(echo "$nocomments" | sed -e "s;$image;${name}:${NEW_TAG};")"
+	          echo "        using $line" >&2
+              fi
+              echo "$line"
+          done)"
+          if ! echo "$modified" | kubectl apply -f -; then
+              echo "modified version of $i:"
+              echo "$modified"
+              exit 1
+          fi
+	  echo "kubectl apply -f ${SNAPSHOT_CONTROLLER_YAML}(modified)"
+      done
+  else
+      echo "kubectl apply -f $SNAPSHOT_CONTROLLER_YAML"
+      kubectl apply -f "$SNAPSHOT_CONTROLLER_YAML"
+  fi
+
   cnt=0
-  expected_running_pods=$(curl https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/"${CSI_SNAPSHOTTER_VERSION}"/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml | grep replicas | cut -d ':' -f 2-)
-  while [ "$(kubectl get pods -l app=snapshot-controller | grep 'Running' -c)" -lt "$expected_running_pods" ]; do
+  expected_running_pods=$(kubectl apply --dry-run=client -o "jsonpath={.spec.replicas}" -f "$SNAPSHOT_CONTROLLER_YAML")
+  expected_namespace=$(kubectl apply --dry-run=client -o "jsonpath={.metadata.namespace}" -f "$SNAPSHOT_CONTROLLER_YAML")
+  while [ "$(kubectl get pods -n "$expected_namespace" -l app=snapshot-controller | grep 'Running' -c)" -lt "$expected_running_pods" ]; do
     if [ $cnt -gt 30 ]; then
         echo "snapshot-controller pod status:"
-        kubectl describe pods -l app=snapshot-controller
+        kubectl describe pods -n "$expected_namespace" -l app=snapshot-controller
         echo >&2 "ERROR: snapshot controller not ready after over 5 min"
         exit 1
     fi
@@ -814,8 +885,8 @@ install_sanity () (
         return
     fi
 
-    git_checkout "${CSI_PROW_SANITY_REPO}" "${GOPATH}/src/${CSI_PROW_SANITY_IMPORT_PATH}" "${CSI_PROW_SANITY_VERSION}" --depth=1 || die "checking out csi-sanity failed"
-    run_with_go "${CSI_PROW_GO_VERSION_SANITY}" go test -c -o "${CSI_PROW_WORK}/csi-sanity" "${CSI_PROW_SANITY_IMPORT_PATH}/cmd/csi-sanity" || die "building csi-sanity failed"
+    git_checkout "${CSI_PROW_SANITY_REPO}" "${GOPATH}/src/${CSI_PROW_SANITY_PACKAGE_PATH}" "${CSI_PROW_SANITY_VERSION}" --depth=1 || die "checking out csi-sanity failed"
+    ( cd "${GOPATH}/src/${CSI_PROW_SANITY_PACKAGE_PATH}/cmd/csi-sanity" && run_with_go "${CSI_PROW_GO_VERSION_SANITY}" go build -o "${CSI_PROW_WORK}/csi-sanity" ) || die "building csi-sanity failed"
 )
 
 # Captures pod output while running some other command.
@@ -933,7 +1004,7 @@ make_test_to_junit () {
         echo "$line" # pass through
         if echo "$line" | grep -q "^### [^ ]*:$"; then
             if [ "$testname" ]; then
-                # previous test succesful
+                # previous test successful
                 echo "    </system-out>" >>"$out"
                 echo "  </testcase>" >>"$out"
             fi
