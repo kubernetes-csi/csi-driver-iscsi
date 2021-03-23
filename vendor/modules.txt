@@ -5,6 +5,7 @@ github.com/blang/semver
 # github.com/cespare/xxhash/v2 v2.1.1
 github.com/cespare/xxhash/v2
 # github.com/container-storage-interface/spec v1.2.0
+## explicit
 github.com/container-storage-interface/spec/lib/go/csi
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
@@ -46,8 +47,10 @@ github.com/inconshreveable/mousetrap
 # github.com/json-iterator/go v1.1.10
 github.com/json-iterator/go
 # github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20190415173011-c545557492f4
+## explicit
 github.com/kubernetes-csi/csi-lib-iscsi/iscsi
 # github.com/kubernetes-csi/csi-lib-utils v0.2.0
+## explicit
 github.com/kubernetes-csi/csi-lib-utils/protosanitizer
 # github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369
 github.com/matttproud/golang_protobuf_extensions/pbutil
@@ -55,6 +58,8 @@ github.com/matttproud/golang_protobuf_extensions/pbutil
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.1
 github.com/modern-go/reflect2
+# github.com/onsi/gomega v1.8.1
+## explicit
 # github.com/prometheus/client_golang v1.7.1
 github.com/prometheus/client_golang/prometheus
 github.com/prometheus/client_golang/prometheus/internal
@@ -70,12 +75,14 @@ github.com/prometheus/procfs
 github.com/prometheus/procfs/internal/fs
 github.com/prometheus/procfs/internal/util
 # github.com/spf13/cobra v1.0.0
+## explicit
 github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.5
 github.com/spf13/pflag
 # golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 golang.org/x/crypto/ssh/terminal
 # golang.org/x/net v0.0.0-20200707034311-ab3426394381
+## explicit
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
 golang.org/x/net/http/httpguts
@@ -109,6 +116,7 @@ google.golang.org/appengine/urlfetch
 # google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.27.0
+## explicit
 google.golang.org/grpc
 google.golang.org/grpc/attributes
 google.golang.org/grpc/backoff
@@ -439,10 +447,12 @@ k8s.io/component-base/metrics
 k8s.io/component-base/metrics/legacyregistry
 k8s.io/component-base/version
 # k8s.io/klog/v2 v2.2.0
+## explicit
 k8s.io/klog/v2
 # k8s.io/kube-openapi v0.0.0-20200805222855-6aeccd4b50c6
 k8s.io/kube-openapi/pkg/util/proto
 # k8s.io/kubernetes v1.19.4
+## explicit
 k8s.io/kubernetes/pkg/api/legacyscheme
 k8s.io/kubernetes/pkg/api/v1/pod
 k8s.io/kubernetes/pkg/apis/core
@@ -462,6 +472,7 @@ k8s.io/kubernetes/pkg/volume/util/subpath
 k8s.io/kubernetes/pkg/volume/util/types
 k8s.io/kubernetes/pkg/volume/util/volumepathhandler
 # k8s.io/utils v0.0.0-20200729134348-d5654de09c73
+## explicit
 k8s.io/utils/buffer
 k8s.io/utils/exec
 k8s.io/utils/integer
@@ -476,3 +487,27 @@ k8s.io/utils/trace
 sigs.k8s.io/structured-merge-diff/v4/value
 # sigs.k8s.io/yaml v1.2.0
 sigs.k8s.io/yaml
+# k8s.io/api => k8s.io/api v0.19.4
+# k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.19.4
+# k8s.io/apimachinery => k8s.io/apimachinery v0.19.4
+# k8s.io/apiserver => k8s.io/apiserver v0.19.4
+# k8s.io/cli-runtime => k8s.io/cli-runtime v0.19.4
+# k8s.io/client-go => k8s.io/client-go v0.19.4
+# k8s.io/cloud-provider => k8s.io/cloud-provider v0.19.4
+# k8s.io/cluster-bootstrap => k8s.io/cluster-bootstrap v0.19.4
+# k8s.io/code-generator => k8s.io/code-generator v0.19.4
+# k8s.io/component-base => k8s.io/component-base v0.19.4
+# k8s.io/cri-api => k8s.io/cri-api v0.19.4
+# k8s.io/csi-translation-lib => k8s.io/csi-translation-lib v0.19.4
+# k8s.io/kube-aggregator => k8s.io/kube-aggregator v0.19.4
+# k8s.io/kube-controller-manager => k8s.io/kube-controller-manager v0.19.4
+# k8s.io/kube-proxy => k8s.io/kube-proxy v0.19.4
+# k8s.io/kube-scheduler => k8s.io/kube-scheduler v0.19.4
+# k8s.io/kubectl => k8s.io/kubectl v0.19.4
+# k8s.io/kubelet => k8s.io/kubelet v0.19.4
+# k8s.io/legacy-cloud-providers => k8s.io/legacy-cloud-providers v0.19.4
+# k8s.io/metrics => k8s.io/metrics v0.19.4
+# k8s.io/node-api => k8s.io/node-api v0.19.4
+# k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.19.4
+# k8s.io/sample-cli-plugin => k8s.io/sample-cli-plugin v0.19.4
+# k8s.io/sample-controller => k8s.io/sample-controller v0.19.4
