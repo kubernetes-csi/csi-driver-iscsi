@@ -35,11 +35,11 @@ type driver struct {
 }
 
 const (
-	driverName = "ISCSI"
+	driverName = "iscsi.csi.k8s.io"
 )
 
 var (
-	version = "1.0.0-rc2"
+	version = "1.0.0"
 )
 
 func NewDriver(nodeID, endpoint string) *driver {
