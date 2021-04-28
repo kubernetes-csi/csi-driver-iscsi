@@ -109,9 +109,10 @@ func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error
 		return err
 	}
 
-	iscsi_lib.Disconnect(connector.TargetIqn, connector.TargetPortals)
-
-	if err := os.RemoveAll(targetPath); err != nil {
+	if disConnectErr := iscsi_lib.Disconnect(connector.TargetIqn, connector.TargetPortals); disConnectErr != nil {
+		klog.Warningf("Warning: Disconnect failed for IQN: %v", connector.TargetIqn)
+	}
+	if err := os.Remove(targetPath); err != nil {
 		klog.Errorf("iscsi: failed to remove mount path Error: %v", err)
 		return err
 	}
