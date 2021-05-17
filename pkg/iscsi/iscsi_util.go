@@ -21,7 +21,7 @@ import (
 	"os"
 	"path"
 
-	iscsi_lib "github.com/kubernetes-csi/csi-lib-iscsi/iscsi"
+	iscsiLib "github.com/kubernetes-csi/csi-lib-iscsi/iscsi"
 	"k8s.io/klog/v2"
 	"k8s.io/utils/mount"
 )
@@ -29,7 +29,7 @@ import (
 type ISCSIUtil struct{}
 
 func (util *ISCSIUtil) AttachDisk(b iscsiDiskMounter) (string, error) {
-	devicePath, err := iscsi_lib.Connect(*b.connector)
+	devicePath, err := iscsiLib.Connect(*b.connector)
 	if err != nil {
 		return "", err
 	}
@@ -55,7 +55,7 @@ func (util *ISCSIUtil) AttachDisk(b iscsiDiskMounter) (string, error) {
 
 	// Persist iscsi disk config to json file for DetachDisk path
 	file := path.Join(mntPath, b.VolName+".json")
-	err = iscsi_lib.PersistConnector(b.connector, file)
+	err = iscsiLib.PersistConnector(b.connector, file)
 	if err != nil {
 		klog.Errorf("failed to persist connection info: %v", err)
 		klog.Errorf("disconnecting volume and failing the publish request because persistence files are required for reliable Unpublish")
@@ -103,13 +103,13 @@ func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error
 
 	// load iscsi disk config from json file
 	file := path.Join(targetPath, c.iscsiDisk.VolName+".json")
-	connector, err := iscsi_lib.GetConnectorFromFile(file)
+	connector, err := iscsiLib.GetConnectorFromFile(file)
 	if err != nil {
 		klog.Errorf("iscsi detach disk: failed to get iscsi config from path %s Error: %v", targetPath, err)
 		return err
 	}
 
-	iscsi_lib.Disconnect(connector.TargetIqn, connector.TargetPortals)
+	iscsiLib.Disconnect(connector.TargetIqn, connector.TargetPortals)
 
 	if err := os.RemoveAll(targetPath); err != nil {
 		klog.Errorf("iscsi: failed to remove mount path Error: %v", err)
