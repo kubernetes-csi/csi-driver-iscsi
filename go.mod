@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/container-storage-interface/spec v1.4.0
 	github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20210519140452-fd47a25d3e16
-	github.com/kubernetes-csi/csi-lib-utils v0.2.0
+	github.com/kubernetes-csi/csi-lib-utils v0.9.1
 	github.com/spf13/cobra v1.1.3
 	golang.org/x/net v0.0.0-20210510120150-4163338589ed
 	google.golang.org/grpc v1.37.1

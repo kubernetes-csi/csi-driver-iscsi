@@ -49,7 +49,7 @@ github.com/json-iterator/go
 # github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20210519140452-fd47a25d3e16
 ## explicit
 github.com/kubernetes-csi/csi-lib-iscsi/iscsi
-# github.com/kubernetes-csi/csi-lib-utils v0.2.0
+# github.com/kubernetes-csi/csi-lib-utils v0.9.1
 ## explicit
 github.com/kubernetes-csi/csi-lib-utils/protosanitizer
 # github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369
