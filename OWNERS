@@ -1,14 +1,11 @@
-# See the OWNERS docs: https://git.k8s.io/community/contributors/guide/owners.md
+# See the OWNERS docs at https://go.k8s.io/owners
 
 approvers:
+- kubernetes-csi-approvers
 - andyzhangx
 - humblec
 - j-griffith
-- msau42
-- saad-ali
+
 reviewers:
-- andyzhangx
+- kubernetes-csi-reviewers
 - humblec
-- j-griffith
-- msau42
-- saad-ali
