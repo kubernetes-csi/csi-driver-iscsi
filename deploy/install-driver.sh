@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2020 The Kubernetes Authors.
+# Copyright 2021 The Kubernetes Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ if [ $ver != "master" ]; then
   repo="$repo/$ver"
 fi
 
-echo "Installing iscsi CSI driver, version: $ver ..."
+echo "Installing iscsi.csi.k8s.io CSI driver, version: $ver ..."
 kubectl apply -f $repo/csi-iscsi-driverinfo.yaml
 kubectl apply -f $repo/csi-iscsi-node.yaml
-echo 'iscsi CSI driver installed successfully.'
+echo 'iscsi.csi.k8s.io CSI driver installed successfully.'
