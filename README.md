@@ -7,12 +7,6 @@
 $ sudo ./bin/iscsiplugin --endpoint tcp://127.0.0.1:10000 --nodeid CSINode
 ```
 
-### Test using csc
-Get ```csc``` tool from https://github.com/rexray/gocsi/tree/master/csc
-```
-$ go get github.com/rexray/gocsi/csc
-```
-
 #### Get plugin info
 ```
 $ csc identity plugin-info --endpoint tcp://127.0.0.1:10000
