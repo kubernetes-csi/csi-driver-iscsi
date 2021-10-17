@@ -17,6 +17,10 @@ all: build
 
 include release-tools/build.make
 
+GOPATH ?= $(shell go env GOPATH)
+GOBIN ?= $(GOPATH)/bin
+export GOPATH GOBIN
+
 .PHONY: sanity-test
 sanity-test:
 	./test/sanity/run-test.sh
