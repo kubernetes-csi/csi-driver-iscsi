@@ -3,13 +3,13 @@ module github.com/kubernetes-csi/csi-driver-iscsi
 go 1.16
 
 require (
-	github.com/container-storage-interface/spec v1.4.0
-	github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20210519140452-fd47a25d3e16
-	github.com/kubernetes-csi/csi-lib-utils v0.9.1
+	github.com/container-storage-interface/spec v1.5.0
+	github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20211110090527-5c802c48a124
+	github.com/kubernetes-csi/csi-lib-utils v0.10.0
 	github.com/spf13/cobra v1.1.3
-	golang.org/x/net v0.0.0-20210510120150-4163338589ed
-	google.golang.org/grpc v1.37.1
-	k8s.io/klog/v2 v2.8.0
+	golang.org/x/net v0.0.0-20210520170846-37e1c6afe023
+	google.golang.org/grpc v1.38.0
+	k8s.io/klog/v2 v2.9.0
 	k8s.io/kubernetes v1.21.1
 	k8s.io/mount-utils v0.21.1-rc.0 // indirect
 	k8s.io/utils v0.0.0-20210305010621-2afb4311ab10
