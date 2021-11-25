@@ -12,12 +12,12 @@ spec:
   capacity:
     storage: 1Gi
   csi:
-    driver: ISCSI
+    driver: iscsi.csi.k8s.io
     volumeHandle: iscsi-data-id
     volumeAttributes:
-      targetPortal: "192.168.122.145:3260"
+      targetPortal: "192.168.0.107:3260"
       portals: "[]"
-      iqn: "iqn.2003-01.org.linux-iscsi.example:targeted"
+      iqn: "iqn.2015-06.com.example.test:target1"
       lun: "0"
       iscsiInterface: "default"
       discoveryCHAPAuth: "false"

@@ -17,8 +17,10 @@ limitations under the License.
 package iscsi
 
 import (
+	"fmt"
 	"github.com/container-storage-interface/spec/lib/go/csi"
 	"k8s.io/klog/v2"
+	"os"
 )
 
 type driver struct {
@@ -35,11 +37,11 @@ type driver struct {
 }
 
 const (
-	driverName = "ISCSI"
+	driverName = "iscsi.csi.k8s.io"
 )
 
 var (
-	version = "1.0.0-rc2"
+	version = "1.0.0"
 )
 
 func NewDriver(nodeID, endpoint string) *driver {
@@ -52,6 +54,9 @@ func NewDriver(nodeID, endpoint string) *driver {
 		endpoint: endpoint,
 	}
 
+	if err := os.MkdirAll(fmt.Sprintf("/var/run/%s", driverName), 0755); err != nil {
+		panic(err)
+	}
 	d.AddVolumeCapabilityAccessModes([]csi.VolumeCapability_AccessMode_Mode{csi.VolumeCapability_AccessMode_SINGLE_NODE_WRITER})
 	// iSCSI plugin does not support ControllerServiceCapability now.
 	// If support is added, it should set to appropriate

@@ -41,7 +41,7 @@ func main() {
 	flag.CommandLine.Parse([]string{})
 
 	cmd := &cobra.Command{
-		Use:   "ISCSI",
+		Use:   "iscsi.csi.k8s.io",
 		Short: "CSI based ISCSI driver",
 		Run: func(cmd *cobra.Command, args []string) {
 			handle()

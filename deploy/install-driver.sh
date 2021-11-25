@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Copyright 2021 The Kubernetes Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,11 +14,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu
+set -euo pipefail
 
-# Copy iscsiplugin.sh
-COPY iscsiplugin.sh /iscsiplugin.sh
-# Copy iscsiplugin from build _output directory
-COPY ./bin/iscsiplugin /iscsiplugin
+ver="master"
+if [[ "$#" -gt 0 ]]; then
+  ver="$1"
+fi
 
-ENTRYPOINT ["sh", "/iscsiplugin.sh"]
+repo="https://raw.githubusercontent.com/kubernetes-csi/csi-driver-iscsi/$ver/deploy"
+if [[ "$#" -gt 1 ]]; then
+  if [[ "$2" == *"local"* ]]; then
+    echo "use local deploy"
+    repo="./deploy"
+  fi
+fi
+
+if [ $ver != "master" ]; then
+  repo="$repo/$ver"
+fi
+
+echo "Installing iscsi.csi.k8s.io CSI driver, version: $ver ..."
+kubectl apply -f $repo/csi-iscsi-driverinfo.yaml
+kubectl apply -f $repo/csi-iscsi-node.yaml
+echo 'iscsi.csi.k8s.io CSI driver installed successfully.'
