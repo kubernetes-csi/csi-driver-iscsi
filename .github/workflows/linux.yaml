@@ -1,4 +1,4 @@
-name: Linux Unit tests
+name: Sanity tests
 on:
     pull_request: {}
     push: {}
