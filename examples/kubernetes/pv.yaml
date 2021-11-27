@@ -16,7 +16,7 @@ spec:
     volumeAttributes: 
       targetPortal: "192.168.122.145:3260"
       portals: "[]"
-      iqn: "iqn.2003-01.org.linux-iscsi.example:targetd"
+      iqn: "iqn.2003-01.org.linux-iscsi.example:targeted"
       lun: "0"
       iscsiInterface: "default"
       discoveryCHAPAuth: "false"
