@@ -19,17 +19,8 @@ if [[ -z "$(command -v yamllint)" ]]; then
 fi
 
 LOG=/tmp/yamllint.log
-helmPath=charts/latest/csi-driver-nfs/templates
 
-echo "checking yaml files num ..."
-deployDirNum=`ls deploy/*.yaml | wc -l`
-helmDirNum=`ls $helmPath/*.yaml | grep -v serviceaccount | wc -l`
-if [[ "${deployDirNum}" != "${helmDirNum}" ]]; then
-  echo "yaml file num($deployDirNum) under deploy/ not equal to num($helmDirNum) under $helmPath"
-  exit 1
-fi
-
-for path in "deploy/*.yaml" "deploy/example/*.yaml" "deploy/example/nfs-provisioner/*.yaml"
+for path in "kubernetes/*.yaml" "examples/kubernetes/*.yaml"
 do
     echo "checking yamllint under path: $path ..."
     yamllint -f parsable $path | grep -v "line too long" > $LOG
@@ -41,14 +32,5 @@ do
         exit 1
     fi
 done
-
-echo "checking yamllint under path: $helmPath ..."
-yamllint -f parsable $helmPath/*.yaml | grep -v "line too long" | grep -v "too many spaces inside braces" | grep -v "missing document start" | grep -v "syntax error" > $LOG
-linecount=`cat $LOG | wc -l`
-if [ $linecount -gt 0 ]; then
-	echo "yaml files under $helmPath/ are not linted, failed with: "
-	cat $LOG
-	exit 1
-fi
 
 echo "Congratulations! All Yaml files have been linted."
