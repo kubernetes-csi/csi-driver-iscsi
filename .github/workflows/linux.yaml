@@ -1,4 +1,4 @@
-name: Linux basic tests
+name: Linux tests
 on:
     pull_request: {}
     push: {}
