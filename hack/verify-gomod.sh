@@ -1,4 +1,6 @@
-# Copyright 2021 The Kubernetes Authors.
+#!/bin/bash
+
+# Copyright 2020 The Kubernetes Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,13 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM centos:7.4.1708
+set -euo pipefail
 
-# Copy iscsiplugin.sh
-COPY iscsiplugin.sh /iscsiplugin.sh
-# Copy iscsiplugin from build _output directory
-COPY bin/iscsiplugin /iscsiplugin
-
-RUN yum -y install iscsi-initiator-utils e2fsprogs xfsprogs && yum clean all
-
-ENTRYPOINT ["/iscsiplugin.sh"]
+echo "Verifying gomod"
+export GO111MODULE=on
+echo "go mod tidy"
+go mod tidy
+echo "go mod vendor"
+go mod vendor
+diff=`git diff`
+if [[ -n "${diff}" ]]; then
+  echo "${diff}"
+  echo
+  echo "error"
+  exit 1
+fi
+echo "Done"

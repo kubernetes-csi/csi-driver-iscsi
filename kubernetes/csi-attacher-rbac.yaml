@@ -1,6 +1,7 @@
 # This YAML file contains RBAC API objects that are necessary to run external
 # CSI attacher for iscsi
 
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:

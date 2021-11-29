@@ -1,4 +1,6 @@
-# Copyright 2021 The Kubernetes Authors.
+#!/bin/bash
+
+# Copyright 2020 The Kubernetes Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,13 +14,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM centos:7.4.1708
+set -euo pipefail
 
-# Copy iscsiplugin.sh
-COPY iscsiplugin.sh /iscsiplugin.sh
-# Copy iscsiplugin from build _output directory
-COPY bin/iscsiplugin /iscsiplugin
+if [[ "$#" -lt 1 ]]; then
+  echo "please provide a registry name"  
+  exit 1
+fi
 
-RUN yum -y install iscsi-initiator-utils e2fsprogs xfsprogs && yum clean all
+export REGISTRY_NAME="$1"
+export REGISTRY=$REGISTRY_NAME.azurecr.io
+export IMAGENAME=public/k8s/csi/nfs-csi
+export CI=1
+export PUBLISH=1
+az acr login --name $REGISTRY_NAME
+make container push push-latest
 
-ENTRYPOINT ["/iscsiplugin.sh"]
+echo "sleep 60s ..."
+sleep 60
+image="mcr.microsoft.com/k8s/csi/nfs-csi:latest"
+docker pull $image
+docker inspect $image | grep Created

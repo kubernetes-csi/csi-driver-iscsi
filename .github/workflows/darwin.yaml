@@ -1,4 +1,4 @@
-name: MacOS Unit Tests
+name: MacOS tests
 on:
     pull_request: {}
     push: {}

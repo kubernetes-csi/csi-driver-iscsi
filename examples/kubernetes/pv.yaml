@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -7,16 +8,16 @@ metadata:
 spec:
   storageClassName: manual
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   capacity:
     storage: 1Gi
   csi:
     driver: ISCSI
     volumeHandle: iscsi-data-id
-    volumeAttributes: 
+    volumeAttributes:
       targetPortal: "192.168.122.145:3260"
       portals: "[]"
-      iqn: "iqn.2003-01.org.linux-iscsi.example:targetd"
+      iqn: "iqn.2003-01.org.linux-iscsi.example:targeted"
       lun: "0"
       iscsiInterface: "default"
       discoveryCHAPAuth: "false"

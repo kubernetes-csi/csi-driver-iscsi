@@ -1,6 +1,7 @@
 # This YAML file contains attacher & csi driver API objects that are necessary
 # to run external CSI attacher for iscsi
 
+---
 kind: Service
 apiVersion: v1
 metadata:
@@ -44,7 +45,7 @@ spec:
 
         - name: iscsi
           image: iscsiplugin:latest
-          args :
+          args:
             - "--nodeid=$(NODE_ID)"
             - "--endpoint=$(CSI_ENDPOINT)"
           env:

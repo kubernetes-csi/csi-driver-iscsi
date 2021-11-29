@@ -1,4 +1,4 @@
-name: Sanity tests
+name: Linux tests
 on:
     pull_request: {}
     push: {}
@@ -27,3 +27,7 @@ jobs:
         make
         echo "is running in github actions: $GITHUB_ACTIONS"
         make sanity-test
+
+    - name: Verification test
+      run: | 
+        ./hack/verify-all.sh

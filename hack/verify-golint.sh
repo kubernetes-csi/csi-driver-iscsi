@@ -1,4 +1,6 @@
-# Copyright 2021 The Kubernetes Authors.
+#!/bin/bash
+
+# Copyright 2018 The Kubernetes Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,13 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM centos:7.4.1708
+set -euo pipefail
 
-# Copy iscsiplugin.sh
-COPY iscsiplugin.sh /iscsiplugin.sh
-# Copy iscsiplugin from build _output directory
-COPY bin/iscsiplugin /iscsiplugin
+if [[ -z "$(command -v golangci-lint)" ]]; then
+  echo "Cannot find golangci-lint. Installing golangci-lint..."
+  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.31.0
+  export PATH=$PATH:$(go env GOPATH)/bin
+fi
 
-RUN yum -y install iscsi-initiator-utils e2fsprogs xfsprogs && yum clean all
+echo "Verifying golint"
 
-ENTRYPOINT ["/iscsiplugin.sh"]
+golangci-lint run --no-config --enable=golint --disable=typecheck --deadline=10m
+
+echo "Congratulations! Lint check completed for all Go source files."
