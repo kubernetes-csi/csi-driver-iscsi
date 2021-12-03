@@ -18,25 +18,25 @@ package iscsi
 
 import (
 	"fmt"
-	"os"
-	"path"
-
 	iscsiLib "github.com/kubernetes-csi/csi-lib-iscsi/iscsi"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"k8s.io/klog/v2"
+	"os"
+
 	"k8s.io/utils/mount"
 )
 
 type ISCSIUtil struct{}
 
 func (util *ISCSIUtil) AttachDisk(b iscsiDiskMounter) (string, error) {
-	devicePath, err := iscsiLib.Connect(*b.connector)
+	devicePath, err := (*b.connector).Connect()
 	if err != nil {
 		return "", err
 	}
 	if devicePath == "" {
 		return "", fmt.Errorf("connect reported success, but no path returned")
 	}
-
 	// Mount device
 	mntPath := b.targetPath
 	notMnt, err := b.mounter.IsLikelyNotMountPoint(mntPath)
@@ -54,8 +54,8 @@ func (util *ISCSIUtil) AttachDisk(b iscsiDiskMounter) (string, error) {
 	}
 
 	// Persist iscsi disk config to json file for DetachDisk path
-	file := path.Join(mntPath, b.VolName+".json")
-	err = iscsiLib.PersistConnector(b.connector, file)
+	iscsiInfoPath := getIscsiInfoPath(b.VolName)
+	err = iscsiLib.PersistConnector(b.connector, iscsiInfoPath)
 	if err != nil {
 		klog.Errorf("failed to persist connection info: %v", err)
 		klog.Errorf("disconnecting volume and failing the publish request because persistence files are required for reliable Unpublish")
@@ -85,12 +85,21 @@ func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error
 		klog.Errorf("iscsi detach disk: failed to get device from mnt: %s\nError: %v", targetPath, err)
 		return err
 	}
-
 	if pathExists, pathErr := mount.PathExists(targetPath); pathErr != nil {
 		return fmt.Errorf("Error checking if path exists: %v", pathErr)
 	} else if !pathExists {
 		klog.Warningf("Warning: Unmount skipped because path does not exist: %v", targetPath)
 		return nil
+	}
+	iscsiInfoPath := getIscsiInfoPath(c.VolName)
+	klog.Infof("loading ISCSI connection info from %s", iscsiInfoPath)
+	connector, err := iscsiLib.GetConnectorFromFile(iscsiInfoPath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			klog.Warningf("assuming that ISCSI connection is already closed")
+			return nil
+		}
+		return status.Error(codes.Internal, err.Error())
 	}
 	if err = c.mounter.Unmount(targetPath); err != nil {
 		klog.Errorf("iscsi detach disk: failed to unmount: %s\nError: %v", targetPath, err)
@@ -98,23 +107,32 @@ func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error
 	}
 	cnt--
 	if cnt != 0 {
+		klog.Errorf("the device is in use : %d", cnt)
 		return nil
 	}
 
-	// load iscsi disk config from json file
-	file := path.Join(targetPath, c.iscsiDisk.VolName+".json")
-	connector, err := iscsiLib.GetConnectorFromFile(file)
+	klog.Info("detaching ISCSI device")
+	err = connector.DisconnectVolume()
 	if err != nil {
 		klog.Errorf("iscsi detach disk: failed to get iscsi config from path %s Error: %v", targetPath, err)
 		return err
 	}
 
 	iscsiLib.Disconnect(connector.TargetIqn, connector.TargetPortals)
-
 	if err := os.RemoveAll(targetPath); err != nil {
 		klog.Errorf("iscsi: failed to remove mount path Error: %v", err)
+	}
+	err = os.Remove(iscsiInfoPath)
+	if err != nil {
 		return err
 	}
 
+	klog.Info("successfully detached ISCSI device")
 	return nil
+
+}
+
+func getIscsiInfoPath(volumeID string) string {
+	runPath := fmt.Sprintf("/var/run/%s", driverName)
+	return fmt.Sprintf("%s/iscsi-%s.json", runPath, volumeID)
 }

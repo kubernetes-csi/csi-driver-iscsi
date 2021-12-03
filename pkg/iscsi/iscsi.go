@@ -83,8 +83,7 @@ func getISCSIInfo(req *csi.NodePublishVolumeRequest) (*iscsiDisk, error) {
 		}
 		lunVal = int32(l)
 	}
-
-	return &iscsiDisk{
+	iscsiDisk := &iscsiDisk{
 		VolName:         volName,
 		Portals:         bkportal,
 		Iqn:             iqn,
@@ -95,15 +94,20 @@ func getISCSIInfo(req *csi.NodePublishVolumeRequest) (*iscsiDisk, error) {
 		secret:          secret,
 		sessionSecret:   sessionSecret,
 		discoverySecret: discoverySecret,
-		InitiatorName:   initiatorName}, nil
+		InitiatorName:   initiatorName}
+
+	return iscsiDisk, nil
 }
 
 func buildISCSIConnector(iscsiInfo *iscsiDisk) *iscsiLib.Connector {
+	if iscsiInfo == nil || iscsiInfo.VolName == "" || iscsiInfo.Iqn == "" || len(iscsiInfo.Portals) == 0 {
+		return nil
+	}
 	c := iscsiLib.Connector{
 		VolumeName:    iscsiInfo.VolName,
 		TargetIqn:     iscsiInfo.Iqn,
 		TargetPortals: iscsiInfo.Portals,
-		Multipath:     len(iscsiInfo.Portals) > 1,
+		Lun:           iscsiInfo.lun,
 	}
 
 	if iscsiInfo.sessionSecret != (iscsiLib.Secrets{}) {
@@ -121,7 +125,7 @@ func getISCSIDiskMounter(iscsiInfo *iscsiDisk, req *csi.NodePublishVolumeRequest
 	fsType := req.GetVolumeCapability().GetMount().GetFsType()
 	mountOptions := req.GetVolumeCapability().GetMount().GetMountFlags()
 
-	return &iscsiDiskMounter{
+	diskMounter := &iscsiDiskMounter{
 		iscsiDisk:    iscsiInfo,
 		fsType:       fsType,
 		readOnly:     readOnly,
@@ -132,6 +136,7 @@ func getISCSIDiskMounter(iscsiInfo *iscsiDisk, req *csi.NodePublishVolumeRequest
 		deviceUtil:   util.NewDeviceHandler(util.NewIOHandler()),
 		connector:    buildISCSIConnector(iscsiInfo),
 	}
+	return diskMounter
 }
 
 func getISCSIDiskUnmounter(req *csi.NodeUnpublishVolumeRequest) *iscsiDiskUnmounter {
