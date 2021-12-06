@@ -1,0 +1,23 @@
+name: Windows Tests
+on:
+    pull_request: {}
+    push: {}
+jobs:
+  build:
+    strategy:
+      matrix:
+        go: [ '^1.16' ]
+        platform: [windows-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run Windows Unit Tests
+        run: |
+          go version
+          go test -v -race ./pkg/...
+

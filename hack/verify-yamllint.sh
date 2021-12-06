@@ -20,7 +20,7 @@ fi
 
 LOG=/tmp/yamllint.log
 
-for path in "kubernetes/*.yaml" "examples/kubernetes/*.yaml"
+for path in "deploy/*.yaml" "examples/*.yaml"
 do
     echo "checking yamllint under path: $path ..."
     yamllint -f parsable $path | grep -v "line too long" > $LOG
