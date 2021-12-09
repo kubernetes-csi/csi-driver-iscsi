@@ -60,7 +60,7 @@ func getISCSIInfo(req *csi.NodePublishVolumeRequest) (*iscsiDisk, error) {
 	}
 
 	for _, portal := range portals {
-		bkportal = append(bkportal, portalMounter(string(portal)))
+		bkportal = append(bkportal, portalMounter(portal))
 	}
 
 	iface := req.GetVolumeContext()["iscsiInterface"]
@@ -151,7 +151,7 @@ func getISCSIDiskUnmounter(req *csi.NodeUnpublishVolumeRequest) *iscsiDiskUnmoun
 
 func portalMounter(portal string) string {
 	if !strings.Contains(portal, ":") {
-		portal = portal + ":3260"
+		portal += ":3260"
 	}
 	return portal
 }
