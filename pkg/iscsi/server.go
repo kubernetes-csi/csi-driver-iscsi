@@ -27,15 +27,15 @@ import (
 	"k8s.io/klog/v2"
 )
 
-// Defines Non blocking GRPC server interfaces
+// Defines Non blocking GRPC server interfaces.
 type NonBlockingGRPCServer interface {
 	// Start services at the endpoint
 	Start(endpoint string, ids csi.IdentityServer, cs csi.ControllerServer, ns csi.NodeServer)
-	// Waits for the service to stop
+	// Wait waits for the service to stop
 	Wait()
-	// Stops the service gracefully
+	// Stop stops the service gracefully
 	Stop()
-	// Stops the service forcefully
+	// ForceStop Stops the service forcefully
 	ForceStop()
 }
 
@@ -104,9 +104,10 @@ func (s *nonBlockingGRPCServer) serve(endpoint string, ids csi.IdentityServer, c
 	if ns != nil {
 		csi.RegisterNodeServer(server, ns)
 	}
-
 	klog.Infof("Listening for connections on address: %#v", listener.Addr())
-
-	server.Serve(listener)
+	err = server.Serve(listener)
+	if err != nil {
+		klog.Fatalf("Failed to serve requests: %v", err)
+	}
 
 }

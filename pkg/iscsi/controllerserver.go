@@ -57,7 +57,7 @@ func (cs *ControllerServer) GetCapacity(ctx context.Context, req *csi.GetCapacit
 }
 
 // ControllerGetCapabilities implements the default GRPC callout.
-// Default supports all capabilities
+// Default supports all capabilities.
 func (cs *ControllerServer) ControllerGetCapabilities(ctx context.Context, req *csi.ControllerGetCapabilitiesRequest) (*csi.ControllerGetCapabilitiesResponse, error) {
 	klog.V(5).Infof("Using default ControllerGetCapabilities")
 

@@ -41,7 +41,7 @@ func (util *ISCSIUtil) AttachDisk(b iscsiDiskMounter) (string, error) {
 	mntPath := b.targetPath
 	notMnt, err := b.mounter.IsLikelyNotMountPoint(mntPath)
 	if err != nil && !os.IsNotExist(err) {
-		return "", fmt.Errorf("Heuristic determination of mount point failed:%v", err)
+		return "", fmt.Errorf("heuristic determination of mount point failed:%v", err)
 	}
 	if !notMnt {
 		klog.Infof("iscsi: %s already mounted", mntPath)
@@ -86,7 +86,7 @@ func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error
 		return err
 	}
 	if pathExists, pathErr := mount.PathExists(targetPath); pathErr != nil {
-		return fmt.Errorf("Error checking if path exists: %v", pathErr)
+		return fmt.Errorf("error checking if path exists: %v", pathErr)
 	} else if !pathExists {
 		klog.Warningf("Warning: Unmount skipped because path does not exist: %v", targetPath)
 		return nil
@@ -128,6 +128,7 @@ func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error
 	}
 
 	klog.Info("successfully detached ISCSI device")
+
 	return nil
 
 }
