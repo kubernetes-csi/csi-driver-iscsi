@@ -66,3 +66,5 @@ replace k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.21.1
 replace k8s.io/sample-cli-plugin => k8s.io/sample-cli-plugin v0.21.1
 
 replace k8s.io/sample-controller => k8s.io/sample-controller v0.21.1
+
+replace github.com/kubernetes-csi/csi-lib-iscsi => ./pkg/lib/iscsi
