@@ -30,7 +30,7 @@ var (
 	sleep              = time.Sleep
 )
 
-// iscsiSession contains information avout an iSCSI session
+// iscsiSession contains information about an iSCSI session
 type iscsiSession struct {
 	Protocol string
 	ID       int32
@@ -239,7 +239,7 @@ func getMultipathDevice(devices []Device) (*Device, error) {
 	return multipathDevice, nil
 }
 
-// Connect is for backward-compatiblity with c.Connect()
+// Connect is for backward-compatibility with c.Connect()
 func Connect(c Connector) (string, error) {
 	return c.Connect()
 }
@@ -477,7 +477,7 @@ func GetSCSIDevices(devicePaths []string, strict bool) ([]Device, error) {
 
 	deviceInfo, err := lsblk(devicePaths, strict)
 	if err != nil {
-		debug.Printf("An error occured while looking info about SCSI devices: %v", err)
+		debug.Printf("An error occurred while looking info about SCSI devices: %v", err)
 		return nil, err
 	}
 

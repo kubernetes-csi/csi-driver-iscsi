@@ -43,14 +43,14 @@ func main() {
 			SecretsType: "chap"},
 		// Lun is the lun number the devices uses for exports
 		Lun: int32(*lun),
-		// Number of times we check for device path, waiting for CheckInterval seconds inbetween each check (defaults to 10 if omitted)
+		// Number of times we check for device path, waiting for CheckInterval seconds in between each check (defaults to 10 if omitted)
 		RetryCount: 11,
-		// CheckInterval is the time in seconds to wait inbetween device path checks when logging in to a target
+		// CheckInterval is the time in seconds to wait in between device path checks when logging in to a target
 		CheckInterval: 1,
 	}
 
 	// Now we can just issue a connection request using our Connector
-	// A succesful connection will include the device path to access our iscsi volume
+	// A successful connection will include the device path to access our iscsi volume
 	path, err := c.Connect()
 	if err != nil {
 		log.Printf("Error returned from c.Connect: %s", err.Error())
