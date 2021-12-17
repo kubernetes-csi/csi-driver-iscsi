@@ -63,7 +63,7 @@ spec:
             capabilities:
               add: ["SYS_ADMIN"]
             allowPrivilegeEscalation: true
-          image: gcr.io/k8s-staging-sig-storage/iscsiplugin
+          image: gcr.io/k8s-staging-sig-storage/iscsiplugin:canary
           args:
             - "-v=5"
             - "--nodeid=$(NODE_ID)"
