@@ -41,7 +41,7 @@ const (
 )
 
 var (
-	version = "1.0.0"
+	version = "0.1.0"
 )
 
 func NewDriver(nodeID, endpoint string) *driver {
