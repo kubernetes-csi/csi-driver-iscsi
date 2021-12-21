@@ -18,11 +18,12 @@ package iscsi
 
 import (
 	"fmt"
+	"os"
+
 	iscsiLib "github.com/kubernetes-csi/csi-lib-iscsi/iscsi"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"k8s.io/klog/v2"
-	"os"
 
 	"k8s.io/utils/mount"
 )
@@ -48,7 +49,7 @@ func (util *ISCSIUtil) AttachDisk(b iscsiDiskMounter) (string, error) {
 		return "", nil
 	}
 
-	if err := os.MkdirAll(mntPath, 0750); err != nil {
+	if err := os.MkdirAll(mntPath, 0o750); err != nil {
 		klog.Errorf("iscsi: failed to mkdir %s, error", mntPath)
 		return "", err
 	}
@@ -130,10 +131,10 @@ func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error
 	klog.Info("successfully detached ISCSI device")
 
 	return nil
-
 }
 
 func getIscsiInfoPath(volumeID string) string {
 	runPath := fmt.Sprintf("/var/run/%s", driverName)
+
 	return fmt.Sprintf("%s/iscsi-%s.json", runPath, volumeID)
 }

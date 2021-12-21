@@ -18,31 +18,27 @@ package iscsi
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/container-storage-interface/spec/lib/go/csi"
 	"k8s.io/klog/v2"
-	"os"
 )
 
 type driver struct {
-	name    string
-	nodeID  string
-	version string
-
+	name     string
+	nodeID   string
+	version  string
 	endpoint string
-
-	ns *nodeServer
-
-	cap   []*csi.VolumeCapability_AccessMode
-	cscap []*csi.ControllerServiceCapability
+	ns       *nodeServer
+	cap      []*csi.VolumeCapability_AccessMode
+	cscap    []*csi.ControllerServiceCapability
 }
 
 const (
 	driverName = "iscsi.csi.k8s.io"
 )
 
-var (
-	version = "0.1.0"
-)
+var version = "0.1.0"
 
 func NewDriver(nodeID, endpoint string) *driver {
 	klog.Infof("Driver: %v version: %v", driverName, version)
@@ -54,7 +50,7 @@ func NewDriver(nodeID, endpoint string) *driver {
 		endpoint: endpoint,
 	}
 
-	if err := os.MkdirAll(fmt.Sprintf("/var/run/%s", driverName), 0755); err != nil {
+	if err := os.MkdirAll(fmt.Sprintf("/var/run/%s", driverName), 0o755); err != nil {
 		panic(err)
 	}
 	d.AddVolumeCapabilityAccessModes([]csi.VolumeCapability_AccessMode_Mode{csi.VolumeCapability_AccessMode_SINGLE_NODE_WRITER})
