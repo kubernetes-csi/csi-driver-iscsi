@@ -41,7 +41,7 @@ type iscsiSession struct {
 
 type deviceInfo []Device
 
-// Device contains informations about a device
+// Device contains information about a device
 type Device struct {
 	Name      string   `json:"name"`
 	Hctl      string   `json:"hctl"`
@@ -58,28 +58,26 @@ type HCTL struct {
 	LUN     int
 }
 
-// Connector provides a struct to hold all of the needed parameters to make our iSCSI connection
+// Connector provides a struct to hold all the needed parameters to make our iSCSI connection
 type Connector struct {
-	VolumeName       string   `json:"volume_name"`
-	TargetIqn        string   `json:"target_iqn"`
-	TargetPortals    []string `json:"target_portal"`
-	Lun              int32    `json:"lun"`
-	AuthType         string   `json:"auth_type"`
-	DiscoverySecrets Secrets  `json:"discovery_secrets"`
-	SessionSecrets   Secrets  `json:"session_secrets"`
-	Interface        string   `json:"interface"`
-
+	VolumeName        string   `json:"volume_name"`
+	TargetIqn         string   `json:"target_iqn"`
+	TargetPortals     []string `json:"target_portal"`
+	Lun               int32    `json:"lun"`
+	AuthType          string   `json:"auth_type"`
+	DiscoverySecrets  Secrets  `json:"discovery_secrets"`
+	SessionSecrets    Secrets  `json:"session_secrets"`
+	Interface         string   `json:"interface"`
 	MountTargetDevice *Device  `json:"mount_target_device"`
 	Devices           []Device `json:"devices"`
-
-	RetryCount      uint `json:"retry_count"`
-	CheckInterval   uint `json:"check_interval"`
-	DoDiscovery     bool `json:"do_discovery"`
-	DoCHAPDiscovery bool `json:"do_chap_discovery"`
+	RetryCount        uint     `json:"retry_count"`
+	CheckInterval     uint     `json:"check_interval"`
+	DoDiscovery       bool     `json:"do_discovery"`
+	DoCHAPDiscovery   bool     `json:"do_chap_discovery"`
 }
 
 func init() {
-	// by default we don't log anything, EnableDebugLogging() can turn on some tracing
+	// by default, we don't log anything, EnableDebugLogging() can turn on some tracing
 	debug = log.New(ioutil.Discard, "", 0)
 }
 
@@ -89,7 +87,7 @@ func EnableDebugLogging(writer io.Writer) {
 	debug = log.New(writer, "DEBUG: ", log.Ldate|log.Ltime|log.Lshortfile)
 }
 
-// parseSession takes the raw stdout from the iscsiadm -m session command and encodes it into an iSCSI session type
+// parseSession takes the raw stdout from the `iscsiadm -m session` command and encodes it into an iSCSI session type
 func parseSessions(lines string) []iscsiSession {
 	entries := strings.Split(strings.TrimSpace(lines), "\n")
 	r := strings.NewReplacer("[", "",
@@ -115,6 +113,7 @@ func parseSessions(lines string) []iscsiSession {
 		}
 		sessions = append(sessions, s)
 	}
+
 	return sessions
 }
 
@@ -322,7 +321,7 @@ func (c *Connector) connectTarget(targetIqn string, target string, iFace string,
 	if _, err := iscsiCmd(append(baseArgs, []string{"-R"}...)...); err != nil {
 		debug.Printf("Failed to rescan session, err: %v", err)
 		if os.IsTimeout(err) {
-			debug.Printf("iscsiadm timeouted, logging out")
+			debug.Printf("iscsiadm timeout, logging out")
 			cmd := execCommand("iscsiadm", append(baseArgs, []string{"-u"}...)...)
 			out, err := cmd.CombinedOutput()
 			if err != nil {
@@ -404,7 +403,7 @@ func Disconnect(targetIqn string, targets []string) {
 }
 
 // Disconnect performs a disconnect operation from an appliance.
-// Be sure to disconnect all deivces properly before doing this as it can result in data loss.
+// Be sure to disconnect all devices properly before doing this as it can result in data loss.
 func (c *Connector) Disconnect() {
 	Disconnect(c.TargetIqn, c.TargetPortals)
 }
@@ -795,7 +794,7 @@ func (d *Device) Delete() error {
 	return d.WriteDeviceFile("delete", "1")
 }
 
-// Rescan rescan an SCSI device by writing 1 in /sys/class/scsi_device/h:c:t:l/device/rescan
+// Rescan does a rescan of SCSI device by writing 1 in /sys/class/scsi_device/h:c:t:l/device/rescan
 func (d *Device) Rescan() error {
 	return d.WriteDeviceFile("rescan", "1")
 }

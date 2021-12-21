@@ -94,7 +94,8 @@ func getISCSIInfo(req *csi.NodePublishVolumeRequest) (*iscsiDisk, error) {
 		secret:          secret,
 		sessionSecret:   sessionSecret,
 		discoverySecret: discoverySecret,
-		InitiatorName:   initiatorName}
+		InitiatorName:   initiatorName,
+	}
 
 	return iscsiDisk, nil
 }
@@ -136,6 +137,7 @@ func getISCSIDiskMounter(iscsiInfo *iscsiDisk, req *csi.NodePublishVolumeRequest
 		deviceUtil:   util.NewDeviceHandler(util.NewIOHandler()),
 		connector:    buildISCSIConnector(iscsiInfo),
 	}
+
 	return diskMounter
 }
 
@@ -153,6 +155,7 @@ func portalMounter(portal string) string {
 	if !strings.Contains(portal, ":") {
 		portal += ":3260"
 	}
+
 	return portal
 }
 
@@ -161,6 +164,7 @@ func parseSecret(secretParams string) map[string]string {
 	if err := json.Unmarshal([]byte(secretParams), &secret); err != nil {
 		return nil
 	}
+
 	return secret
 }
 
@@ -211,6 +215,7 @@ func parseDiscoverySecret(secretParams map[string]string) (iscsiLib.Secrets, err
 	}
 
 	secret.SecretsType = "chap"
+
 	return secret, nil
 }
 

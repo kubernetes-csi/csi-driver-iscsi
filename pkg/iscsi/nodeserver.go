@@ -48,6 +48,7 @@ func (ns *nodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 	if _, err := util.AttachDisk(*diskMounter); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
+
 	return &csi.NodePublishVolumeResponse{}, nil
 }
 
@@ -66,6 +67,7 @@ func (ns *nodeServer) NodeUnpublishVolume(ctx context.Context, req *csi.NodeUnpu
 	if err := iscsiutil.DetachDisk(*diskUnmounter, targetPath); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
+
 	return &csi.NodeUnpublishVolumeResponse{}, nil
 }
 
