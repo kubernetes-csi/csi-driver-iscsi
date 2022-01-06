@@ -50,7 +50,6 @@ type nonBlockingGRPCServer struct {
 }
 
 func (s *nonBlockingGRPCServer) Start(endpoint string, ids csi.IdentityServer, cs csi.ControllerServer, ns csi.NodeServer) {
-
 	s.wg.Add(1)
 
 	go s.serve(endpoint, ids, cs, ns)
@@ -71,7 +70,6 @@ func (s *nonBlockingGRPCServer) ForceStop() {
 }
 
 func (s *nonBlockingGRPCServer) serve(endpoint string, ids csi.IdentityServer, cs csi.ControllerServer, ns csi.NodeServer) {
-
 	proto, addr, err := ParseEndpoint(endpoint)
 	if err != nil {
 		klog.Fatal(err.Error())
@@ -80,13 +78,13 @@ func (s *nonBlockingGRPCServer) serve(endpoint string, ids csi.IdentityServer, c
 	if proto == "unix" {
 		addr = "/" + addr
 		if err := os.Remove(addr); err != nil && !os.IsNotExist(err) {
-			klog.Fatalf("Failed to remove %s, error: %s", addr, err.Error())
+			klog.Fatalf("failed to remove %s, error: %s", addr, err.Error())
 		}
 	}
 
 	listener, err := net.Listen(proto, addr)
 	if err != nil {
-		klog.Fatalf("Failed to listen: %v", err)
+		klog.Fatalf("failed to listen: %v", err)
 	}
 
 	opts := []grpc.ServerOption{
@@ -104,10 +102,9 @@ func (s *nonBlockingGRPCServer) serve(endpoint string, ids csi.IdentityServer, c
 	if ns != nil {
 		csi.RegisterNodeServer(server, ns)
 	}
-	klog.Infof("Listening for connections on address: %#v", listener.Addr())
+	klog.Infof("listening for connections on address: %#v", listener.Addr())
 	err = server.Serve(listener)
 	if err != nil {
-		klog.Fatalf("Failed to serve requests: %v", err)
+		klog.Fatalf("failed to serve requests: %v", err)
 	}
-
 }
