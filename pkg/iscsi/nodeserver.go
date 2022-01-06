@@ -29,13 +29,13 @@ type nodeServer struct {
 
 func (ns *nodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublishVolumeRequest) (*csi.NodePublishVolumeResponse, error) {
 	if req.GetVolumeCapability() == nil {
-		return nil, status.Error(codes.InvalidArgument, "Volume capability missing in request")
+		return nil, status.Error(codes.InvalidArgument, "volume capability missing in request")
 	}
 	if len(req.GetVolumeId()) == 0 {
-		return nil, status.Error(codes.InvalidArgument, "Volume ID missing in request")
+		return nil, status.Error(codes.InvalidArgument, "volumeID missing in request")
 	}
 	if len(req.GetTargetPath()) == 0 {
-		return nil, status.Error(codes.InvalidArgument, "Target path not provided")
+		return nil, status.Error(codes.InvalidArgument, "targetPath not provided")
 	}
 
 	iscsiInfo, err := getISCSIInfo(req)

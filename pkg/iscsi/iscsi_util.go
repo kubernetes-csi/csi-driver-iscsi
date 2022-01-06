@@ -58,8 +58,7 @@ func (util *ISCSIUtil) AttachDisk(b iscsiDiskMounter) (string, error) {
 	iscsiInfoPath := getIscsiInfoPath(b.VolName)
 	err = iscsiLib.PersistConnector(b.connector, iscsiInfoPath)
 	if err != nil {
-		klog.Errorf("failed to persist connection info: %v", err)
-		klog.Errorf("disconnecting volume and failing the publish request because persistence files are required for reliable Unpublish")
+		klog.Errorf("failed to persist connection info: %v, disconnecting volume and failing the publish request because persistence files are required for reliable Unpublish", err)
 		return "", fmt.Errorf("unable to create persistence file for connection")
 	}
 
@@ -89,7 +88,7 @@ func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error
 	if pathExists, pathErr := mount.PathExists(targetPath); pathErr != nil {
 		return fmt.Errorf("error checking if path exists: %v", pathErr)
 	} else if !pathExists {
-		klog.Warningf("Warning: Unmount skipped because path does not exist: %v", targetPath)
+		klog.Warningf("warning: Unmount skipped because path does not exist: %v", targetPath)
 		return nil
 	}
 	iscsiInfoPath := getIscsiInfoPath(c.VolName)

@@ -41,7 +41,7 @@ const (
 var version = "0.1.0"
 
 func NewDriver(nodeID, endpoint string) *driver {
-	klog.Infof("Driver: %v version: %v", driverName, version)
+	klog.Infof("driver: %v version: %v", driverName, version)
 
 	d := &driver{
 		name:     driverName,
@@ -82,7 +82,7 @@ func (d *driver) Run() {
 func (d *driver) AddVolumeCapabilityAccessModes(vc []csi.VolumeCapability_AccessMode_Mode) []*csi.VolumeCapability_AccessMode {
 	var vca []*csi.VolumeCapability_AccessMode
 	for _, c := range vc {
-		klog.Infof("Enabling volume access mode: %v", c.String())
+		klog.Infof("enabling volume access mode: %v", c.String())
 		vca = append(vca, &csi.VolumeCapability_AccessMode{Mode: c})
 	}
 	d.cap = vca
@@ -93,7 +93,7 @@ func (d *driver) AddControllerServiceCapabilities(cl []csi.ControllerServiceCapa
 	var csc []*csi.ControllerServiceCapability
 
 	for _, c := range cl {
-		klog.Infof("Enabling controller service capability: %v", c.String())
+		klog.Infof("enabling controller service capability: %v", c.String())
 		csc = append(csc, NewControllerServiceCapability(c))
 	}
 
