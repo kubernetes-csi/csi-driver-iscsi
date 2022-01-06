@@ -36,4 +36,5 @@ container-build:
 
 .PHONY: sanity-test
 sanity-test:
+	make
 	./test/sanity/run-test.sh
