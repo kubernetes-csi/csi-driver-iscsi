@@ -29,8 +29,9 @@ OUTPUT_TYPE ?= docker
 ARCH ?= amd64
 IMAGE_TAG = $(REGISTRY)/$(IMAGENAME):$(IMAGE_VERSION)
 
-.PHONY: container-build
-container-build:
+.PHONY: container
+container:
+	make
 	docker buildx build --pull --output=type=$(OUTPUT_TYPE) --platform="linux/$(ARCH)" \
 		-t $(IMAGE_TAG) --build-arg ARCH=$(ARCH) .
 
