@@ -193,7 +193,6 @@ func pathExists(devicePath *string, deviceTransport string) error {
 		}
 	} else {
 		fpath, err := filepathGlob(*devicePath)
-
 		if err != nil {
 			return err
 		}
@@ -574,7 +573,7 @@ func writeInSCSIDeviceFile(hctl string, file string, content string) error {
 	filename := filepath.Join("/sys/class/scsi_device", hctl, "device", file)
 	debug.Printf("Write %q in %q.\n", content, filename)
 
-	f, err := osOpenFile(filename, os.O_TRUNC|os.O_WRONLY, 0200)
+	f, err := osOpenFile(filename, os.O_TRUNC|os.O_WRONLY, 0o200)
 	if err != nil {
 		debug.Printf("Error while opening file %v: %v\n", filename, err)
 		return err
@@ -639,7 +638,7 @@ func PersistConnector(c *Connector, filePath string) error {
 
 // Persist persists the Connector to the specified file (ie /var/lib/pfile/myConnector.json)
 func (c *Connector) Persist(filePath string) error {
-	//file := path.Join("mnt", c.VolumeName+".json")
+	// file := path.Join("mnt", c.VolumeName+".json")
 	f, err := os.Create(filePath)
 	if err != nil {
 		return fmt.Errorf("error creating iSCSI persistence file %s: %s", filePath, err)
