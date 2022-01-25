@@ -97,5 +97,4 @@ func (d *driver) AddControllerServiceCapabilities(cl []csi.ControllerServiceCapa
 	}
 
 	d.cscap = csc
-
 }

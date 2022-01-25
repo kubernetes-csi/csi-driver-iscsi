@@ -1,3 +1,5 @@
+#! /bin/bash -x
+
 # Copyright 2021 The Kubernetes Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#! /bin/bash -x
-
 # Update initiatorname with ${iSCSI_INITIATOR_NAME} and start iscsid, if it is defined
 if [ -n "${iSCSI_INITIATOR_NAME}" ]; then
 	echo "InitiatorName=${iSCSI_INITIATOR_NAME}" > /etc/iscsi/initiatorname.iscsi 
@@ -22,4 +22,4 @@ if [ -n "${iSCSI_INITIATOR_NAME}" ]; then
 fi
 
 # Start iscsiplugin
-./iscsiplugin $*
+./iscsiplugin "$*"

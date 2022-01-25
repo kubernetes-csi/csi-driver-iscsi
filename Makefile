@@ -39,3 +39,11 @@ container:
 sanity-test:
 	make
 	./test/sanity/run-test.sh
+.PHONY: mod-check
+mod-check:
+	go mod verify && [ "$(shell sha512sum go.mod)" = "`sha512sum go.mod`" ] || ( echo "ERROR: go.mod was modified by 'go mod verify'" && false )
+
+.PHONY: clean
+clean:
+	go clean -mod=vendor -r -x
+	rm -f bin/iscsiplugin
