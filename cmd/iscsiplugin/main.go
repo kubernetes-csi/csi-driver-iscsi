@@ -33,11 +33,12 @@ var (
 )
 
 func init() {
-	flag.Set("logtostderr", "true") //nolint:errcheck
+	flag.Set("logtostderr", "true")
 }
 
 func main() {
-	flag.CommandLine.Parse([]string{}) //nolint:errcheck
+
+	flag.CommandLine.Parse([]string{})
 
 	cmd := &cobra.Command{
 		Use:   "iscsi.csi.k8s.io",
@@ -52,16 +53,10 @@ func main() {
 	cmd.Flags().AddGoFlagSet(flag.CommandLine)
 
 	cmd.PersistentFlags().StringVar(&nodeID, "nodeid", "", "node id")
-	err := cmd.MarkPersistentFlagRequired("nodeid")
-	if err != nil {
-		return
-	}
+	cmd.MarkPersistentFlagRequired("nodeid")
 
 	cmd.PersistentFlags().StringVar(&endpoint, "endpoint", "", "CSI endpoint")
-	err = cmd.MarkPersistentFlagRequired("endpoint")
-	if err != nil {
-		return
-	}
+	cmd.MarkPersistentFlagRequired("endpoint")
 
 	if err := cmd.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "%s", err.Error())

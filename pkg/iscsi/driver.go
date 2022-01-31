@@ -29,6 +29,7 @@ type driver struct {
 	nodeID   string
 	version  string
 	endpoint string
+	ns       *nodeServer
 	cap      []*csi.VolumeCapability_AccessMode
 	cscap    []*csi.ControllerServiceCapability
 }
@@ -97,4 +98,6 @@ func (d *driver) AddControllerServiceCapabilities(cl []csi.ControllerServiceCapa
 	}
 
 	d.cscap = csc
+
+	return
 }
