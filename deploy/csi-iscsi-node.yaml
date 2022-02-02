@@ -5,6 +5,7 @@ kind: DaemonSet
 apiVersion: apps/v1
 metadata:
   name: csi-iscsi-node
+  namespace: kube-system
 spec:
   selector:
     matchLabels:
@@ -15,7 +16,7 @@ spec:
         app: csi-iscsi-node
     spec:
       hostNetwork: true  # original iscsi connection would be broken without hostNetwork setting
-      dnsPolicy: ClusterFirstWithHostNet
+      dnsPolicy: Default
       nodeSelector:
         kubernetes.io/os: linux
       containers:
@@ -24,14 +25,13 @@ spec:
           args:
             - --csi-address=/csi/csi.sock
             - --probe-timeout=3s
-            - --health-port=29653
+            - --health-port=29753
             - --v=2
           volumeMounts:
             - name: socket-dir
               mountPath: /csi
           resources:
             limits:
-              cpu: 100m
               memory: 100Mi
             requests:
               cpu: 10m
@@ -57,6 +57,12 @@ spec:
               mountPath: /csi
             - name: registration-dir
               mountPath: /registration
+          resources:
+            limits:
+              memory: 200Mi
+            requests:
+              cpu: 10m
+              memory: 20Mi
         - name: iscsi
           securityContext:
             privileged: true
@@ -65,7 +71,7 @@ spec:
             allowPrivilegeEscalation: true
           image: gcr.io/k8s-staging-sig-storage/iscsiplugin:canary
           args:
-            - "-v=5"
+            - "-v=2"
             - "--nodeid=$(NODE_ID)"
             - "--endpoint=$(CSI_ENDPOINT)"
           env:
@@ -76,7 +82,7 @@ spec:
             - name: CSI_ENDPOINT
               value: unix:///csi/csi.sock
           ports:
-            - containerPort: 29653
+            - containerPort: 29753
               name: healthz
               protocol: TCP
           livenessProbe:
@@ -104,6 +110,12 @@ spec:
               subPath: iscsiadm
             - name: iscsi-csi-run-dir
               mountPath: /var/run/iscsi.csi.k8s.io
+          resources:
+            limits:
+              memory: 300Mi
+            requests:
+              cpu: 10m
+              memory: 20Mi
       volumes:
         - name: socket-dir
           hostPath:

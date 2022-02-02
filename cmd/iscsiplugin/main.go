@@ -18,60 +18,29 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 
-	"github.com/spf13/cobra"
 	"k8s.io/klog/v2"
 
 	"github.com/kubernetes-csi/csi-driver-iscsi/pkg/iscsi"
 )
 
 var (
-	endpoint string
-	nodeID   string
+	endpoint = flag.String("endpoint", "unix://tmp/csi.sock", "CSI endpoint")
+	nodeID   = flag.String("nodeid", "", "node id")
 )
 
 func init() {
-	flag.Set("logtostderr", "true") //nolint:errcheck
+	klog.InitFlags(nil)
 }
 
 func main() {
-	flag.CommandLine.Parse([]string{}) //nolint:errcheck
-
-	cmd := &cobra.Command{
-		Use:   "iscsi.csi.k8s.io",
-		Short: "CSI based ISCSI driver",
-		Run: func(cmd *cobra.Command, args []string) {
-			handle()
-		},
-	}
-
-	klog.InitFlags(nil)
-
-	cmd.Flags().AddGoFlagSet(flag.CommandLine)
-
-	cmd.PersistentFlags().StringVar(&nodeID, "nodeid", "", "node id")
-	err := cmd.MarkPersistentFlagRequired("nodeid")
-	if err != nil {
-		return
-	}
-
-	cmd.PersistentFlags().StringVar(&endpoint, "endpoint", "", "CSI endpoint")
-	err = cmd.MarkPersistentFlagRequired("endpoint")
-	if err != nil {
-		return
-	}
-
-	if err := cmd.Execute(); err != nil {
-		fmt.Fprintf(os.Stderr, "%s", err.Error())
-		os.Exit(1)
-	}
-
+	flag.Parse()
+	handle()
 	os.Exit(0)
 }
 
 func handle() {
-	d := iscsi.NewDriver(nodeID, endpoint)
+	d := iscsi.NewDriver(*nodeID, *endpoint)
 	d.Run()
 }
