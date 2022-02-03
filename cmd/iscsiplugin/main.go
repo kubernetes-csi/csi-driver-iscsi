@@ -20,9 +20,8 @@ import (
 	"flag"
 	"os"
 
-	"k8s.io/klog/v2"
-
 	"github.com/kubernetes-csi/csi-driver-iscsi/pkg/iscsi"
+	"k8s.io/klog/v2"
 )
 
 var (
@@ -31,10 +30,11 @@ var (
 )
 
 func init() {
-	klog.InitFlags(nil)
+	_ = flag.Set("logtostderr", "true")
 }
 
 func main() {
+	klog.InitFlags(nil)
 	flag.Parse()
 	handle()
 	os.Exit(0)

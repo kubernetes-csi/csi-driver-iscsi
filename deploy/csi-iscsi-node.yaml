@@ -71,9 +71,9 @@ spec:
             allowPrivilegeEscalation: true
           image: gcr.io/k8s-staging-sig-storage/iscsiplugin:canary
           args:
-            - "-v=2"
             - "--nodeid=$(NODE_ID)"
             - "--endpoint=$(CSI_ENDPOINT)"
+            - "--v=2"
           env:
             - name: NODE_ID
               valueFrom:
@@ -97,9 +97,9 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /csi
-            - name: pods-mount-dir
-              mountPath: /var/lib/kubelet/pods
-              mountPropagation: "Bidirectional"
+            - name: mountpoint-dir
+              mountPath: /var/lib/kubelet/
+              mountPropagation: Bidirectional
             - name: host-dev
               mountPath: /dev
             - name: host-root
@@ -121,14 +121,14 @@ spec:
           hostPath:
             path: /var/lib/kubelet/plugins/iscsi.csi.k8s.io
             type: DirectoryOrCreate
-        - name: pods-mount-dir
+        - name: mountpoint-dir
           hostPath:
-            path: /var/lib/kubelet/pods
-            type: Directory
+            path: /var/lib/kubelet/
+            type: DirectoryOrCreate
         - name: registration-dir
           hostPath:
             path: /var/lib/kubelet/plugins_registry
-            type: Directory
+            type: DirectoryOrCreate
         - name: host-dev
           hostPath:
             path: /dev
@@ -148,6 +148,7 @@ kind: ConfigMap
 apiVersion: v1
 metadata:
   name: configmap-csi-iscsiadm
+  namespace: kube-system
 data:
   iscsiadm: |
     #!/bin/sh
