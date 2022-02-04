@@ -72,8 +72,6 @@ spec:
           image: gcr.io/k8s-staging-sig-storage/iscsiplugin:canary
           args:
             - "--nodeid=$(NODE_ID)"
-            - "--endpoint=$(CSI_ENDPOINT)"
-            - "--v=2"
           env:
             - name: NODE_ID
               valueFrom:

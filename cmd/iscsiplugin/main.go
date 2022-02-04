@@ -25,7 +25,7 @@ import (
 )
 
 var (
-	endpoint = flag.String("endpoint", "unix://tmp/csi.sock", "CSI endpoint")
+	endpoint = flag.String("endpoint", "unix:///csi/csi.sock", "CSI endpoint")
 	nodeID   = flag.String("nodeid", "", "node id")
 )
 

@@ -58,7 +58,7 @@ github.com/googleapis/gnostic/openapiv2
 # github.com/json-iterator/go v1.1.12
 ## explicit; go 1.12
 github.com/json-iterator/go
-# github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20211110090527-5c802c48a124 => ./pkg/lib/iscsi
+# github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20220106022228-366f3190694e => ./pkg/lib/iscsi
 ## explicit; go 1.15
 github.com/kubernetes-csi/csi-lib-iscsi/iscsi
 # github.com/kubernetes-csi/csi-lib-utils v0.10.0
