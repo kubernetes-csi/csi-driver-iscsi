@@ -49,7 +49,7 @@ func (util *ISCSIUtil) AttachDisk(b iscsiDiskMounter) (string, error) {
 		return "", nil
 	}
 
-	if err := os.MkdirAll(mntPath, 0o750); err != nil {
+	if err := os.MkdirAll(mntPath, 0750); err != nil {
 		klog.Errorf("iscsi: failed to mkdir %s, error", mntPath)
 		return "", err
 	}

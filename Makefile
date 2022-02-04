@@ -22,7 +22,7 @@ GOBIN ?= $(GOPATH)/bin
 export GOPATH GOBIN
 
 REGISTRY ?= test
-IMAGE_VERSION ?= v0.1.0
+IMAGE_VERSION ?= v0.2.0
 IMAGENAME ?= iscsi-csi
 # Output type of docker buildx build
 OUTPUT_TYPE ?= docker

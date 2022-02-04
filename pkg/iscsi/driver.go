@@ -37,10 +37,10 @@ const (
 	driverName = "iscsi.csi.k8s.io"
 )
 
-var version = "0.1.0"
+var version = "0.2.0"
 
 func NewDriver(nodeID, endpoint string) *driver {
-	klog.Infof("driver: %v version: %v", driverName, version)
+	klog.Infof("driver: %s version: %s nodeID: %s endpoint: %s", driverName, version, nodeID, endpoint)
 
 	d := &driver{
 		name:     driverName,
@@ -49,7 +49,7 @@ func NewDriver(nodeID, endpoint string) *driver {
 		endpoint: endpoint,
 	}
 
-	if err := os.MkdirAll(fmt.Sprintf("/var/run/%s", driverName), 0o755); err != nil {
+	if err := os.MkdirAll(fmt.Sprintf("/var/run/%s", driverName), 0755); err != nil {
 		panic(err)
 	}
 	d.AddVolumeCapabilityAccessModes([]csi.VolumeCapability_AccessMode_Mode{csi.VolumeCapability_AccessMode_SINGLE_NODE_WRITER})
