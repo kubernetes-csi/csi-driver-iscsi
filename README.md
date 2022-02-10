@@ -1,5 +1,24 @@
 # CSI ISCSI driver
 
+The CSI ISCSI driver is a sidecar container that dynamically attach/mount,
+detach/unmount of volumes by performing Node operations as a response to the
+kubelet requests when workload/application pod get scheduled to a node based on
+CSI GRPC calls.
+
+## Compatibility
+
+This information reflects the head of this branch.
+
+| Compatible with CSI Version | Container Image | [Min K8s Version](https://kubernetes-csi.github.io/docs/kubernetes-compatibility.html#minimum-version) | [Recommended K8s Version](https://kubernetes-csi.github.io/docs/kubernetes-compatibility.html#recommended-version) |
+| ------------------------------------------------------------------------------------------ | -------------------------------| --------------- | ------------- |
+| [CSI Spec v1.5.0](https://github.com/container-storage-interface/spec/releases/tag/v1.5.0) | k8s.gcr.io/sig-storage/csi-provisioner | 1.20 | 1.22 |
+
+## Status
+
+The
+release [v0.1.0](https://github.com/kubernetes-csi/csi-driver-iscsi/releases/tag/v0.1.0)
+is available as a pre-release for trying out this driver.
+
 ## Usage:
 
 ### Start ISCSI driver
