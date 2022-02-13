@@ -38,7 +38,6 @@ func getISCSIInfo(req *csi.NodePublishVolumeRequest) (*iscsiDisk, error) {
 		return nil, fmt.Errorf("ISCSI target information is missing")
 	}
 
-	portalList := req.GetVolumeContext()["portals"]
 	secretParams := req.GetVolumeContext()["secret"]
 	secret := parseSecret(secretParams)
 	sessionSecret, err := parseSessionSecret(secret)
@@ -50,17 +49,20 @@ func getISCSIInfo(req *csi.NodePublishVolumeRequest) (*iscsiDisk, error) {
 		return nil, err
 	}
 
-	portal := portalMounter(tp)
-	var bkportal []string
-	bkportal = append(bkportal, portal)
+	bkportal := []string{}
 
-	portals := []string{}
-	if err := json.Unmarshal([]byte(portalList), &portals); err != nil {
-		return nil, err
-	}
+	portalList := req.GetVolumeContext()["portals"]
+	if len(portalList) > 0 {
+		portal := portalMounter(tp)
+		bkportal = append(bkportal, portal)
+		portals := []string{}
+		if err := json.Unmarshal([]byte(portalList), &portals); err != nil {
+			return nil, err
+		}
 
-	for _, portal := range portals {
-		bkportal = append(bkportal, portalMounter(portal))
+		for _, portal := range portals {
+			bkportal = append(bkportal, portalMounter(portal))
+		}
 	}
 
 	iface := req.GetVolumeContext()["iscsiInterface"]
