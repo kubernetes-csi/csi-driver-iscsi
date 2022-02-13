@@ -19,9 +19,7 @@ RUN clean-install util-linux e2fsprogs mount ca-certificates udev xfsprogs btrfs
 # install updated packages to fix CVE issues
 RUN clean-install libgmp10 bsdutils
 
-# Copy iscsiplugin.sh
-COPY iscsiplugin.sh /iscsiplugin.sh
-# Copy iscsiplugin from build _output directory
+CMD service iscsid start
 COPY ./bin/iscsiplugin /iscsiplugin
 
-ENTRYPOINT ["sh", "/iscsiplugin.sh"]
+ENTRYPOINT ["/iscsiplugin"]
