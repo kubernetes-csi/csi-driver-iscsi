@@ -31,6 +31,10 @@ import (
 type ISCSIUtil struct{}
 
 func (util *ISCSIUtil) AttachDisk(b iscsiDiskMounter) (string, error) {
+	if b.connector == nil {
+		return "", fmt.Errorf("connector is nil")
+	}
+
 	devicePath, err := (*b.connector).Connect()
 	if err != nil {
 		return "", err

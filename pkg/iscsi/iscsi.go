@@ -103,7 +103,7 @@ func getISCSIInfo(req *csi.NodePublishVolumeRequest) (*iscsiDisk, error) {
 }
 
 func buildISCSIConnector(iscsiInfo *iscsiDisk) *iscsiLib.Connector {
-	if iscsiInfo == nil || iscsiInfo.VolName == "" || iscsiInfo.Iqn == "" || len(iscsiInfo.Portals) == 0 {
+	if iscsiInfo == nil || iscsiInfo.VolName == "" || iscsiInfo.Iqn == "" {
 		return nil
 	}
 	c := iscsiLib.Connector{
