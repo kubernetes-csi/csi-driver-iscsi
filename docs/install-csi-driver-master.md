@@ -15,7 +15,6 @@ cd csi-driver-iscsi
 
 - check pods status:
 ```console
-kubectl -n kube-system get pod -o wide -l app=csi-iscsi-controller
 kubectl -n kube-system get pod -o wide -l app=csi-iscsi-node
 ```
 
