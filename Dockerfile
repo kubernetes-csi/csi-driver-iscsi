@@ -12,12 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM k8s.gcr.io/build-image/debian-base:bullseye-v1.1.0
+FROM k8s.gcr.io/build-image/debian-base:bullseye-v1.2.0
 
-RUN apt update && apt-mark unhold libcap2
+RUN apt update && apt upgrade -y && apt-mark unhold libcap2
 RUN clean-install util-linux e2fsprogs mount ca-certificates udev xfsprogs btrfs-progs open-iscsi
-# install updated packages to fix CVE issues
-RUN clean-install libgmp10 bsdutils
 
 CMD service iscsid start
 COPY ./bin/iscsiplugin /iscsiplugin
