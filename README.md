@@ -2,22 +2,29 @@
 
 ### Overview
 
-This is a repository for iscsi [CSI](https://kubernetes-csi.github.io/docs/) driver, csi plugin name: `iscsi.csi.k8s.io`. This driver requires existing and already configured iscsi server, it could dynamically attach/mount, detach/unmount based on CSI GRPC calls.
+This is a repository for iscsi [CSI](https://kubernetes-csi.github.io/docs/)
+driver, csi plugin name: `iscsi.csi.k8s.io`. This driver requires existing and
+already configured iscsi server, it could dynamically attach/mount,
+detach/unmount based on CSI GRPC calls.
 
 ### Project status: Alpha
 
 ### Container Images & Kubernetes Compatibility:
+
 |driver version  | supported k8s version | status |
 |----------------|-----------------------|--------|
 |master branch   | 1.19+                 | alpha   |
 
 ### Install driver on a Kubernetes cluster
- - install by [kubectl](./docs/install-iscsi-csi-driver.md)
+
+- install by [kubectl](./docs/install-iscsi-csi-driver.md)
 
 ### Troubleshooting
- - [CSI driver troubleshooting guide](./docs/csi-debug.md)
+
+- [CSI driver troubleshooting guide](./docs/csi-debug.md)
 
 ### Kubernetes Development
+
 Please refer to [development guide](./docs/csi-dev.md)
 
 ## Community, discussion, contribution, and support
