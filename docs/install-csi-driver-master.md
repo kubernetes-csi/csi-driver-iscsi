@@ -1,12 +1,15 @@
 # Install ISCSI CSI driver master version on a kubernetes cluster
 
 ## Install with kubectl
- - remote install
+
+- remote install
+
 ```console
 curl -skSL https://raw.githubusercontent.com/kubernetes-csi/csi-driver-iscsi/master/deploy/install-driver.sh | bash -s master --
 ```
 
- - local install
+- local install
+
 ```console
 git clone https://github.com/kubernetes-csi/csi-driver-iscsi.git
 cd csi-driver-iscsi
@@ -14,6 +17,7 @@ cd csi-driver-iscsi
 ```
 
 - check pods status:
+
 ```console
 kubectl -n kube-system get pod -o wide -l app=csi-iscsi-node
 ```
@@ -27,6 +31,7 @@ csi-iscsi-node-dr4s4                        3/3     Running   0          35s    
 ```
 
 - clean up ISCSI CSI driver
+
 ```console
 curl -skSL https://raw.githubusercontent.com/kubernetes-csi/csi-driver-iscsi/master/deploy/uninstall-driver.sh | bash -s master --
 ```
