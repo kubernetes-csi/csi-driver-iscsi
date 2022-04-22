@@ -21,7 +21,7 @@ spec:
         kubernetes.io/os: linux
       containers:
         - name: liveness-probe
-          image: k8s.gcr.io/sig-storage/livenessprobe:v2.1.0
+          image: registry.k8s.io/sig-storage/livenessprobe:v2.1.0
           args:
             - --csi-address=/csi/csi.sock
             - --probe-timeout=3s
@@ -42,7 +42,7 @@ spec:
           # created by privileged CSI driver container.
           securityContext:
             privileged: true
-          image: k8s.gcr.io/sig-storage/csi-node-driver-registrar:v2.1.0
+          image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.1.0
           args:
             - --v=2
             - --csi-address=/csi/csi.sock
