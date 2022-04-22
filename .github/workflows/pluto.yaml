@@ -1,7 +1,7 @@
 name: k8s api version check
 on:
-    pull_request: {}
-    push: {}
+  pull_request: {}
+  push: {}
 
 jobs:
 
@@ -10,12 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Download pluto
-      uses: FairwindsOps/pluto/github-action@master
+      - name: Download pluto
+        uses: FairwindsOps/pluto/github-action@master
 
-    - name: Check deploy folder
-      run: |
-        pluto detect-files -d deploy
+      - name: Check deploy folder
+        run: |
+          pluto detect-files -d deploy
