@@ -49,7 +49,7 @@ func NewDriver(nodeID, endpoint string) *driver {
 		endpoint: endpoint,
 	}
 
-	if err := os.MkdirAll(fmt.Sprintf("/var/run/%s", driverName), 0755); err != nil {
+	if err := os.MkdirAll(fmt.Sprintf("/var/run/%s", driverName), 0o755); err != nil {
 		panic(err)
 	}
 	d.AddVolumeCapabilityAccessModes([]csi.VolumeCapability_AccessMode_Mode{csi.VolumeCapability_AccessMode_SINGLE_NODE_WRITER})
