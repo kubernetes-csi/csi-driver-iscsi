@@ -2,6 +2,7 @@ package iscsi
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -35,13 +36,14 @@ func ExecWithTimeout(command string, args []string, timeout time.Duration) ([]by
 	// We want to check the context error to see if the timeout was executed.
 	// The error returned by cmd.Output() will be OS specific based on what
 	// happens when a process is killed.
-	if ctx.Err() == context.DeadlineExceeded {
+	if errors.Is(ctx.Err(), context.DeadlineExceeded) {
 		debug.Printf("Command '%s' timeout reached.\n", command)
 		return nil, ctx.Err()
 	}
 
 	if err != nil {
-		if ee, ok := err.(*exec.ExitError); ok {
+		var ee *exec.ExitError
+		if ok := errors.Is(err, ee); ok {
 			debug.Printf("Non-zero exit code: %s\n", err)
 			err = fmt.Errorf("%s", ee.Stderr)
 		}

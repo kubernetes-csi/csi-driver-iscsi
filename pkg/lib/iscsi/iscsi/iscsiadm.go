@@ -65,12 +65,18 @@ func CreateDBEntry(tgtIQN, portal, iFace string, discoverySecrets, sessionSecret
 
 	if discoverySecrets.SecretsType == "chap" {
 		debug.Printf("Setting CHAP Discovery...")
-		createCHAPEntries(baseArgs, discoverySecrets, true)
+		err := createCHAPEntries(baseArgs, discoverySecrets, true)
+		if err != nil {
+			return err
+		}
 	}
 
 	if sessionSecrets.SecretsType == "chap" {
 		debug.Printf("Setting CHAP Session...")
-		createCHAPEntries(baseArgs, sessionSecrets, false)
+		err := createCHAPEntries(baseArgs, sessionSecrets, false)
+		if err != nil {
+			return err
+		}
 	}
 
 	return err
