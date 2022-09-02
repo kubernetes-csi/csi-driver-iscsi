@@ -38,7 +38,7 @@ func iscsiadmDebug(output string, cmdError error) {
 }
 
 // ListInterfaces returns a list of all iscsi interfaces configured on the node
-/// along with the raw output in Response.StdOut we add the convenience of
+// along with the raw output in Response.StdOut we add the convenience of
 // returning a list of entries found
 func ListInterfaces() ([]string, error) {
 	debug.Println("Begin ListInterface...")
