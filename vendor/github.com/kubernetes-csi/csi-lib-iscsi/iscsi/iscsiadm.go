@@ -38,7 +38,7 @@ func iscsiadmDebug(output string, cmdError error) {
 }
 
 // ListInterfaces returns a list of all iscsi interfaces configured on the node
-/// along with the raw output in Response.StdOut we add the convenience of
+// along with the raw output in Response.StdOut we add the convenience of
 // returning a list of entries found
 func ListInterfaces() ([]string, error) {
 	debug.Println("Begin ListInterface...")
@@ -65,12 +65,18 @@ func CreateDBEntry(tgtIQN, portal, iFace string, discoverySecrets, sessionSecret
 
 	if discoverySecrets.SecretsType == "chap" {
 		debug.Printf("Setting CHAP Discovery...")
-		createCHAPEntries(baseArgs, discoverySecrets, true)
+		err := createCHAPEntries(baseArgs, discoverySecrets, true)
+		if err != nil {
+			return err
+		}
 	}
 
 	if sessionSecrets.SecretsType == "chap" {
 		debug.Printf("Setting CHAP Session...")
-		createCHAPEntries(baseArgs, sessionSecrets, false)
+		err := createCHAPEntries(baseArgs, sessionSecrets, false)
+		if err != nil {
+			return err
+		}
 	}
 
 	return err

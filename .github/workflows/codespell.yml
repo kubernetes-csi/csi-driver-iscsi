@@ -13,4 +13,4 @@ jobs:
         with:
           check_filenames: true
           skip: ./.git,./.github/workflows/codespell.yml,.git,*.png,*.jpg,*.svg,*.sum,./vendor,go.sum,./release-tools/prow.sh,./pkg/lib/iscsi/
-          ignore_words_list: "lun,targetportal"
+          ignore_words_list: "lun,targetportal,ro"
