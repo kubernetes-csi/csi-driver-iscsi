@@ -38,11 +38,8 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-
-var (
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = fmt.Errorf
+var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -55,11 +52,9 @@ func (*Eviction) ProtoMessage() {}
 func (*Eviction) Descriptor() ([]byte, []int) {
 	return fileDescriptor_2d50488813b2d18e, []int{0}
 }
-
 func (m *Eviction) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *Eviction) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -68,15 +63,12 @@ func (m *Eviction) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
-
 func (m *Eviction) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_Eviction.Merge(m, src)
 }
-
 func (m *Eviction) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *Eviction) XXX_DiscardUnknown() {
 	xxx_messageInfo_Eviction.DiscardUnknown(m)
 }
@@ -88,11 +80,9 @@ func (*PodDisruptionBudget) ProtoMessage() {}
 func (*PodDisruptionBudget) Descriptor() ([]byte, []int) {
 	return fileDescriptor_2d50488813b2d18e, []int{1}
 }
-
 func (m *PodDisruptionBudget) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PodDisruptionBudget) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -101,15 +91,12 @@ func (m *PodDisruptionBudget) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 	}
 	return b[:n], nil
 }
-
 func (m *PodDisruptionBudget) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PodDisruptionBudget.Merge(m, src)
 }
-
 func (m *PodDisruptionBudget) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PodDisruptionBudget) XXX_DiscardUnknown() {
 	xxx_messageInfo_PodDisruptionBudget.DiscardUnknown(m)
 }
@@ -121,11 +108,9 @@ func (*PodDisruptionBudgetList) ProtoMessage() {}
 func (*PodDisruptionBudgetList) Descriptor() ([]byte, []int) {
 	return fileDescriptor_2d50488813b2d18e, []int{2}
 }
-
 func (m *PodDisruptionBudgetList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PodDisruptionBudgetList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -134,15 +119,12 @@ func (m *PodDisruptionBudgetList) XXX_Marshal(b []byte, deterministic bool) ([]b
 	}
 	return b[:n], nil
 }
-
 func (m *PodDisruptionBudgetList) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PodDisruptionBudgetList.Merge(m, src)
 }
-
 func (m *PodDisruptionBudgetList) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PodDisruptionBudgetList) XXX_DiscardUnknown() {
 	xxx_messageInfo_PodDisruptionBudgetList.DiscardUnknown(m)
 }
@@ -154,11 +136,9 @@ func (*PodDisruptionBudgetSpec) ProtoMessage() {}
 func (*PodDisruptionBudgetSpec) Descriptor() ([]byte, []int) {
 	return fileDescriptor_2d50488813b2d18e, []int{3}
 }
-
 func (m *PodDisruptionBudgetSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PodDisruptionBudgetSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -167,15 +147,12 @@ func (m *PodDisruptionBudgetSpec) XXX_Marshal(b []byte, deterministic bool) ([]b
 	}
 	return b[:n], nil
 }
-
 func (m *PodDisruptionBudgetSpec) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PodDisruptionBudgetSpec.Merge(m, src)
 }
-
 func (m *PodDisruptionBudgetSpec) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PodDisruptionBudgetSpec) XXX_DiscardUnknown() {
 	xxx_messageInfo_PodDisruptionBudgetSpec.DiscardUnknown(m)
 }
@@ -187,11 +164,9 @@ func (*PodDisruptionBudgetStatus) ProtoMessage() {}
 func (*PodDisruptionBudgetStatus) Descriptor() ([]byte, []int) {
 	return fileDescriptor_2d50488813b2d18e, []int{4}
 }
-
 func (m *PodDisruptionBudgetStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PodDisruptionBudgetStatus) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -200,15 +175,12 @@ func (m *PodDisruptionBudgetStatus) XXX_Marshal(b []byte, deterministic bool) ([
 	}
 	return b[:n], nil
 }
-
 func (m *PodDisruptionBudgetStatus) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PodDisruptionBudgetStatus.Merge(m, src)
 }
-
 func (m *PodDisruptionBudgetStatus) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PodDisruptionBudgetStatus) XXX_DiscardUnknown() {
 	xxx_messageInfo_PodDisruptionBudgetStatus.DiscardUnknown(m)
 }
@@ -579,7 +551,6 @@ func encodeVarintGenerated(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-
 func (m *Eviction) Size() (n int) {
 	if m == nil {
 		return 0
@@ -680,30 +651,25 @@ func (m *PodDisruptionBudgetStatus) Size() (n int) {
 func sovGenerated(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
-
 func sozGenerated(x uint64) (n int) {
 	return sovGenerated(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-
 func (this *Eviction) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&Eviction{`,
+	s := strings.Join([]string{`&Eviction{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`DeleteOptions:` + strings.Replace(fmt.Sprintf("%v", this.DeleteOptions), "DeleteOptions", "v1.DeleteOptions", 1) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *PodDisruptionBudget) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&PodDisruptionBudget{`,
+	s := strings.Join([]string{`&PodDisruptionBudget{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "PodDisruptionBudgetSpec", "PodDisruptionBudgetSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "PodDisruptionBudgetStatus", "PodDisruptionBudgetStatus", 1), `&`, ``, 1) + `,`,
@@ -711,7 +677,6 @@ func (this *PodDisruptionBudget) String() string {
 	}, "")
 	return s
 }
-
 func (this *PodDisruptionBudgetList) String() string {
 	if this == nil {
 		return "nil"
@@ -721,21 +686,18 @@ func (this *PodDisruptionBudgetList) String() string {
 		repeatedStringForItems += strings.Replace(strings.Replace(f.String(), "PodDisruptionBudget", "PodDisruptionBudget", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForItems += "}"
-	s := strings.Join([]string{
-		`&PodDisruptionBudgetList{`,
+	s := strings.Join([]string{`&PodDisruptionBudgetList{`,
 		`ListMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ListMeta), "ListMeta", "v1.ListMeta", 1), `&`, ``, 1) + `,`,
 		`Items:` + repeatedStringForItems + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *PodDisruptionBudgetSpec) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&PodDisruptionBudgetSpec{`,
+	s := strings.Join([]string{`&PodDisruptionBudgetSpec{`,
 		`MinAvailable:` + strings.Replace(fmt.Sprintf("%v", this.MinAvailable), "IntOrString", "intstr.IntOrString", 1) + `,`,
 		`Selector:` + strings.Replace(fmt.Sprintf("%v", this.Selector), "LabelSelector", "v1.LabelSelector", 1) + `,`,
 		`MaxUnavailable:` + strings.Replace(fmt.Sprintf("%v", this.MaxUnavailable), "IntOrString", "intstr.IntOrString", 1) + `,`,
@@ -743,7 +705,6 @@ func (this *PodDisruptionBudgetSpec) String() string {
 	}, "")
 	return s
 }
-
 func (this *PodDisruptionBudgetStatus) String() string {
 	if this == nil {
 		return "nil"
@@ -763,8 +724,7 @@ func (this *PodDisruptionBudgetStatus) String() string {
 		mapStringForDisruptedPods += fmt.Sprintf("%v: %v,", k, this.DisruptedPods[k])
 	}
 	mapStringForDisruptedPods += "}"
-	s := strings.Join([]string{
-		`&PodDisruptionBudgetStatus{`,
+	s := strings.Join([]string{`&PodDisruptionBudgetStatus{`,
 		`ObservedGeneration:` + fmt.Sprintf("%v", this.ObservedGeneration) + `,`,
 		`DisruptedPods:` + mapStringForDisruptedPods + `,`,
 		`DisruptionsAllowed:` + fmt.Sprintf("%v", this.DisruptionsAllowed) + `,`,
@@ -776,7 +736,6 @@ func (this *PodDisruptionBudgetStatus) String() string {
 	}, "")
 	return s
 }
-
 func valueToStringGenerated(v interface{}) string {
 	rv := reflect.ValueOf(v)
 	if rv.IsNil() {
@@ -785,7 +744,6 @@ func valueToStringGenerated(v interface{}) string {
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
 }
-
 func (m *Eviction) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -905,7 +863,6 @@ func (m *Eviction) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PodDisruptionBudget) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1055,7 +1012,6 @@ func (m *PodDisruptionBudget) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PodDisruptionBudgetList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1173,7 +1129,6 @@ func (m *PodDisruptionBudgetList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PodDisruptionBudgetSpec) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1332,7 +1287,6 @@ func (m *PodDisruptionBudgetSpec) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PodDisruptionBudgetStatus) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1641,7 +1595,6 @@ func (m *PodDisruptionBudgetStatus) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func skipGenerated(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

@@ -24,10 +24,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-var (
-	_ runtime.Unstructured = &UnstructuredList{}
-	_ metav1.ListInterface = &UnstructuredList{}
-)
+var _ runtime.Unstructured = &UnstructuredList{}
+var _ metav1.ListInterface = &UnstructuredList{}
 
 // UnstructuredList allows lists that do not have Golang structs
 // registered to be manipulated generically. This can be used to deal

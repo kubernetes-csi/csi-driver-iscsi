@@ -249,6 +249,7 @@ func parseCPUInfoARM(info []byte) ([]CPUInfo, error) {
 		cpuinfo[i].Flags = strings.Fields(fields[1])
 	}
 	return cpuinfo, nil
+
 }
 
 func parseCPUInfoS390X(info []byte) ([]CPUInfo, error) {

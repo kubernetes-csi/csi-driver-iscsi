@@ -173,7 +173,7 @@ func (tv TypedValue) ExtractItems(items *fieldpath.Set) *TypedValue {
 // Please note: union behavior isn't finalized yet and this is still experimental.
 func (tv TypedValue) NormalizeUnions(new *TypedValue) (*TypedValue, error) {
 	var errs ValidationErrors
-	normalizeFn := func(w *mergingWalker) {
+	var normalizeFn = func(w *mergingWalker) {
 		if w.rhs != nil {
 			v := w.rhs.Unstructured()
 			w.out = &v
@@ -199,7 +199,7 @@ func (tv TypedValue) NormalizeUnions(new *TypedValue) (*TypedValue, error) {
 // Please note: union behavior isn't finalized yet and this is still experimental.
 func (tv TypedValue) NormalizeUnionsApply(new *TypedValue) (*TypedValue, error) {
 	var errs ValidationErrors
-	normalizeFn := func(w *mergingWalker) {
+	var normalizeFn = func(w *mergingWalker) {
 		if w.rhs != nil {
 			v := w.rhs.Unstructured()
 			w.out = &v

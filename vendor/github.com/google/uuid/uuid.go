@@ -101,8 +101,7 @@ func Parse(s string) (UUID, error) {
 		9, 11,
 		14, 16,
 		19, 21,
-		24, 26, 28, 30, 32, 34,
-	} {
+		24, 26, 28, 30, 32, 34} {
 		v, ok := xtob(s[x], s[x+1])
 		if !ok {
 			return uuid, errors.New("invalid UUID format")
@@ -146,8 +145,7 @@ func ParseBytes(b []byte) (UUID, error) {
 		9, 11,
 		14, 16,
 		19, 21,
-		24, 26, 28, 30, 32, 34,
-	} {
+		24, 26, 28, 30, 32, 34} {
 		v, ok := xtob(b[x], b[x+1])
 		if !ok {
 			return uuid, errors.New("invalid UUID format")

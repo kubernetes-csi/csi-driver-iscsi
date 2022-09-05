@@ -79,12 +79,10 @@ func (f *FieldCacheEntry) GetFrom(structVal reflect.Value) reflect.Value {
 	return structVal
 }
 
-var (
-	marshalerType               = reflect.TypeOf(new(json.Marshaler)).Elem()
-	unmarshalerType             = reflect.TypeOf(new(json.Unmarshaler)).Elem()
-	unstructuredConvertableType = reflect.TypeOf(new(UnstructuredConverter)).Elem()
-	defaultReflectCache         = newReflectCache()
-)
+var marshalerType = reflect.TypeOf(new(json.Marshaler)).Elem()
+var unmarshalerType = reflect.TypeOf(new(json.Unmarshaler)).Elem()
+var unstructuredConvertableType = reflect.TypeOf(new(UnstructuredConverter)).Elem()
+var defaultReflectCache = newReflectCache()
 
 // TypeReflectEntryOf returns the TypeReflectCacheEntry of the provided reflect.Type.
 func TypeReflectEntryOf(t reflect.Type) *TypeReflectCacheEntry {

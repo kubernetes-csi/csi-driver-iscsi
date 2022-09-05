@@ -228,6 +228,7 @@ func (c *fromUnstructuredContext) pushKey(key string) {
 		c.parentPath = append(c.parentPath, ".")
 	}
 	c.parentPath = append(c.parentPath, key)
+
 }
 
 // FromUnstructuredWIthValidation converts an object from map[string]interface{} representation into a concrete type.
@@ -361,6 +362,7 @@ func fromUnstructured(sv, dv reflect.Value, ctx *fromUnstructuredContext) error 
 	default:
 		return fmt.Errorf("unrecognized type: %v", dt.Kind())
 	}
+
 }
 
 func fieldInfoFromField(structType reflect.Type, field int) *fieldInfo {

@@ -172,6 +172,7 @@ func (ts *timeSeries) Add(observation Observable) {
 
 // AddWithTime records an observation at the specified time.
 func (ts *timeSeries) AddWithTime(observation Observable, t time.Time) {
+
 	smallBucketDuration := ts.levels[0].size
 
 	if t.After(ts.lastAdd) {

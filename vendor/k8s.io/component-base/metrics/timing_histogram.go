@@ -40,11 +40,9 @@ type TimingHistogram struct {
 	selfCollector
 }
 
-var (
-	_ GaugeMetric   = &TimingHistogram{}
-	_ Registerable  = &TimingHistogram{}
-	_ kubeCollector = &TimingHistogram{}
-)
+var _ GaugeMetric = &TimingHistogram{}
+var _ Registerable = &TimingHistogram{}
+var _ kubeCollector = &TimingHistogram{}
 
 // NewTimingHistogram returns an object which is TimingHistogram-like. However, nothing
 // will be measured until the histogram is registered somewhere.
@@ -111,11 +109,9 @@ type TimingHistogramVec struct {
 	originalLabels []string
 }
 
-var (
-	_ GaugeVecMetric = &TimingHistogramVec{}
-	_ Registerable   = &TimingHistogramVec{}
-	_ kubeCollector  = &TimingHistogramVec{}
-)
+var _ GaugeVecMetric = &TimingHistogramVec{}
+var _ Registerable = &TimingHistogramVec{}
+var _ kubeCollector = &TimingHistogramVec{}
 
 // NewTimingHistogramVec returns an object which satisfies the kubeCollector, Registerable, and GaugeVecMetric interfaces
 // and wraps an underlying promext.TimingHistogramVec object.  Note well the way that

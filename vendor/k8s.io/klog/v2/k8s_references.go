@@ -113,10 +113,8 @@ type kobjSlice struct {
 	arg interface{}
 }
 
-var (
-	_ fmt.Stringer   = kobjSlice{}
-	_ logr.Marshaler = kobjSlice{}
-)
+var _ fmt.Stringer = kobjSlice{}
+var _ logr.Marshaler = kobjSlice{}
 
 func (ks kobjSlice) String() string {
 	objectRefs, err := ks.process()

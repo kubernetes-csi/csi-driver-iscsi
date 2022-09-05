@@ -244,6 +244,7 @@ func (m *DefaultRESTMapper) ResourcesFor(input schema.GroupVersionResource) ([]s
 					ret = append(ret, plural)
 				}
 			}
+
 		}
 
 	case hasVersion:
@@ -328,6 +329,7 @@ func (m *DefaultRESTMapper) KindsFor(input schema.GroupVersionResource) ([]schem
 					ret = append(ret, currKind)
 				}
 			}
+
 		}
 
 	case hasVersion:
@@ -493,7 +495,7 @@ func (m *DefaultRESTMapper) RESTMappings(gk schema.GroupKind, versions ...string
 	}
 
 	for _, gvk := range potentialGVK {
-		// Ensure we have a REST mapping
+		//Ensure we have a REST mapping
 		res, ok := m.kindToPluralResource[gvk]
 		if !ok {
 			continue

@@ -25,7 +25,6 @@ type list interface {
 func FormatList(s fmt.State, r rune, vs list) {
 	io.WriteString(s, formatListOpt(vs, true, r == 'v' && (s.Flag('+') || s.Flag('#'))))
 }
-
 func formatListOpt(vs list, isRoot, allowMulti bool) string {
 	start, end := "[", "]"
 	if isRoot {
@@ -120,7 +119,6 @@ var descriptorAccessors = map[reflect.Type][]string{
 func FormatDesc(s fmt.State, r rune, t pref.Descriptor) {
 	io.WriteString(s, formatDescOpt(t, true, r == 'v' && (s.Flag('+') || s.Flag('#'))))
 }
-
 func formatDescOpt(t pref.Descriptor, isRoot, allowMulti bool) string {
 	rv := reflect.ValueOf(t)
 	rt := rv.MethodByName("ProtoType").Type().In(0)

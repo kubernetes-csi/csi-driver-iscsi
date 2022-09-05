@@ -21,9 +21,11 @@ const (
 	metadataPath = "/computeMetadata/v1/"
 )
 
-var metadataRequestHeaders = http.Header{
-	"Metadata-Flavor": []string{"Google"},
-}
+var (
+	metadataRequestHeaders = http.Header{
+		"Metadata-Flavor": []string{"Google"},
+	}
+)
 
 // TODO(dsymonds): Do we need to support default values, like Python?
 func mustGetMetadata(key string) []byte {

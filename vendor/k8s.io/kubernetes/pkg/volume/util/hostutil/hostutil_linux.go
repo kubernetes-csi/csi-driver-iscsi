@@ -40,7 +40,8 @@ const (
 )
 
 // HostUtil implements HostUtils for Linux platforms.
-type HostUtil struct{}
+type HostUtil struct {
+}
 
 // NewHostUtil returns a struct that implements the HostUtils interface on
 // linux platforms

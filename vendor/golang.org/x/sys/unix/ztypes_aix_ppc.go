@@ -22,11 +22,9 @@ type (
 	_C_long_long int64
 )
 
-type (
-	off64  int64
-	off    int32
-	Mode_t uint32
-)
+type off64 int64
+type off int32
+type Mode_t uint32
 
 type Timespec struct {
 	Sec  int32
@@ -328,7 +326,6 @@ type Flock_t struct {
 type Fsid_t struct {
 	Val [2]uint32
 }
-
 type Fsid64_t struct {
 	Val [2]uint64
 }

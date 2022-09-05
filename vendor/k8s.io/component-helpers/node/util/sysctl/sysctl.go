@@ -78,7 +78,8 @@ func New() Interface {
 }
 
 // procSysctl implements Interface by reading and writing files under /proc/sys
-type procSysctl struct{}
+type procSysctl struct {
+}
 
 // GetSysctl returns the value for the specified sysctl setting
 func (*procSysctl) GetSysctl(sysctl string) (int, error) {
@@ -95,5 +96,5 @@ func (*procSysctl) GetSysctl(sysctl string) (int, error) {
 
 // SetSysctl modifies the specified sysctl flag to the new value
 func (*procSysctl) SetSysctl(sysctl string, newVal int) error {
-	return ioutil.WriteFile(path.Join(sysctlBase, sysctl), []byte(strconv.Itoa(newVal)), 0o640)
+	return ioutil.WriteFile(path.Join(sysctlBase, sysctl), []byte(strconv.Itoa(newVal)), 0640)
 }

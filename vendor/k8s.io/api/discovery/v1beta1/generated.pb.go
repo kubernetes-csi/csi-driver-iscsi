@@ -37,11 +37,8 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-
-var (
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = fmt.Errorf
+var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -54,11 +51,9 @@ func (*Endpoint) ProtoMessage() {}
 func (*Endpoint) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ece80bbc872d519b, []int{0}
 }
-
 func (m *Endpoint) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *Endpoint) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -67,15 +62,12 @@ func (m *Endpoint) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
-
 func (m *Endpoint) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_Endpoint.Merge(m, src)
 }
-
 func (m *Endpoint) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *Endpoint) XXX_DiscardUnknown() {
 	xxx_messageInfo_Endpoint.DiscardUnknown(m)
 }
@@ -87,11 +79,9 @@ func (*EndpointConditions) ProtoMessage() {}
 func (*EndpointConditions) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ece80bbc872d519b, []int{1}
 }
-
 func (m *EndpointConditions) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *EndpointConditions) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -100,15 +90,12 @@ func (m *EndpointConditions) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 	}
 	return b[:n], nil
 }
-
 func (m *EndpointConditions) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_EndpointConditions.Merge(m, src)
 }
-
 func (m *EndpointConditions) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *EndpointConditions) XXX_DiscardUnknown() {
 	xxx_messageInfo_EndpointConditions.DiscardUnknown(m)
 }
@@ -120,11 +107,9 @@ func (*EndpointHints) ProtoMessage() {}
 func (*EndpointHints) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ece80bbc872d519b, []int{2}
 }
-
 func (m *EndpointHints) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *EndpointHints) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -133,15 +118,12 @@ func (m *EndpointHints) XXX_Marshal(b []byte, deterministic bool) ([]byte, error
 	}
 	return b[:n], nil
 }
-
 func (m *EndpointHints) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_EndpointHints.Merge(m, src)
 }
-
 func (m *EndpointHints) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *EndpointHints) XXX_DiscardUnknown() {
 	xxx_messageInfo_EndpointHints.DiscardUnknown(m)
 }
@@ -153,11 +135,9 @@ func (*EndpointPort) ProtoMessage() {}
 func (*EndpointPort) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ece80bbc872d519b, []int{3}
 }
-
 func (m *EndpointPort) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *EndpointPort) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -166,15 +146,12 @@ func (m *EndpointPort) XXX_Marshal(b []byte, deterministic bool) ([]byte, error)
 	}
 	return b[:n], nil
 }
-
 func (m *EndpointPort) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_EndpointPort.Merge(m, src)
 }
-
 func (m *EndpointPort) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *EndpointPort) XXX_DiscardUnknown() {
 	xxx_messageInfo_EndpointPort.DiscardUnknown(m)
 }
@@ -186,11 +163,9 @@ func (*EndpointSlice) ProtoMessage() {}
 func (*EndpointSlice) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ece80bbc872d519b, []int{4}
 }
-
 func (m *EndpointSlice) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *EndpointSlice) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -199,15 +174,12 @@ func (m *EndpointSlice) XXX_Marshal(b []byte, deterministic bool) ([]byte, error
 	}
 	return b[:n], nil
 }
-
 func (m *EndpointSlice) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_EndpointSlice.Merge(m, src)
 }
-
 func (m *EndpointSlice) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *EndpointSlice) XXX_DiscardUnknown() {
 	xxx_messageInfo_EndpointSlice.DiscardUnknown(m)
 }
@@ -219,11 +191,9 @@ func (*EndpointSliceList) ProtoMessage() {}
 func (*EndpointSliceList) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ece80bbc872d519b, []int{5}
 }
-
 func (m *EndpointSliceList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *EndpointSliceList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -232,15 +202,12 @@ func (m *EndpointSliceList) XXX_Marshal(b []byte, deterministic bool) ([]byte, e
 	}
 	return b[:n], nil
 }
-
 func (m *EndpointSliceList) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_EndpointSliceList.Merge(m, src)
 }
-
 func (m *EndpointSliceList) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *EndpointSliceList) XXX_DiscardUnknown() {
 	xxx_messageInfo_EndpointSliceList.DiscardUnknown(m)
 }
@@ -252,11 +219,9 @@ func (*ForZone) ProtoMessage() {}
 func (*ForZone) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ece80bbc872d519b, []int{6}
 }
-
 func (m *ForZone) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *ForZone) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -265,15 +230,12 @@ func (m *ForZone) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
-
 func (m *ForZone) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_ForZone.Merge(m, src)
 }
-
 func (m *ForZone) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *ForZone) XXX_DiscardUnknown() {
 	xxx_messageInfo_ForZone.DiscardUnknown(m)
 }
@@ -749,7 +711,6 @@ func encodeVarintGenerated(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-
 func (m *Endpoint) Size() (n int) {
 	if m == nil {
 		return 0
@@ -904,11 +865,9 @@ func (m *ForZone) Size() (n int) {
 func sovGenerated(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
-
 func sozGenerated(x uint64) (n int) {
 	return sovGenerated(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-
 func (this *Endpoint) String() string {
 	if this == nil {
 		return "nil"
@@ -923,8 +882,7 @@ func (this *Endpoint) String() string {
 		mapStringForTopology += fmt.Sprintf("%v: %v,", k, this.Topology[k])
 	}
 	mapStringForTopology += "}"
-	s := strings.Join([]string{
-		`&Endpoint{`,
+	s := strings.Join([]string{`&Endpoint{`,
 		`Addresses:` + fmt.Sprintf("%v", this.Addresses) + `,`,
 		`Conditions:` + strings.Replace(strings.Replace(this.Conditions.String(), "EndpointConditions", "EndpointConditions", 1), `&`, ``, 1) + `,`,
 		`Hostname:` + valueToStringGenerated(this.Hostname) + `,`,
@@ -936,13 +894,11 @@ func (this *Endpoint) String() string {
 	}, "")
 	return s
 }
-
 func (this *EndpointConditions) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&EndpointConditions{`,
+	s := strings.Join([]string{`&EndpointConditions{`,
 		`Ready:` + valueToStringGenerated(this.Ready) + `,`,
 		`Serving:` + valueToStringGenerated(this.Serving) + `,`,
 		`Terminating:` + valueToStringGenerated(this.Terminating) + `,`,
@@ -950,7 +906,6 @@ func (this *EndpointConditions) String() string {
 	}, "")
 	return s
 }
-
 func (this *EndpointHints) String() string {
 	if this == nil {
 		return "nil"
@@ -960,20 +915,17 @@ func (this *EndpointHints) String() string {
 		repeatedStringForForZones += strings.Replace(strings.Replace(f.String(), "ForZone", "ForZone", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForForZones += "}"
-	s := strings.Join([]string{
-		`&EndpointHints{`,
+	s := strings.Join([]string{`&EndpointHints{`,
 		`ForZones:` + repeatedStringForForZones + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *EndpointPort) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&EndpointPort{`,
+	s := strings.Join([]string{`&EndpointPort{`,
 		`Name:` + valueToStringGenerated(this.Name) + `,`,
 		`Protocol:` + valueToStringGenerated(this.Protocol) + `,`,
 		`Port:` + valueToStringGenerated(this.Port) + `,`,
@@ -982,7 +934,6 @@ func (this *EndpointPort) String() string {
 	}, "")
 	return s
 }
-
 func (this *EndpointSlice) String() string {
 	if this == nil {
 		return "nil"
@@ -997,8 +948,7 @@ func (this *EndpointSlice) String() string {
 		repeatedStringForPorts += strings.Replace(strings.Replace(f.String(), "EndpointPort", "EndpointPort", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForPorts += "}"
-	s := strings.Join([]string{
-		`&EndpointSlice{`,
+	s := strings.Join([]string{`&EndpointSlice{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v11.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Endpoints:` + repeatedStringForEndpoints + `,`,
 		`Ports:` + repeatedStringForPorts + `,`,
@@ -1007,7 +957,6 @@ func (this *EndpointSlice) String() string {
 	}, "")
 	return s
 }
-
 func (this *EndpointSliceList) String() string {
 	if this == nil {
 		return "nil"
@@ -1017,27 +966,23 @@ func (this *EndpointSliceList) String() string {
 		repeatedStringForItems += strings.Replace(strings.Replace(f.String(), "EndpointSlice", "EndpointSlice", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForItems += "}"
-	s := strings.Join([]string{
-		`&EndpointSliceList{`,
+	s := strings.Join([]string{`&EndpointSliceList{`,
 		`ListMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ListMeta), "ListMeta", "v11.ListMeta", 1), `&`, ``, 1) + `,`,
 		`Items:` + repeatedStringForItems + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *ForZone) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&ForZone{`,
+	s := strings.Join([]string{`&ForZone{`,
 		`Name:` + fmt.Sprintf("%v", this.Name) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func valueToStringGenerated(v interface{}) string {
 	rv := reflect.ValueOf(v)
 	if rv.IsNil() {
@@ -1046,7 +991,6 @@ func valueToStringGenerated(v interface{}) string {
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
 }
-
 func (m *Endpoint) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1427,7 +1371,6 @@ func (m *Endpoint) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *EndpointConditions) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1541,7 +1484,6 @@ func (m *EndpointConditions) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *EndpointHints) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1626,7 +1568,6 @@ func (m *EndpointHints) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *EndpointPort) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1796,7 +1737,6 @@ func (m *EndpointPort) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *EndpointSlice) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1980,7 +1920,6 @@ func (m *EndpointSlice) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *EndpointSliceList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2098,7 +2037,6 @@ func (m *EndpointSliceList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *ForZone) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2181,7 +2119,6 @@ func (m *ForZone) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func skipGenerated(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

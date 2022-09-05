@@ -14,23 +14,18 @@ import (
 func (m *messageState) Descriptor() protoreflect.MessageDescriptor {
 	return m.messageInfo().Desc
 }
-
 func (m *messageState) Type() protoreflect.MessageType {
 	return m.messageInfo()
 }
-
 func (m *messageState) New() protoreflect.Message {
 	return m.messageInfo().New()
 }
-
 func (m *messageState) Interface() protoreflect.ProtoMessage {
 	return m.protoUnwrap().(protoreflect.ProtoMessage)
 }
-
 func (m *messageState) protoUnwrap() interface{} {
 	return m.pointer().AsIfaceOf(m.messageInfo().GoReflectType.Elem())
 }
-
 func (m *messageState) ProtoMethods() *protoiface.Methods {
 	m.messageInfo().init()
 	return &m.messageInfo().methods
@@ -66,7 +61,6 @@ func (m *messageState) Range(f func(protoreflect.FieldDescriptor, protoreflect.V
 	}
 	m.messageInfo().extensionMap(m.pointer()).Range(f)
 }
-
 func (m *messageState) Has(fd protoreflect.FieldDescriptor) bool {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
@@ -75,7 +69,6 @@ func (m *messageState) Has(fd protoreflect.FieldDescriptor) bool {
 		return m.messageInfo().extensionMap(m.pointer()).Has(xt)
 	}
 }
-
 func (m *messageState) Clear(fd protoreflect.FieldDescriptor) {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
@@ -84,7 +77,6 @@ func (m *messageState) Clear(fd protoreflect.FieldDescriptor) {
 		m.messageInfo().extensionMap(m.pointer()).Clear(xt)
 	}
 }
-
 func (m *messageState) Get(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
@@ -93,7 +85,6 @@ func (m *messageState) Get(fd protoreflect.FieldDescriptor) protoreflect.Value {
 		return m.messageInfo().extensionMap(m.pointer()).Get(xt)
 	}
 }
-
 func (m *messageState) Set(fd protoreflect.FieldDescriptor, v protoreflect.Value) {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
@@ -102,7 +93,6 @@ func (m *messageState) Set(fd protoreflect.FieldDescriptor, v protoreflect.Value
 		m.messageInfo().extensionMap(m.pointer()).Set(xt, v)
 	}
 }
-
 func (m *messageState) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
@@ -111,7 +101,6 @@ func (m *messageState) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Val
 		return m.messageInfo().extensionMap(m.pointer()).Mutable(xt)
 	}
 }
-
 func (m *messageState) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
@@ -120,7 +109,6 @@ func (m *messageState) NewField(fd protoreflect.FieldDescriptor) protoreflect.Va
 		return xt.New()
 	}
 }
-
 func (m *messageState) WhichOneof(od protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	m.messageInfo().init()
 	if oi := m.messageInfo().oneofs[od.Name()]; oi != nil && oi.oneofDesc == od {
@@ -128,17 +116,14 @@ func (m *messageState) WhichOneof(od protoreflect.OneofDescriptor) protoreflect.
 	}
 	panic("invalid oneof descriptor " + string(od.FullName()) + " for message " + string(m.Descriptor().FullName()))
 }
-
 func (m *messageState) GetUnknown() protoreflect.RawFields {
 	m.messageInfo().init()
 	return m.messageInfo().getUnknown(m.pointer())
 }
-
 func (m *messageState) SetUnknown(b protoreflect.RawFields) {
 	m.messageInfo().init()
 	m.messageInfo().setUnknown(m.pointer(), b)
 }
-
 func (m *messageState) IsValid() bool {
 	return !m.pointer().IsNil()
 }
@@ -146,26 +131,21 @@ func (m *messageState) IsValid() bool {
 func (m *messageReflectWrapper) Descriptor() protoreflect.MessageDescriptor {
 	return m.messageInfo().Desc
 }
-
 func (m *messageReflectWrapper) Type() protoreflect.MessageType {
 	return m.messageInfo()
 }
-
 func (m *messageReflectWrapper) New() protoreflect.Message {
 	return m.messageInfo().New()
 }
-
 func (m *messageReflectWrapper) Interface() protoreflect.ProtoMessage {
 	if m, ok := m.protoUnwrap().(protoreflect.ProtoMessage); ok {
 		return m
 	}
 	return (*messageIfaceWrapper)(m)
 }
-
 func (m *messageReflectWrapper) protoUnwrap() interface{} {
 	return m.pointer().AsIfaceOf(m.messageInfo().GoReflectType.Elem())
 }
-
 func (m *messageReflectWrapper) ProtoMethods() *protoiface.Methods {
 	m.messageInfo().init()
 	return &m.messageInfo().methods
@@ -201,7 +181,6 @@ func (m *messageReflectWrapper) Range(f func(protoreflect.FieldDescriptor, proto
 	}
 	m.messageInfo().extensionMap(m.pointer()).Range(f)
 }
-
 func (m *messageReflectWrapper) Has(fd protoreflect.FieldDescriptor) bool {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
@@ -210,7 +189,6 @@ func (m *messageReflectWrapper) Has(fd protoreflect.FieldDescriptor) bool {
 		return m.messageInfo().extensionMap(m.pointer()).Has(xt)
 	}
 }
-
 func (m *messageReflectWrapper) Clear(fd protoreflect.FieldDescriptor) {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
@@ -219,7 +197,6 @@ func (m *messageReflectWrapper) Clear(fd protoreflect.FieldDescriptor) {
 		m.messageInfo().extensionMap(m.pointer()).Clear(xt)
 	}
 }
-
 func (m *messageReflectWrapper) Get(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
@@ -228,7 +205,6 @@ func (m *messageReflectWrapper) Get(fd protoreflect.FieldDescriptor) protoreflec
 		return m.messageInfo().extensionMap(m.pointer()).Get(xt)
 	}
 }
-
 func (m *messageReflectWrapper) Set(fd protoreflect.FieldDescriptor, v protoreflect.Value) {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
@@ -237,7 +213,6 @@ func (m *messageReflectWrapper) Set(fd protoreflect.FieldDescriptor, v protorefl
 		m.messageInfo().extensionMap(m.pointer()).Set(xt, v)
 	}
 }
-
 func (m *messageReflectWrapper) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
@@ -246,7 +221,6 @@ func (m *messageReflectWrapper) Mutable(fd protoreflect.FieldDescriptor) protore
 		return m.messageInfo().extensionMap(m.pointer()).Mutable(xt)
 	}
 }
-
 func (m *messageReflectWrapper) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	m.messageInfo().init()
 	if fi, xt := m.messageInfo().checkField(fd); fi != nil {
@@ -255,7 +229,6 @@ func (m *messageReflectWrapper) NewField(fd protoreflect.FieldDescriptor) protor
 		return xt.New()
 	}
 }
-
 func (m *messageReflectWrapper) WhichOneof(od protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	m.messageInfo().init()
 	if oi := m.messageInfo().oneofs[od.Name()]; oi != nil && oi.oneofDesc == od {
@@ -263,17 +236,14 @@ func (m *messageReflectWrapper) WhichOneof(od protoreflect.OneofDescriptor) prot
 	}
 	panic("invalid oneof descriptor " + string(od.FullName()) + " for message " + string(m.Descriptor().FullName()))
 }
-
 func (m *messageReflectWrapper) GetUnknown() protoreflect.RawFields {
 	m.messageInfo().init()
 	return m.messageInfo().getUnknown(m.pointer())
 }
-
 func (m *messageReflectWrapper) SetUnknown(b protoreflect.RawFields) {
 	m.messageInfo().init()
 	m.messageInfo().setUnknown(m.pointer(), b)
 }
-
 func (m *messageReflectWrapper) IsValid() bool {
 	return !m.pointer().IsNil()
 }

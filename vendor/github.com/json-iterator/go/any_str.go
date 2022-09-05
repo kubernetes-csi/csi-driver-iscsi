@@ -50,6 +50,7 @@ func (any *stringAny) ToBool() bool {
 
 func (any *stringAny) ToInt() int {
 	return int(any.ToInt64())
+
 }
 
 func (any *stringAny) ToInt32() int32 {

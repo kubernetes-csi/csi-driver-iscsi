@@ -21,11 +21,10 @@
 package openapi_v3
 
 import (
-	reflect "reflect"
-
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	descriptorpb "google.golang.org/protobuf/types/descriptorpb"
+	reflect "reflect"
 )
 
 const (
@@ -141,7 +140,6 @@ var file_openapiv3_annotations_proto_goTypes = []interface{}{
 	(*Operation)(nil),                   // 5: openapi.v3.Operation
 	(*Schema)(nil),                      // 6: openapi.v3.Schema
 }
-
 var file_openapiv3_annotations_proto_depIdxs = []int32{
 	0, // 0: openapi.v3.document:extendee -> google.protobuf.FileOptions
 	1, // 1: openapi.v3.operation:extendee -> google.protobuf.MethodOptions

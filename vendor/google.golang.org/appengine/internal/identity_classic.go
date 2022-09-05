@@ -44,7 +44,6 @@ func ModuleName(ctx netcontext.Context) string {
 	}
 	return appengine.ModuleName(c)
 }
-
 func VersionID(ctx netcontext.Context) string {
 	c := fromContext(ctx)
 	if c == nil {

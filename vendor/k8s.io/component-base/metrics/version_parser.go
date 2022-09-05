@@ -29,7 +29,9 @@ const (
 	versionRegexpString = `^v(\d+\.\d+\.\d+)`
 )
 
-var versionRe = regexp.MustCompile(versionRegexpString)
+var (
+	versionRe = regexp.MustCompile(versionRegexpString)
+)
 
 func parseSemver(s string) *semver.Version {
 	if s != "" {
@@ -38,7 +40,6 @@ func parseSemver(s string) *semver.Version {
 	}
 	return nil
 }
-
 func parseVersion(ver apimachineryversion.Info) semver.Version {
 	matches := versionRe.FindAllStringSubmatch(ver.String(), -1)
 

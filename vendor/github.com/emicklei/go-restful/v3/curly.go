@@ -72,7 +72,7 @@ func (c CurlyRouter) matchesRouteByPathTokens(routeTokens, requestTokens []strin
 			return false, 0, 0
 		}
 		requestToken := requestTokens[i]
-		if routeHasCustomVerb && hasCustomVerb(routeToken) {
+		if routeHasCustomVerb && hasCustomVerb(routeToken){
 			if !isMatchCustomVerb(routeToken, requestToken) {
 				return false, 0, 0
 			}
@@ -166,7 +166,7 @@ func (c CurlyRouter) computeWebserviceScore(requestTokens []string, tokens []str
 			if each != other {
 				return false, score
 			}
-			score += (len(tokens) - i) * 10 // fuzzy
+			score += (len(tokens) - i) * 10 //fuzzy
 		}
 	}
 	return true, score

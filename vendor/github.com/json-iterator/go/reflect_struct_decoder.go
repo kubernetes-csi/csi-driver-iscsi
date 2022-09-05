@@ -111,12 +111,10 @@ func createStructDecoder(ctx *ctx, typ reflect2.Type, fields map[string]*structF
 				fieldDecoder3 = fieldDecoder
 			}
 		}
-		return &threeFieldsStructDecoder{
-			typ,
+		return &threeFieldsStructDecoder{typ,
 			fieldName1, fieldDecoder1,
 			fieldName2, fieldDecoder2,
-			fieldName3, fieldDecoder3,
-		}
+			fieldName3, fieldDecoder3}
 	case 4:
 		var fieldName1 int64
 		var fieldName2 int64
@@ -147,13 +145,11 @@ func createStructDecoder(ctx *ctx, typ reflect2.Type, fields map[string]*structF
 				fieldDecoder4 = fieldDecoder
 			}
 		}
-		return &fourFieldsStructDecoder{
-			typ,
+		return &fourFieldsStructDecoder{typ,
 			fieldName1, fieldDecoder1,
 			fieldName2, fieldDecoder2,
 			fieldName3, fieldDecoder3,
-			fieldName4, fieldDecoder4,
-		}
+			fieldName4, fieldDecoder4}
 	case 5:
 		var fieldName1 int64
 		var fieldName2 int64
@@ -189,14 +185,12 @@ func createStructDecoder(ctx *ctx, typ reflect2.Type, fields map[string]*structF
 				fieldDecoder5 = fieldDecoder
 			}
 		}
-		return &fiveFieldsStructDecoder{
-			typ,
+		return &fiveFieldsStructDecoder{typ,
 			fieldName1, fieldDecoder1,
 			fieldName2, fieldDecoder2,
 			fieldName3, fieldDecoder3,
 			fieldName4, fieldDecoder4,
-			fieldName5, fieldDecoder5,
-		}
+			fieldName5, fieldDecoder5}
 	case 6:
 		var fieldName1 int64
 		var fieldName2 int64
@@ -237,15 +231,13 @@ func createStructDecoder(ctx *ctx, typ reflect2.Type, fields map[string]*structF
 				fieldDecoder6 = fieldDecoder
 			}
 		}
-		return &sixFieldsStructDecoder{
-			typ,
+		return &sixFieldsStructDecoder{typ,
 			fieldName1, fieldDecoder1,
 			fieldName2, fieldDecoder2,
 			fieldName3, fieldDecoder3,
 			fieldName4, fieldDecoder4,
 			fieldName5, fieldDecoder5,
-			fieldName6, fieldDecoder6,
-		}
+			fieldName6, fieldDecoder6}
 	case 7:
 		var fieldName1 int64
 		var fieldName2 int64
@@ -291,16 +283,14 @@ func createStructDecoder(ctx *ctx, typ reflect2.Type, fields map[string]*structF
 				fieldDecoder7 = fieldDecoder
 			}
 		}
-		return &sevenFieldsStructDecoder{
-			typ,
+		return &sevenFieldsStructDecoder{typ,
 			fieldName1, fieldDecoder1,
 			fieldName2, fieldDecoder2,
 			fieldName3, fieldDecoder3,
 			fieldName4, fieldDecoder4,
 			fieldName5, fieldDecoder5,
 			fieldName6, fieldDecoder6,
-			fieldName7, fieldDecoder7,
-		}
+			fieldName7, fieldDecoder7}
 	case 8:
 		var fieldName1 int64
 		var fieldName2 int64
@@ -351,8 +341,7 @@ func createStructDecoder(ctx *ctx, typ reflect2.Type, fields map[string]*structF
 				fieldDecoder8 = fieldDecoder
 			}
 		}
-		return &eightFieldsStructDecoder{
-			typ,
+		return &eightFieldsStructDecoder{typ,
 			fieldName1, fieldDecoder1,
 			fieldName2, fieldDecoder2,
 			fieldName3, fieldDecoder3,
@@ -360,8 +349,7 @@ func createStructDecoder(ctx *ctx, typ reflect2.Type, fields map[string]*structF
 			fieldName5, fieldDecoder5,
 			fieldName6, fieldDecoder6,
 			fieldName7, fieldDecoder7,
-			fieldName8, fieldDecoder8,
-		}
+			fieldName8, fieldDecoder8}
 	case 9:
 		var fieldName1 int64
 		var fieldName2 int64
@@ -417,8 +405,7 @@ func createStructDecoder(ctx *ctx, typ reflect2.Type, fields map[string]*structF
 				fieldDecoder9 = fieldDecoder
 			}
 		}
-		return &nineFieldsStructDecoder{
-			typ,
+		return &nineFieldsStructDecoder{typ,
 			fieldName1, fieldDecoder1,
 			fieldName2, fieldDecoder2,
 			fieldName3, fieldDecoder3,
@@ -427,8 +414,7 @@ func createStructDecoder(ctx *ctx, typ reflect2.Type, fields map[string]*structF
 			fieldName6, fieldDecoder6,
 			fieldName7, fieldDecoder7,
 			fieldName8, fieldDecoder8,
-			fieldName9, fieldDecoder9,
-		}
+			fieldName9, fieldDecoder9}
 	case 10:
 		var fieldName1 int64
 		var fieldName2 int64
@@ -489,8 +475,7 @@ func createStructDecoder(ctx *ctx, typ reflect2.Type, fields map[string]*structF
 				fieldDecoder10 = fieldDecoder
 			}
 		}
-		return &tenFieldsStructDecoder{
-			typ,
+		return &tenFieldsStructDecoder{typ,
 			fieldName1, fieldDecoder1,
 			fieldName2, fieldDecoder2,
 			fieldName3, fieldDecoder3,
@@ -500,8 +485,7 @@ func createStructDecoder(ctx *ctx, typ reflect2.Type, fields map[string]*structF
 			fieldName7, fieldDecoder7,
 			fieldName8, fieldDecoder8,
 			fieldName9, fieldDecoder9,
-			fieldName10, fieldDecoder10,
-		}
+			fieldName10, fieldDecoder10}
 	}
 	return &generalStructDecoder{typ, fields, false}
 }

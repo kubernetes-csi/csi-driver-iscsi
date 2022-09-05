@@ -33,11 +33,8 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-
-var (
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = fmt.Errorf
+var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -50,11 +47,9 @@ func (*RawExtension) ProtoMessage() {}
 func (*RawExtension) Descriptor() ([]byte, []int) {
 	return fileDescriptor_9d3c45d7f546725c, []int{0}
 }
-
 func (m *RawExtension) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *RawExtension) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -63,15 +58,12 @@ func (m *RawExtension) XXX_Marshal(b []byte, deterministic bool) ([]byte, error)
 	}
 	return b[:n], nil
 }
-
 func (m *RawExtension) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_RawExtension.Merge(m, src)
 }
-
 func (m *RawExtension) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *RawExtension) XXX_DiscardUnknown() {
 	xxx_messageInfo_RawExtension.DiscardUnknown(m)
 }
@@ -83,11 +75,9 @@ func (*TypeMeta) ProtoMessage() {}
 func (*TypeMeta) Descriptor() ([]byte, []int) {
 	return fileDescriptor_9d3c45d7f546725c, []int{1}
 }
-
 func (m *TypeMeta) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *TypeMeta) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -96,15 +86,12 @@ func (m *TypeMeta) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
-
 func (m *TypeMeta) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_TypeMeta.Merge(m, src)
 }
-
 func (m *TypeMeta) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *TypeMeta) XXX_DiscardUnknown() {
 	xxx_messageInfo_TypeMeta.DiscardUnknown(m)
 }
@@ -116,11 +103,9 @@ func (*Unknown) ProtoMessage() {}
 func (*Unknown) Descriptor() ([]byte, []int) {
 	return fileDescriptor_9d3c45d7f546725c, []int{2}
 }
-
 func (m *Unknown) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *Unknown) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -129,15 +114,12 @@ func (m *Unknown) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
-
 func (m *Unknown) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_Unknown.Merge(m, src)
 }
-
 func (m *Unknown) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *Unknown) XXX_DiscardUnknown() {
 	xxx_messageInfo_Unknown.DiscardUnknown(m)
 }
@@ -306,7 +288,6 @@ func encodeVarintGenerated(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-
 func (m *RawExtension) Size() (n int) {
 	if m == nil {
 		return 0
@@ -355,42 +336,35 @@ func (m *Unknown) Size() (n int) {
 func sovGenerated(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
-
 func sozGenerated(x uint64) (n int) {
 	return sovGenerated(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-
 func (this *RawExtension) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&RawExtension{`,
+	s := strings.Join([]string{`&RawExtension{`,
 		`Raw:` + valueToStringGenerated(this.Raw) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *TypeMeta) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&TypeMeta{`,
+	s := strings.Join([]string{`&TypeMeta{`,
 		`APIVersion:` + fmt.Sprintf("%v", this.APIVersion) + `,`,
 		`Kind:` + fmt.Sprintf("%v", this.Kind) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *Unknown) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&Unknown{`,
+	s := strings.Join([]string{`&Unknown{`,
 		`TypeMeta:` + strings.Replace(strings.Replace(this.TypeMeta.String(), "TypeMeta", "TypeMeta", 1), `&`, ``, 1) + `,`,
 		`Raw:` + valueToStringGenerated(this.Raw) + `,`,
 		`ContentEncoding:` + fmt.Sprintf("%v", this.ContentEncoding) + `,`,
@@ -399,7 +373,6 @@ func (this *Unknown) String() string {
 	}, "")
 	return s
 }
-
 func valueToStringGenerated(v interface{}) string {
 	rv := reflect.ValueOf(v)
 	if rv.IsNil() {
@@ -408,7 +381,6 @@ func valueToStringGenerated(v interface{}) string {
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
 }
-
 func (m *RawExtension) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -493,7 +465,6 @@ func (m *RawExtension) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *TypeMeta) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -608,7 +579,6 @@ func (m *TypeMeta) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *Unknown) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -790,7 +760,6 @@ func (m *Unknown) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func skipGenerated(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

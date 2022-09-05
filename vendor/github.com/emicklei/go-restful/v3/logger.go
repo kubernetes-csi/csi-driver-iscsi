@@ -7,10 +7,8 @@ import (
 	"github.com/emicklei/go-restful/v3/log"
 )
 
-var (
-	trace       bool = false
-	traceLogger log.StdLogger
-)
+var trace bool = false
+var traceLogger log.StdLogger
 
 func init() {
 	traceLogger = log.Logger // use the package logger by default

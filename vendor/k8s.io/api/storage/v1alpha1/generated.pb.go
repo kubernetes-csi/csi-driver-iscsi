@@ -38,11 +38,8 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-
-var (
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = fmt.Errorf
+var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -55,11 +52,9 @@ func (*CSIStorageCapacity) ProtoMessage() {}
 func (*CSIStorageCapacity) Descriptor() ([]byte, []int) {
 	return fileDescriptor_10f856db1e670dc4, []int{0}
 }
-
 func (m *CSIStorageCapacity) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *CSIStorageCapacity) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -68,15 +63,12 @@ func (m *CSIStorageCapacity) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 	}
 	return b[:n], nil
 }
-
 func (m *CSIStorageCapacity) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_CSIStorageCapacity.Merge(m, src)
 }
-
 func (m *CSIStorageCapacity) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *CSIStorageCapacity) XXX_DiscardUnknown() {
 	xxx_messageInfo_CSIStorageCapacity.DiscardUnknown(m)
 }
@@ -88,11 +80,9 @@ func (*CSIStorageCapacityList) ProtoMessage() {}
 func (*CSIStorageCapacityList) Descriptor() ([]byte, []int) {
 	return fileDescriptor_10f856db1e670dc4, []int{1}
 }
-
 func (m *CSIStorageCapacityList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *CSIStorageCapacityList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -101,15 +91,12 @@ func (m *CSIStorageCapacityList) XXX_Marshal(b []byte, deterministic bool) ([]by
 	}
 	return b[:n], nil
 }
-
 func (m *CSIStorageCapacityList) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_CSIStorageCapacityList.Merge(m, src)
 }
-
 func (m *CSIStorageCapacityList) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *CSIStorageCapacityList) XXX_DiscardUnknown() {
 	xxx_messageInfo_CSIStorageCapacityList.DiscardUnknown(m)
 }
@@ -121,11 +108,9 @@ func (*VolumeAttachment) ProtoMessage() {}
 func (*VolumeAttachment) Descriptor() ([]byte, []int) {
 	return fileDescriptor_10f856db1e670dc4, []int{2}
 }
-
 func (m *VolumeAttachment) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *VolumeAttachment) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -134,15 +119,12 @@ func (m *VolumeAttachment) XXX_Marshal(b []byte, deterministic bool) ([]byte, er
 	}
 	return b[:n], nil
 }
-
 func (m *VolumeAttachment) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_VolumeAttachment.Merge(m, src)
 }
-
 func (m *VolumeAttachment) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *VolumeAttachment) XXX_DiscardUnknown() {
 	xxx_messageInfo_VolumeAttachment.DiscardUnknown(m)
 }
@@ -154,11 +136,9 @@ func (*VolumeAttachmentList) ProtoMessage() {}
 func (*VolumeAttachmentList) Descriptor() ([]byte, []int) {
 	return fileDescriptor_10f856db1e670dc4, []int{3}
 }
-
 func (m *VolumeAttachmentList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *VolumeAttachmentList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -167,15 +147,12 @@ func (m *VolumeAttachmentList) XXX_Marshal(b []byte, deterministic bool) ([]byte
 	}
 	return b[:n], nil
 }
-
 func (m *VolumeAttachmentList) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_VolumeAttachmentList.Merge(m, src)
 }
-
 func (m *VolumeAttachmentList) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *VolumeAttachmentList) XXX_DiscardUnknown() {
 	xxx_messageInfo_VolumeAttachmentList.DiscardUnknown(m)
 }
@@ -187,11 +164,9 @@ func (*VolumeAttachmentSource) ProtoMessage() {}
 func (*VolumeAttachmentSource) Descriptor() ([]byte, []int) {
 	return fileDescriptor_10f856db1e670dc4, []int{4}
 }
-
 func (m *VolumeAttachmentSource) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *VolumeAttachmentSource) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -200,15 +175,12 @@ func (m *VolumeAttachmentSource) XXX_Marshal(b []byte, deterministic bool) ([]by
 	}
 	return b[:n], nil
 }
-
 func (m *VolumeAttachmentSource) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_VolumeAttachmentSource.Merge(m, src)
 }
-
 func (m *VolumeAttachmentSource) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *VolumeAttachmentSource) XXX_DiscardUnknown() {
 	xxx_messageInfo_VolumeAttachmentSource.DiscardUnknown(m)
 }
@@ -220,11 +192,9 @@ func (*VolumeAttachmentSpec) ProtoMessage() {}
 func (*VolumeAttachmentSpec) Descriptor() ([]byte, []int) {
 	return fileDescriptor_10f856db1e670dc4, []int{5}
 }
-
 func (m *VolumeAttachmentSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *VolumeAttachmentSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -233,15 +203,12 @@ func (m *VolumeAttachmentSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte
 	}
 	return b[:n], nil
 }
-
 func (m *VolumeAttachmentSpec) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_VolumeAttachmentSpec.Merge(m, src)
 }
-
 func (m *VolumeAttachmentSpec) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *VolumeAttachmentSpec) XXX_DiscardUnknown() {
 	xxx_messageInfo_VolumeAttachmentSpec.DiscardUnknown(m)
 }
@@ -253,11 +220,9 @@ func (*VolumeAttachmentStatus) ProtoMessage() {}
 func (*VolumeAttachmentStatus) Descriptor() ([]byte, []int) {
 	return fileDescriptor_10f856db1e670dc4, []int{6}
 }
-
 func (m *VolumeAttachmentStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *VolumeAttachmentStatus) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -266,15 +231,12 @@ func (m *VolumeAttachmentStatus) XXX_Marshal(b []byte, deterministic bool) ([]by
 	}
 	return b[:n], nil
 }
-
 func (m *VolumeAttachmentStatus) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_VolumeAttachmentStatus.Merge(m, src)
 }
-
 func (m *VolumeAttachmentStatus) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *VolumeAttachmentStatus) XXX_DiscardUnknown() {
 	xxx_messageInfo_VolumeAttachmentStatus.DiscardUnknown(m)
 }
@@ -286,11 +248,9 @@ func (*VolumeError) ProtoMessage() {}
 func (*VolumeError) Descriptor() ([]byte, []int) {
 	return fileDescriptor_10f856db1e670dc4, []int{7}
 }
-
 func (m *VolumeError) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *VolumeError) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -299,15 +259,12 @@ func (m *VolumeError) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) 
 	}
 	return b[:n], nil
 }
-
 func (m *VolumeError) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_VolumeError.Merge(m, src)
 }
-
 func (m *VolumeError) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *VolumeError) XXX_DiscardUnknown() {
 	xxx_messageInfo_VolumeError.DiscardUnknown(m)
 }
@@ -826,7 +783,6 @@ func encodeVarintGenerated(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-
 func (m *CSIStorageCapacity) Size() (n int) {
 	if m == nil {
 		return 0
@@ -975,17 +931,14 @@ func (m *VolumeError) Size() (n int) {
 func sovGenerated(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
-
 func sozGenerated(x uint64) (n int) {
 	return sovGenerated(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-
 func (this *CSIStorageCapacity) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&CSIStorageCapacity{`,
+	s := strings.Join([]string{`&CSIStorageCapacity{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`NodeTopology:` + strings.Replace(fmt.Sprintf("%v", this.NodeTopology), "LabelSelector", "v1.LabelSelector", 1) + `,`,
 		`StorageClassName:` + fmt.Sprintf("%v", this.StorageClassName) + `,`,
@@ -995,7 +948,6 @@ func (this *CSIStorageCapacity) String() string {
 	}, "")
 	return s
 }
-
 func (this *CSIStorageCapacityList) String() string {
 	if this == nil {
 		return "nil"
@@ -1005,21 +957,18 @@ func (this *CSIStorageCapacityList) String() string {
 		repeatedStringForItems += strings.Replace(strings.Replace(f.String(), "CSIStorageCapacity", "CSIStorageCapacity", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForItems += "}"
-	s := strings.Join([]string{
-		`&CSIStorageCapacityList{`,
+	s := strings.Join([]string{`&CSIStorageCapacityList{`,
 		`ListMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ListMeta), "ListMeta", "v1.ListMeta", 1), `&`, ``, 1) + `,`,
 		`Items:` + repeatedStringForItems + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *VolumeAttachment) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&VolumeAttachment{`,
+	s := strings.Join([]string{`&VolumeAttachment{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "VolumeAttachmentSpec", "VolumeAttachmentSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "VolumeAttachmentStatus", "VolumeAttachmentStatus", 1), `&`, ``, 1) + `,`,
@@ -1027,7 +976,6 @@ func (this *VolumeAttachment) String() string {
 	}, "")
 	return s
 }
-
 func (this *VolumeAttachmentList) String() string {
 	if this == nil {
 		return "nil"
@@ -1037,34 +985,29 @@ func (this *VolumeAttachmentList) String() string {
 		repeatedStringForItems += strings.Replace(strings.Replace(f.String(), "VolumeAttachment", "VolumeAttachment", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForItems += "}"
-	s := strings.Join([]string{
-		`&VolumeAttachmentList{`,
+	s := strings.Join([]string{`&VolumeAttachmentList{`,
 		`ListMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ListMeta), "ListMeta", "v1.ListMeta", 1), `&`, ``, 1) + `,`,
 		`Items:` + repeatedStringForItems + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *VolumeAttachmentSource) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&VolumeAttachmentSource{`,
+	s := strings.Join([]string{`&VolumeAttachmentSource{`,
 		`PersistentVolumeName:` + valueToStringGenerated(this.PersistentVolumeName) + `,`,
 		`InlineVolumeSpec:` + strings.Replace(fmt.Sprintf("%v", this.InlineVolumeSpec), "PersistentVolumeSpec", "v11.PersistentVolumeSpec", 1) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *VolumeAttachmentSpec) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&VolumeAttachmentSpec{`,
+	s := strings.Join([]string{`&VolumeAttachmentSpec{`,
 		`Attacher:` + fmt.Sprintf("%v", this.Attacher) + `,`,
 		`Source:` + strings.Replace(strings.Replace(this.Source.String(), "VolumeAttachmentSource", "VolumeAttachmentSource", 1), `&`, ``, 1) + `,`,
 		`NodeName:` + fmt.Sprintf("%v", this.NodeName) + `,`,
@@ -1072,7 +1015,6 @@ func (this *VolumeAttachmentSpec) String() string {
 	}, "")
 	return s
 }
-
 func (this *VolumeAttachmentStatus) String() string {
 	if this == nil {
 		return "nil"
@@ -1087,8 +1029,7 @@ func (this *VolumeAttachmentStatus) String() string {
 		mapStringForAttachmentMetadata += fmt.Sprintf("%v: %v,", k, this.AttachmentMetadata[k])
 	}
 	mapStringForAttachmentMetadata += "}"
-	s := strings.Join([]string{
-		`&VolumeAttachmentStatus{`,
+	s := strings.Join([]string{`&VolumeAttachmentStatus{`,
 		`Attached:` + fmt.Sprintf("%v", this.Attached) + `,`,
 		`AttachmentMetadata:` + mapStringForAttachmentMetadata + `,`,
 		`AttachError:` + strings.Replace(this.AttachError.String(), "VolumeError", "VolumeError", 1) + `,`,
@@ -1097,20 +1038,17 @@ func (this *VolumeAttachmentStatus) String() string {
 	}, "")
 	return s
 }
-
 func (this *VolumeError) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&VolumeError{`,
+	s := strings.Join([]string{`&VolumeError{`,
 		`Time:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.Time), "Time", "v1.Time", 1), `&`, ``, 1) + `,`,
 		`Message:` + fmt.Sprintf("%v", this.Message) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func valueToStringGenerated(v interface{}) string {
 	rv := reflect.ValueOf(v)
 	if rv.IsNil() {
@@ -1119,7 +1057,6 @@ func valueToStringGenerated(v interface{}) string {
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
 }
-
 func (m *CSIStorageCapacity) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1343,7 +1280,6 @@ func (m *CSIStorageCapacity) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *CSIStorageCapacityList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1461,7 +1397,6 @@ func (m *CSIStorageCapacityList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *VolumeAttachment) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1611,7 +1546,6 @@ func (m *VolumeAttachment) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *VolumeAttachmentList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1729,7 +1663,6 @@ func (m *VolumeAttachmentList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *VolumeAttachmentSource) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1849,7 +1782,6 @@ func (m *VolumeAttachmentSource) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *VolumeAttachmentSpec) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1997,7 +1929,6 @@ func (m *VolumeAttachmentSpec) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *VolumeAttachmentStatus) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2267,7 +2198,6 @@ func (m *VolumeAttachmentStatus) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *VolumeError) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2383,7 +2313,6 @@ func (m *VolumeError) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func skipGenerated(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

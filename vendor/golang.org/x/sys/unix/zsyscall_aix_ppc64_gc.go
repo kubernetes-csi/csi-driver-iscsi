@@ -248,7 +248,8 @@ import (
 
 type syscallFunc uintptr
 
-var libc_utimes,
+var (
+	libc_utimes,
 	libc_utimensat,
 	libc_getcwd,
 	libc_accept,
@@ -365,6 +366,7 @@ var libc_utimes,
 	libc_setrlimit,
 	libc_lseek,
 	libc_mmap64 syscallFunc
+)
 
 // Implemented in runtime/syscall_aix.go.
 func rawSyscall6(trap, nargs, a1, a2, a3, a4, a5, a6 uintptr) (r1, r2 uintptr, err Errno)

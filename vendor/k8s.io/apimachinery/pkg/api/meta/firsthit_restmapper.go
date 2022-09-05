@@ -23,7 +23,9 @@ import (
 	utilerrors "k8s.io/apimachinery/pkg/util/errors"
 )
 
-var _ ResettableRESTMapper = &FirstHitRESTMapper{}
+var (
+	_ ResettableRESTMapper = &FirstHitRESTMapper{}
+)
 
 // FirstHitRESTMapper is a wrapper for multiple RESTMappers which returns the
 // first successful result for the singular requests

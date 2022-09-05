@@ -42,10 +42,8 @@ const (
 	invalidStart = `JSON pointer must be empty or start with a "` + pointerSeparator
 )
 
-var (
-	jsonPointableType = reflect.TypeOf(new(JSONPointable)).Elem()
-	jsonSetableType   = reflect.TypeOf(new(JSONSetable)).Elem()
-)
+var jsonPointableType = reflect.TypeOf(new(JSONPointable)).Elem()
+var jsonSetableType = reflect.TypeOf(new(JSONSetable)).Elem()
 
 // JSONPointable is an interface for structs to implement when they need to customize the
 // json pointer process
@@ -61,9 +59,11 @@ type JSONSetable interface {
 
 // New creates a new json pointer for the given string
 func New(jsonPointerString string) (Pointer, error) {
+
 	var p Pointer
 	err := p.parse(jsonPointerString)
 	return p, err
+
 }
 
 // Pointer the json pointer reprsentation
@@ -73,6 +73,7 @@ type Pointer struct {
 
 // "Constructor", parses the given string JSON pointer
 func (p *Pointer) parse(jsonPointerString string) error {
+
 	var err error
 
 	if jsonPointerString != emptyPointer {
@@ -155,6 +156,7 @@ func getSingleImpl(node interface{}, decodedToken string, nameProvider *swag.Nam
 	default:
 		return nil, kind, fmt.Errorf("invalid token reference %q", decodedToken)
 	}
+
 }
 
 func setSingleImpl(node, data interface{}, decodedToken string, nameProvider *swag.NameProvider) error {
@@ -205,9 +207,11 @@ func setSingleImpl(node, data interface{}, decodedToken string, nameProvider *sw
 	default:
 		return fmt.Errorf("invalid token reference %q", decodedToken)
 	}
+
 }
 
 func (p *Pointer) get(node interface{}, nameProvider *swag.NameProvider) (interface{}, reflect.Kind, error) {
+
 	if nameProvider == nil {
 		nameProvider = swag.DefaultJSONNameProvider
 	}
@@ -259,6 +263,7 @@ func (p *Pointer) set(node, data interface{}, nameProvider *swag.NameProvider) e
 		decodedToken := Unescape(token)
 
 		if isLastToken {
+
 			return setSingleImpl(node, data, decodedToken, nameProvider)
 		}
 
@@ -348,6 +353,7 @@ func (p *Pointer) IsEmpty() bool {
 
 // Pointer to string representation function
 func (p *Pointer) String() string {
+
 	if len(p.referenceTokens) == 0 {
 		return emptyPointer
 	}

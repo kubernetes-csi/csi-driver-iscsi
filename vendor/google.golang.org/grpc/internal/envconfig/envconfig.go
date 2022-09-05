@@ -29,5 +29,7 @@ const (
 	txtErrIgnoreStr = prefix + "IGNORE_TXT_ERRORS"
 )
 
-// TXTErrIgnore is set if TXT errors should be ignored ("GRPC_GO_IGNORE_TXT_ERRORS" is not "false").
-var TXTErrIgnore = !strings.EqualFold(os.Getenv(txtErrIgnoreStr), "false")
+var (
+	// TXTErrIgnore is set if TXT errors should be ignored ("GRPC_GO_IGNORE_TXT_ERRORS" is not "false").
+	TXTErrIgnore = !strings.EqualFold(os.Getenv(txtErrIgnoreStr), "false")
+)

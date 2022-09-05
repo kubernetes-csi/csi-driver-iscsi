@@ -23,6 +23,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/moby/sys/mountinfo"
 	"io/fs"
 	"io/ioutil"
 	"os"
@@ -32,8 +33,6 @@ import (
 	"strings"
 	"syscall"
 	"time"
-
-	"github.com/moby/sys/mountinfo"
 
 	"k8s.io/klog/v2"
 	utilexec "k8s.io/utils/exec"

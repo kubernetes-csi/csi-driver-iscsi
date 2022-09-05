@@ -20,9 +20,10 @@ limitations under the License.
 package volume
 
 import (
-	"os"
 	"path/filepath"
 	"syscall"
+
+	"os"
 	"time"
 
 	v1 "k8s.io/api/core/v1"
@@ -31,9 +32,9 @@ import (
 )
 
 const (
-	rwMask   = os.FileMode(0o660)
-	roMask   = os.FileMode(0o440)
-	execMask = os.FileMode(0o110)
+	rwMask   = os.FileMode(0660)
+	roMask   = os.FileMode(0440)
+	execMask = os.FileMode(0110)
 )
 
 // SetVolumeOwnership modifies the given volume to be owned by

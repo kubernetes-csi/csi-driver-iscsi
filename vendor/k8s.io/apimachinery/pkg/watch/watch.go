@@ -48,7 +48,9 @@ const (
 	Error    EventType = "ERROR"
 )
 
-var DefaultChanSize int32 = 100
+var (
+	DefaultChanSize int32 = 100
+)
 
 // Event represents a single event to a watched resource.
 // +k8s:deepcopy-gen=true

@@ -47,6 +47,7 @@ func split(str string) []string {
 	}
 
 	return result
+
 }
 
 func (s *splitter) split(str string) []nameLexem {

@@ -102,7 +102,6 @@ type functionFakeRuntimeObject func()
 func (obj functionFakeRuntimeObject) GetObjectKind() schema.ObjectKind {
 	return schema.EmptyObjectKind
 }
-
 func (obj functionFakeRuntimeObject) DeepCopyObject() runtime.Object {
 	if obj == nil {
 		return nil

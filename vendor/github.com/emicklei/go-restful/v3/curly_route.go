@@ -29,11 +29,9 @@ func (s sortableCurlyRoutes) routes() (routes []Route) {
 func (s sortableCurlyRoutes) Len() int {
 	return len(s)
 }
-
 func (s sortableCurlyRoutes) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
 }
-
 func (s sortableCurlyRoutes) Less(i, j int) bool {
 	a := s[j]
 	b := s[i]

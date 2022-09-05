@@ -46,14 +46,12 @@ import (
 	"k8s.io/kubernetes/pkg/volume/util/subpath"
 )
 
-type (
-	ProbeOperation uint32
-	ProbeEvent     struct {
-		Plugin     VolumePlugin // VolumePlugin that was added/updated/removed. if ProbeEvent.Op is 'ProbeRemove', Plugin should be nil
-		PluginName string
-		Op         ProbeOperation // The operation to the plugin
-	}
-)
+type ProbeOperation uint32
+type ProbeEvent struct {
+	Plugin     VolumePlugin // VolumePlugin that was added/updated/removed. if ProbeEvent.Op is 'ProbeRemove', Plugin should be nil
+	PluginName string
+	Op         ProbeOperation // The operation to the plugin
+}
 
 const (
 	// Common parameter which can be specified in StorageClass to specify the desired FSType
@@ -66,13 +64,15 @@ const (
 	ProbeRemove
 )
 
-var deprecatedVolumeProviders = map[string]string{
-	"kubernetes.io/cinder":    "The Cinder volume provider is deprecated and will be removed in a future release",
-	"kubernetes.io/storageos": "The StorageOS volume provider is deprecated and will be removed in a future release",
-	"kubernetes.io/quobyte":   "The Quobyte volume provider is deprecated and will be removed in a future release",
-	"kubernetes.io/flocker":   "The Flocker volume provider is deprecated and will be removed in a future release",
-	"kubernetes.io/glusterfs": "The GlusterFS volume provider is deprecated and will be removed soon after in a subsequent release",
-}
+var (
+	deprecatedVolumeProviders = map[string]string{
+		"kubernetes.io/cinder":    "The Cinder volume provider is deprecated and will be removed in a future release",
+		"kubernetes.io/storageos": "The StorageOS volume provider is deprecated and will be removed in a future release",
+		"kubernetes.io/quobyte":   "The Quobyte volume provider is deprecated and will be removed in a future release",
+		"kubernetes.io/flocker":   "The Flocker volume provider is deprecated and will be removed in a future release",
+		"kubernetes.io/glusterfs": "The GlusterFS volume provider is deprecated and will be removed soon after in a subsequent release",
+	}
+)
 
 // VolumeOptions contains option information about a volume.
 type VolumeOptions struct {
@@ -746,6 +746,7 @@ func (pm *VolumePluginMgr) logDeprecation(plugin string) {
 // If it is, initialize all probed plugins and replace the cache with them.
 func (pm *VolumePluginMgr) refreshProbedPlugins() {
 	events, err := pm.prober.Probe()
+
 	if err != nil {
 		klog.ErrorS(err, "Error dynamically probing plugins")
 	}

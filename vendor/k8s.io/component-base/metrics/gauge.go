@@ -34,11 +34,9 @@ type Gauge struct {
 	selfCollector
 }
 
-var (
-	_ GaugeMetric   = &Gauge{}
-	_ Registerable  = &Gauge{}
-	_ kubeCollector = &Gauge{}
-)
+var _ GaugeMetric = &Gauge{}
+var _ Registerable = &Gauge{}
+var _ kubeCollector = &Gauge{}
 
 // NewGauge returns an object which satisfies the kubeCollector, Registerable, and Gauge interfaces.
 // However, the object returned will not measure anything unless the collector is first
@@ -95,11 +93,9 @@ type GaugeVec struct {
 	originalLabels []string
 }
 
-var (
-	_ GaugeVecMetric = &GaugeVec{}
-	_ Registerable   = &GaugeVec{}
-	_ kubeCollector  = &GaugeVec{}
-)
+var _ GaugeVecMetric = &GaugeVec{}
+var _ Registerable = &GaugeVec{}
+var _ kubeCollector = &GaugeVec{}
 
 // NewGaugeVec returns an object which satisfies the kubeCollector, Registerable, and GaugeVecMetric interfaces.
 // However, the object returned will not measure anything unless the collector is first

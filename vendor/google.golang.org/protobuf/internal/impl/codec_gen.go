@@ -3022,6 +3022,7 @@ var coderUint64PackedSliceValue = valueCoderFuncs{
 
 // sizeSfixed32 returns the size of wire encoding a int32 pointer as a Sfixed32.
 func sizeSfixed32(p pointer, f *coderFieldInfo, opts marshalOptions) (size int) {
+
 	return f.tagsize + protowire.SizeFixed32()
 }
 
@@ -3337,6 +3338,7 @@ var coderSfixed32PackedSliceValue = valueCoderFuncs{
 
 // sizeFixed32 returns the size of wire encoding a uint32 pointer as a Fixed32.
 func sizeFixed32(p pointer, f *coderFieldInfo, opts marshalOptions) (size int) {
+
 	return f.tagsize + protowire.SizeFixed32()
 }
 
@@ -3652,6 +3654,7 @@ var coderFixed32PackedSliceValue = valueCoderFuncs{
 
 // sizeFloat returns the size of wire encoding a float32 pointer as a Float.
 func sizeFloat(p pointer, f *coderFieldInfo, opts marshalOptions) (size int) {
+
 	return f.tagsize + protowire.SizeFixed32()
 }
 
@@ -3967,6 +3970,7 @@ var coderFloatPackedSliceValue = valueCoderFuncs{
 
 // sizeSfixed64 returns the size of wire encoding a int64 pointer as a Sfixed64.
 func sizeSfixed64(p pointer, f *coderFieldInfo, opts marshalOptions) (size int) {
+
 	return f.tagsize + protowire.SizeFixed64()
 }
 
@@ -4282,6 +4286,7 @@ var coderSfixed64PackedSliceValue = valueCoderFuncs{
 
 // sizeFixed64 returns the size of wire encoding a uint64 pointer as a Fixed64.
 func sizeFixed64(p pointer, f *coderFieldInfo, opts marshalOptions) (size int) {
+
 	return f.tagsize + protowire.SizeFixed64()
 }
 
@@ -4597,6 +4602,7 @@ var coderFixed64PackedSliceValue = valueCoderFuncs{
 
 // sizeDouble returns the size of wire encoding a float64 pointer as a Double.
 func sizeDouble(p pointer, f *coderFieldInfo, opts marshalOptions) (size int) {
+
 	return f.tagsize + protowire.SizeFixed64()
 }
 

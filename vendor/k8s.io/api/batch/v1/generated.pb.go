@@ -39,11 +39,8 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-
-var (
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = fmt.Errorf
+var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -56,11 +53,9 @@ func (*CronJob) ProtoMessage() {}
 func (*CronJob) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b52da57c93de713, []int{0}
 }
-
 func (m *CronJob) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *CronJob) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -69,15 +64,12 @@ func (m *CronJob) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
-
 func (m *CronJob) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_CronJob.Merge(m, src)
 }
-
 func (m *CronJob) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *CronJob) XXX_DiscardUnknown() {
 	xxx_messageInfo_CronJob.DiscardUnknown(m)
 }
@@ -89,11 +81,9 @@ func (*CronJobList) ProtoMessage() {}
 func (*CronJobList) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b52da57c93de713, []int{1}
 }
-
 func (m *CronJobList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *CronJobList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -102,15 +92,12 @@ func (m *CronJobList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) 
 	}
 	return b[:n], nil
 }
-
 func (m *CronJobList) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_CronJobList.Merge(m, src)
 }
-
 func (m *CronJobList) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *CronJobList) XXX_DiscardUnknown() {
 	xxx_messageInfo_CronJobList.DiscardUnknown(m)
 }
@@ -122,11 +109,9 @@ func (*CronJobSpec) ProtoMessage() {}
 func (*CronJobSpec) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b52da57c93de713, []int{2}
 }
-
 func (m *CronJobSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *CronJobSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -135,15 +120,12 @@ func (m *CronJobSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) 
 	}
 	return b[:n], nil
 }
-
 func (m *CronJobSpec) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_CronJobSpec.Merge(m, src)
 }
-
 func (m *CronJobSpec) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *CronJobSpec) XXX_DiscardUnknown() {
 	xxx_messageInfo_CronJobSpec.DiscardUnknown(m)
 }
@@ -155,11 +137,9 @@ func (*CronJobStatus) ProtoMessage() {}
 func (*CronJobStatus) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b52da57c93de713, []int{3}
 }
-
 func (m *CronJobStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *CronJobStatus) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -168,15 +148,12 @@ func (m *CronJobStatus) XXX_Marshal(b []byte, deterministic bool) ([]byte, error
 	}
 	return b[:n], nil
 }
-
 func (m *CronJobStatus) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_CronJobStatus.Merge(m, src)
 }
-
 func (m *CronJobStatus) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *CronJobStatus) XXX_DiscardUnknown() {
 	xxx_messageInfo_CronJobStatus.DiscardUnknown(m)
 }
@@ -188,11 +165,9 @@ func (*Job) ProtoMessage() {}
 func (*Job) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b52da57c93de713, []int{4}
 }
-
 func (m *Job) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *Job) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -201,15 +176,12 @@ func (m *Job) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
-
 func (m *Job) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_Job.Merge(m, src)
 }
-
 func (m *Job) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *Job) XXX_DiscardUnknown() {
 	xxx_messageInfo_Job.DiscardUnknown(m)
 }
@@ -221,11 +193,9 @@ func (*JobCondition) ProtoMessage() {}
 func (*JobCondition) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b52da57c93de713, []int{5}
 }
-
 func (m *JobCondition) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *JobCondition) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -234,15 +204,12 @@ func (m *JobCondition) XXX_Marshal(b []byte, deterministic bool) ([]byte, error)
 	}
 	return b[:n], nil
 }
-
 func (m *JobCondition) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_JobCondition.Merge(m, src)
 }
-
 func (m *JobCondition) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *JobCondition) XXX_DiscardUnknown() {
 	xxx_messageInfo_JobCondition.DiscardUnknown(m)
 }
@@ -254,11 +221,9 @@ func (*JobList) ProtoMessage() {}
 func (*JobList) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b52da57c93de713, []int{6}
 }
-
 func (m *JobList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *JobList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -267,15 +232,12 @@ func (m *JobList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
-
 func (m *JobList) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_JobList.Merge(m, src)
 }
-
 func (m *JobList) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *JobList) XXX_DiscardUnknown() {
 	xxx_messageInfo_JobList.DiscardUnknown(m)
 }
@@ -287,11 +249,9 @@ func (*JobSpec) ProtoMessage() {}
 func (*JobSpec) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b52da57c93de713, []int{7}
 }
-
 func (m *JobSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *JobSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -300,15 +260,12 @@ func (m *JobSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
-
 func (m *JobSpec) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_JobSpec.Merge(m, src)
 }
-
 func (m *JobSpec) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *JobSpec) XXX_DiscardUnknown() {
 	xxx_messageInfo_JobSpec.DiscardUnknown(m)
 }
@@ -320,11 +277,9 @@ func (*JobStatus) ProtoMessage() {}
 func (*JobStatus) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b52da57c93de713, []int{8}
 }
-
 func (m *JobStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *JobStatus) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -333,15 +288,12 @@ func (m *JobStatus) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
-
 func (m *JobStatus) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_JobStatus.Merge(m, src)
 }
-
 func (m *JobStatus) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *JobStatus) XXX_DiscardUnknown() {
 	xxx_messageInfo_JobStatus.DiscardUnknown(m)
 }
@@ -353,11 +305,9 @@ func (*JobTemplateSpec) ProtoMessage() {}
 func (*JobTemplateSpec) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b52da57c93de713, []int{9}
 }
-
 func (m *JobTemplateSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *JobTemplateSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -366,15 +316,12 @@ func (m *JobTemplateSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 	}
 	return b[:n], nil
 }
-
 func (m *JobTemplateSpec) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_JobTemplateSpec.Merge(m, src)
 }
-
 func (m *JobTemplateSpec) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *JobTemplateSpec) XXX_DiscardUnknown() {
 	xxx_messageInfo_JobTemplateSpec.DiscardUnknown(m)
 }
@@ -386,11 +333,9 @@ func (*PodFailurePolicy) ProtoMessage() {}
 func (*PodFailurePolicy) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b52da57c93de713, []int{10}
 }
-
 func (m *PodFailurePolicy) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PodFailurePolicy) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -399,15 +344,12 @@ func (m *PodFailurePolicy) XXX_Marshal(b []byte, deterministic bool) ([]byte, er
 	}
 	return b[:n], nil
 }
-
 func (m *PodFailurePolicy) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PodFailurePolicy.Merge(m, src)
 }
-
 func (m *PodFailurePolicy) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PodFailurePolicy) XXX_DiscardUnknown() {
 	xxx_messageInfo_PodFailurePolicy.DiscardUnknown(m)
 }
@@ -421,11 +363,9 @@ func (*PodFailurePolicyOnExitCodesRequirement) ProtoMessage() {}
 func (*PodFailurePolicyOnExitCodesRequirement) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b52da57c93de713, []int{11}
 }
-
 func (m *PodFailurePolicyOnExitCodesRequirement) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PodFailurePolicyOnExitCodesRequirement) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -434,15 +374,12 @@ func (m *PodFailurePolicyOnExitCodesRequirement) XXX_Marshal(b []byte, determini
 	}
 	return b[:n], nil
 }
-
 func (m *PodFailurePolicyOnExitCodesRequirement) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PodFailurePolicyOnExitCodesRequirement.Merge(m, src)
 }
-
 func (m *PodFailurePolicyOnExitCodesRequirement) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PodFailurePolicyOnExitCodesRequirement) XXX_DiscardUnknown() {
 	xxx_messageInfo_PodFailurePolicyOnExitCodesRequirement.DiscardUnknown(m)
 }
@@ -456,11 +393,9 @@ func (*PodFailurePolicyOnPodConditionsPattern) ProtoMessage() {}
 func (*PodFailurePolicyOnPodConditionsPattern) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b52da57c93de713, []int{12}
 }
-
 func (m *PodFailurePolicyOnPodConditionsPattern) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PodFailurePolicyOnPodConditionsPattern) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -469,15 +404,12 @@ func (m *PodFailurePolicyOnPodConditionsPattern) XXX_Marshal(b []byte, determini
 	}
 	return b[:n], nil
 }
-
 func (m *PodFailurePolicyOnPodConditionsPattern) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PodFailurePolicyOnPodConditionsPattern.Merge(m, src)
 }
-
 func (m *PodFailurePolicyOnPodConditionsPattern) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PodFailurePolicyOnPodConditionsPattern) XXX_DiscardUnknown() {
 	xxx_messageInfo_PodFailurePolicyOnPodConditionsPattern.DiscardUnknown(m)
 }
@@ -489,11 +421,9 @@ func (*PodFailurePolicyRule) ProtoMessage() {}
 func (*PodFailurePolicyRule) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b52da57c93de713, []int{13}
 }
-
 func (m *PodFailurePolicyRule) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PodFailurePolicyRule) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -502,15 +432,12 @@ func (m *PodFailurePolicyRule) XXX_Marshal(b []byte, deterministic bool) ([]byte
 	}
 	return b[:n], nil
 }
-
 func (m *PodFailurePolicyRule) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PodFailurePolicyRule.Merge(m, src)
 }
-
 func (m *PodFailurePolicyRule) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PodFailurePolicyRule) XXX_DiscardUnknown() {
 	xxx_messageInfo_PodFailurePolicyRule.DiscardUnknown(m)
 }
@@ -522,11 +449,9 @@ func (*UncountedTerminatedPods) ProtoMessage() {}
 func (*UncountedTerminatedPods) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b52da57c93de713, []int{14}
 }
-
 func (m *UncountedTerminatedPods) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *UncountedTerminatedPods) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -535,15 +460,12 @@ func (m *UncountedTerminatedPods) XXX_Marshal(b []byte, deterministic bool) ([]b
 	}
 	return b[:n], nil
 }
-
 func (m *UncountedTerminatedPods) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_UncountedTerminatedPods.Merge(m, src)
 }
-
 func (m *UncountedTerminatedPods) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *UncountedTerminatedPods) XXX_DiscardUnknown() {
 	xxx_messageInfo_UncountedTerminatedPods.DiscardUnknown(m)
 }
@@ -1543,7 +1465,6 @@ func encodeVarintGenerated(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-
 func (m *CronJob) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1868,17 +1789,14 @@ func (m *UncountedTerminatedPods) Size() (n int) {
 func sovGenerated(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
-
 func sozGenerated(x uint64) (n int) {
 	return sovGenerated(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-
 func (this *CronJob) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&CronJob{`,
+	s := strings.Join([]string{`&CronJob{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "CronJobSpec", "CronJobSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "CronJobStatus", "CronJobStatus", 1), `&`, ``, 1) + `,`,
@@ -1886,7 +1804,6 @@ func (this *CronJob) String() string {
 	}, "")
 	return s
 }
-
 func (this *CronJobList) String() string {
 	if this == nil {
 		return "nil"
@@ -1896,21 +1813,18 @@ func (this *CronJobList) String() string {
 		repeatedStringForItems += strings.Replace(strings.Replace(f.String(), "CronJob", "CronJob", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForItems += "}"
-	s := strings.Join([]string{
-		`&CronJobList{`,
+	s := strings.Join([]string{`&CronJobList{`,
 		`ListMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ListMeta), "ListMeta", "v1.ListMeta", 1), `&`, ``, 1) + `,`,
 		`Items:` + repeatedStringForItems + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *CronJobSpec) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&CronJobSpec{`,
+	s := strings.Join([]string{`&CronJobSpec{`,
 		`Schedule:` + fmt.Sprintf("%v", this.Schedule) + `,`,
 		`StartingDeadlineSeconds:` + valueToStringGenerated(this.StartingDeadlineSeconds) + `,`,
 		`ConcurrencyPolicy:` + fmt.Sprintf("%v", this.ConcurrencyPolicy) + `,`,
@@ -1923,7 +1837,6 @@ func (this *CronJobSpec) String() string {
 	}, "")
 	return s
 }
-
 func (this *CronJobStatus) String() string {
 	if this == nil {
 		return "nil"
@@ -1933,8 +1846,7 @@ func (this *CronJobStatus) String() string {
 		repeatedStringForActive += fmt.Sprintf("%v", f) + ","
 	}
 	repeatedStringForActive += "}"
-	s := strings.Join([]string{
-		`&CronJobStatus{`,
+	s := strings.Join([]string{`&CronJobStatus{`,
 		`Active:` + repeatedStringForActive + `,`,
 		`LastScheduleTime:` + strings.Replace(fmt.Sprintf("%v", this.LastScheduleTime), "Time", "v1.Time", 1) + `,`,
 		`LastSuccessfulTime:` + strings.Replace(fmt.Sprintf("%v", this.LastSuccessfulTime), "Time", "v1.Time", 1) + `,`,
@@ -1942,13 +1854,11 @@ func (this *CronJobStatus) String() string {
 	}, "")
 	return s
 }
-
 func (this *Job) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&Job{`,
+	s := strings.Join([]string{`&Job{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "JobSpec", "JobSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "JobStatus", "JobStatus", 1), `&`, ``, 1) + `,`,
@@ -1956,13 +1866,11 @@ func (this *Job) String() string {
 	}, "")
 	return s
 }
-
 func (this *JobCondition) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&JobCondition{`,
+	s := strings.Join([]string{`&JobCondition{`,
 		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
 		`Status:` + fmt.Sprintf("%v", this.Status) + `,`,
 		`LastProbeTime:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.LastProbeTime), "Time", "v1.Time", 1), `&`, ``, 1) + `,`,
@@ -1973,7 +1881,6 @@ func (this *JobCondition) String() string {
 	}, "")
 	return s
 }
-
 func (this *JobList) String() string {
 	if this == nil {
 		return "nil"
@@ -1983,21 +1890,18 @@ func (this *JobList) String() string {
 		repeatedStringForItems += strings.Replace(strings.Replace(f.String(), "Job", "Job", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForItems += "}"
-	s := strings.Join([]string{
-		`&JobList{`,
+	s := strings.Join([]string{`&JobList{`,
 		`ListMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ListMeta), "ListMeta", "v1.ListMeta", 1), `&`, ``, 1) + `,`,
 		`Items:` + repeatedStringForItems + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *JobSpec) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&JobSpec{`,
+	s := strings.Join([]string{`&JobSpec{`,
 		`Parallelism:` + valueToStringGenerated(this.Parallelism) + `,`,
 		`Completions:` + valueToStringGenerated(this.Completions) + `,`,
 		`ActiveDeadlineSeconds:` + valueToStringGenerated(this.ActiveDeadlineSeconds) + `,`,
@@ -2013,7 +1917,6 @@ func (this *JobSpec) String() string {
 	}, "")
 	return s
 }
-
 func (this *JobStatus) String() string {
 	if this == nil {
 		return "nil"
@@ -2023,8 +1926,7 @@ func (this *JobStatus) String() string {
 		repeatedStringForConditions += strings.Replace(strings.Replace(f.String(), "JobCondition", "JobCondition", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForConditions += "}"
-	s := strings.Join([]string{
-		`&JobStatus{`,
+	s := strings.Join([]string{`&JobStatus{`,
 		`Conditions:` + repeatedStringForConditions + `,`,
 		`StartTime:` + strings.Replace(fmt.Sprintf("%v", this.StartTime), "Time", "v1.Time", 1) + `,`,
 		`CompletionTime:` + strings.Replace(fmt.Sprintf("%v", this.CompletionTime), "Time", "v1.Time", 1) + `,`,
@@ -2038,20 +1940,17 @@ func (this *JobStatus) String() string {
 	}, "")
 	return s
 }
-
 func (this *JobTemplateSpec) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&JobTemplateSpec{`,
+	s := strings.Join([]string{`&JobTemplateSpec{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "JobSpec", "JobSpec", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *PodFailurePolicy) String() string {
 	if this == nil {
 		return "nil"
@@ -2061,20 +1960,17 @@ func (this *PodFailurePolicy) String() string {
 		repeatedStringForRules += strings.Replace(strings.Replace(f.String(), "PodFailurePolicyRule", "PodFailurePolicyRule", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForRules += "}"
-	s := strings.Join([]string{
-		`&PodFailurePolicy{`,
+	s := strings.Join([]string{`&PodFailurePolicy{`,
 		`Rules:` + repeatedStringForRules + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *PodFailurePolicyOnExitCodesRequirement) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&PodFailurePolicyOnExitCodesRequirement{`,
+	s := strings.Join([]string{`&PodFailurePolicyOnExitCodesRequirement{`,
 		`ContainerName:` + valueToStringGenerated(this.ContainerName) + `,`,
 		`Operator:` + fmt.Sprintf("%v", this.Operator) + `,`,
 		`Values:` + fmt.Sprintf("%v", this.Values) + `,`,
@@ -2082,20 +1978,17 @@ func (this *PodFailurePolicyOnExitCodesRequirement) String() string {
 	}, "")
 	return s
 }
-
 func (this *PodFailurePolicyOnPodConditionsPattern) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&PodFailurePolicyOnPodConditionsPattern{`,
+	s := strings.Join([]string{`&PodFailurePolicyOnPodConditionsPattern{`,
 		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
 		`Status:` + fmt.Sprintf("%v", this.Status) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *PodFailurePolicyRule) String() string {
 	if this == nil {
 		return "nil"
@@ -2105,8 +1998,7 @@ func (this *PodFailurePolicyRule) String() string {
 		repeatedStringForOnPodConditions += strings.Replace(strings.Replace(f.String(), "PodFailurePolicyOnPodConditionsPattern", "PodFailurePolicyOnPodConditionsPattern", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForOnPodConditions += "}"
-	s := strings.Join([]string{
-		`&PodFailurePolicyRule{`,
+	s := strings.Join([]string{`&PodFailurePolicyRule{`,
 		`Action:` + fmt.Sprintf("%v", this.Action) + `,`,
 		`OnExitCodes:` + strings.Replace(this.OnExitCodes.String(), "PodFailurePolicyOnExitCodesRequirement", "PodFailurePolicyOnExitCodesRequirement", 1) + `,`,
 		`OnPodConditions:` + repeatedStringForOnPodConditions + `,`,
@@ -2114,20 +2006,17 @@ func (this *PodFailurePolicyRule) String() string {
 	}, "")
 	return s
 }
-
 func (this *UncountedTerminatedPods) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&UncountedTerminatedPods{`,
+	s := strings.Join([]string{`&UncountedTerminatedPods{`,
 		`Succeeded:` + fmt.Sprintf("%v", this.Succeeded) + `,`,
 		`Failed:` + fmt.Sprintf("%v", this.Failed) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func valueToStringGenerated(v interface{}) string {
 	rv := reflect.ValueOf(v)
 	if rv.IsNil() {
@@ -2136,7 +2025,6 @@ func valueToStringGenerated(v interface{}) string {
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
 }
-
 func (m *CronJob) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2286,7 +2174,6 @@ func (m *CronJob) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *CronJobList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2404,7 +2291,6 @@ func (m *CronJobList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *CronJobSpec) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2666,7 +2552,6 @@ func (m *CronJobSpec) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *CronJobStatus) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2823,7 +2708,6 @@ func (m *CronJobStatus) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *Job) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2973,7 +2857,6 @@ func (m *Job) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *JobCondition) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3218,7 +3101,6 @@ func (m *JobCondition) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *JobList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3336,7 +3218,6 @@ func (m *JobList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *JobSpec) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3667,7 +3548,6 @@ func (m *JobSpec) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *JobStatus) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3969,7 +3849,6 @@ func (m *JobStatus) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *JobTemplateSpec) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4086,7 +3965,6 @@ func (m *JobTemplateSpec) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PodFailurePolicy) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4171,7 +4049,6 @@ func (m *PodFailurePolicy) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PodFailurePolicyOnExitCodesRequirement) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4363,7 +4240,6 @@ func (m *PodFailurePolicyOnExitCodesRequirement) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PodFailurePolicyOnPodConditionsPattern) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4478,7 +4354,6 @@ func (m *PodFailurePolicyOnPodConditionsPattern) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PodFailurePolicyRule) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4631,7 +4506,6 @@ func (m *PodFailurePolicyRule) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *UncountedTerminatedPods) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4746,7 +4620,6 @@ func (m *UncountedTerminatedPods) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func skipGenerated(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

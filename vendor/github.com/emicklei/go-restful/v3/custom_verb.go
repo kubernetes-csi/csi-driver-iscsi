@@ -5,7 +5,9 @@ import (
 	"regexp"
 )
 
-var customVerbReg = regexp.MustCompile(":([A-Za-z]+)$")
+var (
+	customVerbReg = regexp.MustCompile(":([A-Za-z]+)$")
+)
 
 func hasCustomVerb(routeToken string) bool {
 	return customVerbReg.MatchString(routeToken)

@@ -18,7 +18,6 @@ package spec3
 
 import (
 	"encoding/json"
-
 	"github.com/go-openapi/swag"
 	"k8s.io/kube-openapi/pkg/validation/spec"
 )

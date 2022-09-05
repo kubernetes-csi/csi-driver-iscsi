@@ -75,6 +75,7 @@ type writeSettings []Setting
 func (s writeSettings) staysWithinBuffer(max int) bool {
 	const settingSize = 6 // uint16 + uint32
 	return frameHeaderLen+settingSize*len(s) <= max
+
 }
 
 func (s writeSettings) writeFrame(ctx writeContext) error {

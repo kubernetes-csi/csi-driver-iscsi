@@ -71,10 +71,8 @@ func normalizeUnionsApply(w *mergingWalker) error {
 	return nil
 }
 
-type (
-	discriminated string
-	field         string
-)
+type discriminated string
+type field string
 
 type discriminatedNames struct {
 	f2d map[field]discriminated

@@ -1520,7 +1520,7 @@ func (fr *Framer) readMetaFrame(hf *HeadersFrame) (*MetaHeadersFrame, error) {
 	mh := &MetaHeadersFrame{
 		HeadersFrame: hf,
 	}
-	remainSize := fr.maxHeaderListSize()
+	var remainSize = fr.maxHeaderListSize()
 	var sawRegular bool
 
 	var invalid error // pseudo header field errors

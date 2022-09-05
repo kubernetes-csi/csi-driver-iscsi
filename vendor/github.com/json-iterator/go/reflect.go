@@ -246,7 +246,6 @@ func createEncoderOfType(ctx *ctx, typ reflect2.Type) ValEncoder {
 	placeholder.encoder = encoder
 	return encoder
 }
-
 func _createEncoderOfType(ctx *ctx, typ reflect2.Type) ValEncoder {
 	encoder := createEncoderOfJsonRawMessage(ctx, typ)
 	if encoder != nil {

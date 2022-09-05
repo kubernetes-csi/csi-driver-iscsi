@@ -59,7 +59,9 @@ type heapData struct {
 	lessFunc LessFunc
 }
 
-var _ = heap.Interface(&heapData{}) // heapData is a standard heap
+var (
+	_ = heap.Interface(&heapData{}) // heapData is a standard heap
+)
 
 // Less compares two objects and returns true if the first one should go
 // in front of the second one in the heap.

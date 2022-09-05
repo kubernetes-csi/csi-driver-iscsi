@@ -27,8 +27,10 @@ import (
 	"k8s.io/klog/v2/internal/severity"
 )
 
-// Pid is inserted into log headers. Can be overridden for tests.
-var Pid = os.Getpid()
+var (
+	// Pid is inserted into log headers. Can be overridden for tests.
+	Pid = os.Getpid()
+)
 
 // Buffer holds a single byte.Buffer for reuse. The zero value is ready for
 // use. It also provides some helper methods for output formatting.

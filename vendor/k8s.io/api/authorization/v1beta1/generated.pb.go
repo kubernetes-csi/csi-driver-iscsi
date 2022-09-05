@@ -35,11 +35,8 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-
-var (
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = fmt.Errorf
+var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -52,11 +49,9 @@ func (*ExtraValue) ProtoMessage() {}
 func (*ExtraValue) Descriptor() ([]byte, []int) {
 	return fileDescriptor_43130d8376f09103, []int{0}
 }
-
 func (m *ExtraValue) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *ExtraValue) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -65,15 +60,12 @@ func (m *ExtraValue) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
-
 func (m *ExtraValue) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_ExtraValue.Merge(m, src)
 }
-
 func (m *ExtraValue) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *ExtraValue) XXX_DiscardUnknown() {
 	xxx_messageInfo_ExtraValue.DiscardUnknown(m)
 }
@@ -85,11 +77,9 @@ func (*LocalSubjectAccessReview) ProtoMessage() {}
 func (*LocalSubjectAccessReview) Descriptor() ([]byte, []int) {
 	return fileDescriptor_43130d8376f09103, []int{1}
 }
-
 func (m *LocalSubjectAccessReview) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *LocalSubjectAccessReview) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -98,15 +88,12 @@ func (m *LocalSubjectAccessReview) XXX_Marshal(b []byte, deterministic bool) ([]
 	}
 	return b[:n], nil
 }
-
 func (m *LocalSubjectAccessReview) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_LocalSubjectAccessReview.Merge(m, src)
 }
-
 func (m *LocalSubjectAccessReview) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *LocalSubjectAccessReview) XXX_DiscardUnknown() {
 	xxx_messageInfo_LocalSubjectAccessReview.DiscardUnknown(m)
 }
@@ -118,11 +105,9 @@ func (*NonResourceAttributes) ProtoMessage() {}
 func (*NonResourceAttributes) Descriptor() ([]byte, []int) {
 	return fileDescriptor_43130d8376f09103, []int{2}
 }
-
 func (m *NonResourceAttributes) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *NonResourceAttributes) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -131,15 +116,12 @@ func (m *NonResourceAttributes) XXX_Marshal(b []byte, deterministic bool) ([]byt
 	}
 	return b[:n], nil
 }
-
 func (m *NonResourceAttributes) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_NonResourceAttributes.Merge(m, src)
 }
-
 func (m *NonResourceAttributes) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *NonResourceAttributes) XXX_DiscardUnknown() {
 	xxx_messageInfo_NonResourceAttributes.DiscardUnknown(m)
 }
@@ -151,11 +133,9 @@ func (*NonResourceRule) ProtoMessage() {}
 func (*NonResourceRule) Descriptor() ([]byte, []int) {
 	return fileDescriptor_43130d8376f09103, []int{3}
 }
-
 func (m *NonResourceRule) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *NonResourceRule) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -164,15 +144,12 @@ func (m *NonResourceRule) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 	}
 	return b[:n], nil
 }
-
 func (m *NonResourceRule) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_NonResourceRule.Merge(m, src)
 }
-
 func (m *NonResourceRule) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *NonResourceRule) XXX_DiscardUnknown() {
 	xxx_messageInfo_NonResourceRule.DiscardUnknown(m)
 }
@@ -184,11 +161,9 @@ func (*ResourceAttributes) ProtoMessage() {}
 func (*ResourceAttributes) Descriptor() ([]byte, []int) {
 	return fileDescriptor_43130d8376f09103, []int{4}
 }
-
 func (m *ResourceAttributes) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *ResourceAttributes) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -197,15 +172,12 @@ func (m *ResourceAttributes) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 	}
 	return b[:n], nil
 }
-
 func (m *ResourceAttributes) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_ResourceAttributes.Merge(m, src)
 }
-
 func (m *ResourceAttributes) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *ResourceAttributes) XXX_DiscardUnknown() {
 	xxx_messageInfo_ResourceAttributes.DiscardUnknown(m)
 }
@@ -217,11 +189,9 @@ func (*ResourceRule) ProtoMessage() {}
 func (*ResourceRule) Descriptor() ([]byte, []int) {
 	return fileDescriptor_43130d8376f09103, []int{5}
 }
-
 func (m *ResourceRule) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *ResourceRule) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -230,15 +200,12 @@ func (m *ResourceRule) XXX_Marshal(b []byte, deterministic bool) ([]byte, error)
 	}
 	return b[:n], nil
 }
-
 func (m *ResourceRule) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_ResourceRule.Merge(m, src)
 }
-
 func (m *ResourceRule) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *ResourceRule) XXX_DiscardUnknown() {
 	xxx_messageInfo_ResourceRule.DiscardUnknown(m)
 }
@@ -250,11 +217,9 @@ func (*SelfSubjectAccessReview) ProtoMessage() {}
 func (*SelfSubjectAccessReview) Descriptor() ([]byte, []int) {
 	return fileDescriptor_43130d8376f09103, []int{6}
 }
-
 func (m *SelfSubjectAccessReview) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *SelfSubjectAccessReview) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -263,15 +228,12 @@ func (m *SelfSubjectAccessReview) XXX_Marshal(b []byte, deterministic bool) ([]b
 	}
 	return b[:n], nil
 }
-
 func (m *SelfSubjectAccessReview) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_SelfSubjectAccessReview.Merge(m, src)
 }
-
 func (m *SelfSubjectAccessReview) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *SelfSubjectAccessReview) XXX_DiscardUnknown() {
 	xxx_messageInfo_SelfSubjectAccessReview.DiscardUnknown(m)
 }
@@ -283,11 +245,9 @@ func (*SelfSubjectAccessReviewSpec) ProtoMessage() {}
 func (*SelfSubjectAccessReviewSpec) Descriptor() ([]byte, []int) {
 	return fileDescriptor_43130d8376f09103, []int{7}
 }
-
 func (m *SelfSubjectAccessReviewSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *SelfSubjectAccessReviewSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -296,15 +256,12 @@ func (m *SelfSubjectAccessReviewSpec) XXX_Marshal(b []byte, deterministic bool) 
 	}
 	return b[:n], nil
 }
-
 func (m *SelfSubjectAccessReviewSpec) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_SelfSubjectAccessReviewSpec.Merge(m, src)
 }
-
 func (m *SelfSubjectAccessReviewSpec) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *SelfSubjectAccessReviewSpec) XXX_DiscardUnknown() {
 	xxx_messageInfo_SelfSubjectAccessReviewSpec.DiscardUnknown(m)
 }
@@ -316,11 +273,9 @@ func (*SelfSubjectRulesReview) ProtoMessage() {}
 func (*SelfSubjectRulesReview) Descriptor() ([]byte, []int) {
 	return fileDescriptor_43130d8376f09103, []int{8}
 }
-
 func (m *SelfSubjectRulesReview) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *SelfSubjectRulesReview) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -329,15 +284,12 @@ func (m *SelfSubjectRulesReview) XXX_Marshal(b []byte, deterministic bool) ([]by
 	}
 	return b[:n], nil
 }
-
 func (m *SelfSubjectRulesReview) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_SelfSubjectRulesReview.Merge(m, src)
 }
-
 func (m *SelfSubjectRulesReview) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *SelfSubjectRulesReview) XXX_DiscardUnknown() {
 	xxx_messageInfo_SelfSubjectRulesReview.DiscardUnknown(m)
 }
@@ -349,11 +301,9 @@ func (*SelfSubjectRulesReviewSpec) ProtoMessage() {}
 func (*SelfSubjectRulesReviewSpec) Descriptor() ([]byte, []int) {
 	return fileDescriptor_43130d8376f09103, []int{9}
 }
-
 func (m *SelfSubjectRulesReviewSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *SelfSubjectRulesReviewSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -362,15 +312,12 @@ func (m *SelfSubjectRulesReviewSpec) XXX_Marshal(b []byte, deterministic bool) (
 	}
 	return b[:n], nil
 }
-
 func (m *SelfSubjectRulesReviewSpec) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_SelfSubjectRulesReviewSpec.Merge(m, src)
 }
-
 func (m *SelfSubjectRulesReviewSpec) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *SelfSubjectRulesReviewSpec) XXX_DiscardUnknown() {
 	xxx_messageInfo_SelfSubjectRulesReviewSpec.DiscardUnknown(m)
 }
@@ -382,11 +329,9 @@ func (*SubjectAccessReview) ProtoMessage() {}
 func (*SubjectAccessReview) Descriptor() ([]byte, []int) {
 	return fileDescriptor_43130d8376f09103, []int{10}
 }
-
 func (m *SubjectAccessReview) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *SubjectAccessReview) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -395,15 +340,12 @@ func (m *SubjectAccessReview) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 	}
 	return b[:n], nil
 }
-
 func (m *SubjectAccessReview) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_SubjectAccessReview.Merge(m, src)
 }
-
 func (m *SubjectAccessReview) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *SubjectAccessReview) XXX_DiscardUnknown() {
 	xxx_messageInfo_SubjectAccessReview.DiscardUnknown(m)
 }
@@ -415,11 +357,9 @@ func (*SubjectAccessReviewSpec) ProtoMessage() {}
 func (*SubjectAccessReviewSpec) Descriptor() ([]byte, []int) {
 	return fileDescriptor_43130d8376f09103, []int{11}
 }
-
 func (m *SubjectAccessReviewSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *SubjectAccessReviewSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -428,15 +368,12 @@ func (m *SubjectAccessReviewSpec) XXX_Marshal(b []byte, deterministic bool) ([]b
 	}
 	return b[:n], nil
 }
-
 func (m *SubjectAccessReviewSpec) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_SubjectAccessReviewSpec.Merge(m, src)
 }
-
 func (m *SubjectAccessReviewSpec) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *SubjectAccessReviewSpec) XXX_DiscardUnknown() {
 	xxx_messageInfo_SubjectAccessReviewSpec.DiscardUnknown(m)
 }
@@ -448,11 +385,9 @@ func (*SubjectAccessReviewStatus) ProtoMessage() {}
 func (*SubjectAccessReviewStatus) Descriptor() ([]byte, []int) {
 	return fileDescriptor_43130d8376f09103, []int{12}
 }
-
 func (m *SubjectAccessReviewStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *SubjectAccessReviewStatus) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -461,15 +396,12 @@ func (m *SubjectAccessReviewStatus) XXX_Marshal(b []byte, deterministic bool) ([
 	}
 	return b[:n], nil
 }
-
 func (m *SubjectAccessReviewStatus) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_SubjectAccessReviewStatus.Merge(m, src)
 }
-
 func (m *SubjectAccessReviewStatus) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *SubjectAccessReviewStatus) XXX_DiscardUnknown() {
 	xxx_messageInfo_SubjectAccessReviewStatus.DiscardUnknown(m)
 }
@@ -481,11 +413,9 @@ func (*SubjectRulesReviewStatus) ProtoMessage() {}
 func (*SubjectRulesReviewStatus) Descriptor() ([]byte, []int) {
 	return fileDescriptor_43130d8376f09103, []int{13}
 }
-
 func (m *SubjectRulesReviewStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *SubjectRulesReviewStatus) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -494,15 +424,12 @@ func (m *SubjectRulesReviewStatus) XXX_Marshal(b []byte, deterministic bool) ([]
 	}
 	return b[:n], nil
 }
-
 func (m *SubjectRulesReviewStatus) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_SubjectRulesReviewStatus.Merge(m, src)
 }
-
 func (m *SubjectRulesReviewStatus) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *SubjectRulesReviewStatus) XXX_DiscardUnknown() {
 	xxx_messageInfo_SubjectRulesReviewStatus.DiscardUnknown(m)
 }
@@ -1336,7 +1263,6 @@ func encodeVarintGenerated(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-
 func (m ExtraValue) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1608,17 +1534,14 @@ func (m *SubjectRulesReviewStatus) Size() (n int) {
 func sovGenerated(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
-
 func sozGenerated(x uint64) (n int) {
 	return sovGenerated(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-
 func (this *LocalSubjectAccessReview) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&LocalSubjectAccessReview{`,
+	s := strings.Join([]string{`&LocalSubjectAccessReview{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "SubjectAccessReviewSpec", "SubjectAccessReviewSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "SubjectAccessReviewStatus", "SubjectAccessReviewStatus", 1), `&`, ``, 1) + `,`,
@@ -1626,39 +1549,33 @@ func (this *LocalSubjectAccessReview) String() string {
 	}, "")
 	return s
 }
-
 func (this *NonResourceAttributes) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&NonResourceAttributes{`,
+	s := strings.Join([]string{`&NonResourceAttributes{`,
 		`Path:` + fmt.Sprintf("%v", this.Path) + `,`,
 		`Verb:` + fmt.Sprintf("%v", this.Verb) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *NonResourceRule) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&NonResourceRule{`,
+	s := strings.Join([]string{`&NonResourceRule{`,
 		`Verbs:` + fmt.Sprintf("%v", this.Verbs) + `,`,
 		`NonResourceURLs:` + fmt.Sprintf("%v", this.NonResourceURLs) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *ResourceAttributes) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&ResourceAttributes{`,
+	s := strings.Join([]string{`&ResourceAttributes{`,
 		`Namespace:` + fmt.Sprintf("%v", this.Namespace) + `,`,
 		`Verb:` + fmt.Sprintf("%v", this.Verb) + `,`,
 		`Group:` + fmt.Sprintf("%v", this.Group) + `,`,
@@ -1670,13 +1587,11 @@ func (this *ResourceAttributes) String() string {
 	}, "")
 	return s
 }
-
 func (this *ResourceRule) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&ResourceRule{`,
+	s := strings.Join([]string{`&ResourceRule{`,
 		`Verbs:` + fmt.Sprintf("%v", this.Verbs) + `,`,
 		`APIGroups:` + fmt.Sprintf("%v", this.APIGroups) + `,`,
 		`Resources:` + fmt.Sprintf("%v", this.Resources) + `,`,
@@ -1685,13 +1600,11 @@ func (this *ResourceRule) String() string {
 	}, "")
 	return s
 }
-
 func (this *SelfSubjectAccessReview) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&SelfSubjectAccessReview{`,
+	s := strings.Join([]string{`&SelfSubjectAccessReview{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "SelfSubjectAccessReviewSpec", "SelfSubjectAccessReviewSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "SubjectAccessReviewStatus", "SubjectAccessReviewStatus", 1), `&`, ``, 1) + `,`,
@@ -1699,26 +1612,22 @@ func (this *SelfSubjectAccessReview) String() string {
 	}, "")
 	return s
 }
-
 func (this *SelfSubjectAccessReviewSpec) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&SelfSubjectAccessReviewSpec{`,
+	s := strings.Join([]string{`&SelfSubjectAccessReviewSpec{`,
 		`ResourceAttributes:` + strings.Replace(this.ResourceAttributes.String(), "ResourceAttributes", "ResourceAttributes", 1) + `,`,
 		`NonResourceAttributes:` + strings.Replace(this.NonResourceAttributes.String(), "NonResourceAttributes", "NonResourceAttributes", 1) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *SelfSubjectRulesReview) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&SelfSubjectRulesReview{`,
+	s := strings.Join([]string{`&SelfSubjectRulesReview{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "SelfSubjectRulesReviewSpec", "SelfSubjectRulesReviewSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "SubjectRulesReviewStatus", "SubjectRulesReviewStatus", 1), `&`, ``, 1) + `,`,
@@ -1726,25 +1635,21 @@ func (this *SelfSubjectRulesReview) String() string {
 	}, "")
 	return s
 }
-
 func (this *SelfSubjectRulesReviewSpec) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&SelfSubjectRulesReviewSpec{`,
+	s := strings.Join([]string{`&SelfSubjectRulesReviewSpec{`,
 		`Namespace:` + fmt.Sprintf("%v", this.Namespace) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *SubjectAccessReview) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&SubjectAccessReview{`,
+	s := strings.Join([]string{`&SubjectAccessReview{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "SubjectAccessReviewSpec", "SubjectAccessReviewSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "SubjectAccessReviewStatus", "SubjectAccessReviewStatus", 1), `&`, ``, 1) + `,`,
@@ -1752,7 +1657,6 @@ func (this *SubjectAccessReview) String() string {
 	}, "")
 	return s
 }
-
 func (this *SubjectAccessReviewSpec) String() string {
 	if this == nil {
 		return "nil"
@@ -1767,8 +1671,7 @@ func (this *SubjectAccessReviewSpec) String() string {
 		mapStringForExtra += fmt.Sprintf("%v: %v,", k, this.Extra[k])
 	}
 	mapStringForExtra += "}"
-	s := strings.Join([]string{
-		`&SubjectAccessReviewSpec{`,
+	s := strings.Join([]string{`&SubjectAccessReviewSpec{`,
 		`ResourceAttributes:` + strings.Replace(this.ResourceAttributes.String(), "ResourceAttributes", "ResourceAttributes", 1) + `,`,
 		`NonResourceAttributes:` + strings.Replace(this.NonResourceAttributes.String(), "NonResourceAttributes", "NonResourceAttributes", 1) + `,`,
 		`User:` + fmt.Sprintf("%v", this.User) + `,`,
@@ -1779,13 +1682,11 @@ func (this *SubjectAccessReviewSpec) String() string {
 	}, "")
 	return s
 }
-
 func (this *SubjectAccessReviewStatus) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&SubjectAccessReviewStatus{`,
+	s := strings.Join([]string{`&SubjectAccessReviewStatus{`,
 		`Allowed:` + fmt.Sprintf("%v", this.Allowed) + `,`,
 		`Reason:` + fmt.Sprintf("%v", this.Reason) + `,`,
 		`EvaluationError:` + fmt.Sprintf("%v", this.EvaluationError) + `,`,
@@ -1794,7 +1695,6 @@ func (this *SubjectAccessReviewStatus) String() string {
 	}, "")
 	return s
 }
-
 func (this *SubjectRulesReviewStatus) String() string {
 	if this == nil {
 		return "nil"
@@ -1809,8 +1709,7 @@ func (this *SubjectRulesReviewStatus) String() string {
 		repeatedStringForNonResourceRules += strings.Replace(strings.Replace(f.String(), "NonResourceRule", "NonResourceRule", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForNonResourceRules += "}"
-	s := strings.Join([]string{
-		`&SubjectRulesReviewStatus{`,
+	s := strings.Join([]string{`&SubjectRulesReviewStatus{`,
 		`ResourceRules:` + repeatedStringForResourceRules + `,`,
 		`NonResourceRules:` + repeatedStringForNonResourceRules + `,`,
 		`Incomplete:` + fmt.Sprintf("%v", this.Incomplete) + `,`,
@@ -1819,7 +1718,6 @@ func (this *SubjectRulesReviewStatus) String() string {
 	}, "")
 	return s
 }
-
 func valueToStringGenerated(v interface{}) string {
 	rv := reflect.ValueOf(v)
 	if rv.IsNil() {
@@ -1828,7 +1726,6 @@ func valueToStringGenerated(v interface{}) string {
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
 }
-
 func (m *ExtraValue) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1911,7 +1808,6 @@ func (m *ExtraValue) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *LocalSubjectAccessReview) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2061,7 +1957,6 @@ func (m *LocalSubjectAccessReview) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *NonResourceAttributes) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2176,7 +2071,6 @@ func (m *NonResourceAttributes) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *NonResourceRule) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2291,7 +2185,6 @@ func (m *NonResourceRule) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *ResourceAttributes) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2566,7 +2459,6 @@ func (m *ResourceAttributes) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *ResourceRule) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2745,7 +2637,6 @@ func (m *ResourceRule) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *SelfSubjectAccessReview) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2895,7 +2786,6 @@ func (m *SelfSubjectAccessReview) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *SelfSubjectAccessReviewSpec) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3018,7 +2908,6 @@ func (m *SelfSubjectAccessReviewSpec) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *SelfSubjectRulesReview) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3168,7 +3057,6 @@ func (m *SelfSubjectRulesReview) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *SelfSubjectRulesReviewSpec) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3251,7 +3139,6 @@ func (m *SelfSubjectRulesReviewSpec) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *SubjectAccessReview) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3401,7 +3288,6 @@ func (m *SubjectAccessReview) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *SubjectAccessReviewSpec) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3749,7 +3635,6 @@ func (m *SubjectAccessReviewSpec) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *SubjectAccessReviewStatus) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3904,7 +3789,6 @@ func (m *SubjectAccessReviewStatus) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *SubjectRulesReviewStatus) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4075,7 +3959,6 @@ func (m *SubjectRulesReviewStatus) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func skipGenerated(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

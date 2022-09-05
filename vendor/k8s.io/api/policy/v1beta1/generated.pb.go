@@ -40,11 +40,8 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-
-var (
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = fmt.Errorf
+var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -57,11 +54,9 @@ func (*AllowedCSIDriver) ProtoMessage() {}
 func (*AllowedCSIDriver) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{0}
 }
-
 func (m *AllowedCSIDriver) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *AllowedCSIDriver) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -70,15 +65,12 @@ func (m *AllowedCSIDriver) XXX_Marshal(b []byte, deterministic bool) ([]byte, er
 	}
 	return b[:n], nil
 }
-
 func (m *AllowedCSIDriver) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_AllowedCSIDriver.Merge(m, src)
 }
-
 func (m *AllowedCSIDriver) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *AllowedCSIDriver) XXX_DiscardUnknown() {
 	xxx_messageInfo_AllowedCSIDriver.DiscardUnknown(m)
 }
@@ -90,11 +82,9 @@ func (*AllowedFlexVolume) ProtoMessage() {}
 func (*AllowedFlexVolume) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{1}
 }
-
 func (m *AllowedFlexVolume) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *AllowedFlexVolume) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -103,15 +93,12 @@ func (m *AllowedFlexVolume) XXX_Marshal(b []byte, deterministic bool) ([]byte, e
 	}
 	return b[:n], nil
 }
-
 func (m *AllowedFlexVolume) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_AllowedFlexVolume.Merge(m, src)
 }
-
 func (m *AllowedFlexVolume) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *AllowedFlexVolume) XXX_DiscardUnknown() {
 	xxx_messageInfo_AllowedFlexVolume.DiscardUnknown(m)
 }
@@ -123,11 +110,9 @@ func (*AllowedHostPath) ProtoMessage() {}
 func (*AllowedHostPath) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{2}
 }
-
 func (m *AllowedHostPath) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *AllowedHostPath) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -136,15 +121,12 @@ func (m *AllowedHostPath) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 	}
 	return b[:n], nil
 }
-
 func (m *AllowedHostPath) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_AllowedHostPath.Merge(m, src)
 }
-
 func (m *AllowedHostPath) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *AllowedHostPath) XXX_DiscardUnknown() {
 	xxx_messageInfo_AllowedHostPath.DiscardUnknown(m)
 }
@@ -156,11 +138,9 @@ func (*Eviction) ProtoMessage() {}
 func (*Eviction) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{3}
 }
-
 func (m *Eviction) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *Eviction) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -169,15 +149,12 @@ func (m *Eviction) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
-
 func (m *Eviction) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_Eviction.Merge(m, src)
 }
-
 func (m *Eviction) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *Eviction) XXX_DiscardUnknown() {
 	xxx_messageInfo_Eviction.DiscardUnknown(m)
 }
@@ -189,11 +166,9 @@ func (*FSGroupStrategyOptions) ProtoMessage() {}
 func (*FSGroupStrategyOptions) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{4}
 }
-
 func (m *FSGroupStrategyOptions) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *FSGroupStrategyOptions) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -202,15 +177,12 @@ func (m *FSGroupStrategyOptions) XXX_Marshal(b []byte, deterministic bool) ([]by
 	}
 	return b[:n], nil
 }
-
 func (m *FSGroupStrategyOptions) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_FSGroupStrategyOptions.Merge(m, src)
 }
-
 func (m *FSGroupStrategyOptions) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *FSGroupStrategyOptions) XXX_DiscardUnknown() {
 	xxx_messageInfo_FSGroupStrategyOptions.DiscardUnknown(m)
 }
@@ -222,11 +194,9 @@ func (*HostPortRange) ProtoMessage() {}
 func (*HostPortRange) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{5}
 }
-
 func (m *HostPortRange) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *HostPortRange) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -235,15 +205,12 @@ func (m *HostPortRange) XXX_Marshal(b []byte, deterministic bool) ([]byte, error
 	}
 	return b[:n], nil
 }
-
 func (m *HostPortRange) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_HostPortRange.Merge(m, src)
 }
-
 func (m *HostPortRange) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *HostPortRange) XXX_DiscardUnknown() {
 	xxx_messageInfo_HostPortRange.DiscardUnknown(m)
 }
@@ -255,11 +222,9 @@ func (*IDRange) ProtoMessage() {}
 func (*IDRange) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{6}
 }
-
 func (m *IDRange) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *IDRange) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -268,15 +233,12 @@ func (m *IDRange) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
-
 func (m *IDRange) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_IDRange.Merge(m, src)
 }
-
 func (m *IDRange) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *IDRange) XXX_DiscardUnknown() {
 	xxx_messageInfo_IDRange.DiscardUnknown(m)
 }
@@ -288,11 +250,9 @@ func (*PodDisruptionBudget) ProtoMessage() {}
 func (*PodDisruptionBudget) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{7}
 }
-
 func (m *PodDisruptionBudget) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PodDisruptionBudget) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -301,15 +261,12 @@ func (m *PodDisruptionBudget) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 	}
 	return b[:n], nil
 }
-
 func (m *PodDisruptionBudget) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PodDisruptionBudget.Merge(m, src)
 }
-
 func (m *PodDisruptionBudget) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PodDisruptionBudget) XXX_DiscardUnknown() {
 	xxx_messageInfo_PodDisruptionBudget.DiscardUnknown(m)
 }
@@ -321,11 +278,9 @@ func (*PodDisruptionBudgetList) ProtoMessage() {}
 func (*PodDisruptionBudgetList) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{8}
 }
-
 func (m *PodDisruptionBudgetList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PodDisruptionBudgetList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -334,15 +289,12 @@ func (m *PodDisruptionBudgetList) XXX_Marshal(b []byte, deterministic bool) ([]b
 	}
 	return b[:n], nil
 }
-
 func (m *PodDisruptionBudgetList) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PodDisruptionBudgetList.Merge(m, src)
 }
-
 func (m *PodDisruptionBudgetList) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PodDisruptionBudgetList) XXX_DiscardUnknown() {
 	xxx_messageInfo_PodDisruptionBudgetList.DiscardUnknown(m)
 }
@@ -354,11 +306,9 @@ func (*PodDisruptionBudgetSpec) ProtoMessage() {}
 func (*PodDisruptionBudgetSpec) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{9}
 }
-
 func (m *PodDisruptionBudgetSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PodDisruptionBudgetSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -367,15 +317,12 @@ func (m *PodDisruptionBudgetSpec) XXX_Marshal(b []byte, deterministic bool) ([]b
 	}
 	return b[:n], nil
 }
-
 func (m *PodDisruptionBudgetSpec) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PodDisruptionBudgetSpec.Merge(m, src)
 }
-
 func (m *PodDisruptionBudgetSpec) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PodDisruptionBudgetSpec) XXX_DiscardUnknown() {
 	xxx_messageInfo_PodDisruptionBudgetSpec.DiscardUnknown(m)
 }
@@ -387,11 +334,9 @@ func (*PodDisruptionBudgetStatus) ProtoMessage() {}
 func (*PodDisruptionBudgetStatus) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{10}
 }
-
 func (m *PodDisruptionBudgetStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PodDisruptionBudgetStatus) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -400,15 +345,12 @@ func (m *PodDisruptionBudgetStatus) XXX_Marshal(b []byte, deterministic bool) ([
 	}
 	return b[:n], nil
 }
-
 func (m *PodDisruptionBudgetStatus) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PodDisruptionBudgetStatus.Merge(m, src)
 }
-
 func (m *PodDisruptionBudgetStatus) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PodDisruptionBudgetStatus) XXX_DiscardUnknown() {
 	xxx_messageInfo_PodDisruptionBudgetStatus.DiscardUnknown(m)
 }
@@ -420,11 +362,9 @@ func (*PodSecurityPolicy) ProtoMessage() {}
 func (*PodSecurityPolicy) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{11}
 }
-
 func (m *PodSecurityPolicy) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PodSecurityPolicy) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -433,15 +373,12 @@ func (m *PodSecurityPolicy) XXX_Marshal(b []byte, deterministic bool) ([]byte, e
 	}
 	return b[:n], nil
 }
-
 func (m *PodSecurityPolicy) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PodSecurityPolicy.Merge(m, src)
 }
-
 func (m *PodSecurityPolicy) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PodSecurityPolicy) XXX_DiscardUnknown() {
 	xxx_messageInfo_PodSecurityPolicy.DiscardUnknown(m)
 }
@@ -453,11 +390,9 @@ func (*PodSecurityPolicyList) ProtoMessage() {}
 func (*PodSecurityPolicyList) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{12}
 }
-
 func (m *PodSecurityPolicyList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PodSecurityPolicyList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -466,15 +401,12 @@ func (m *PodSecurityPolicyList) XXX_Marshal(b []byte, deterministic bool) ([]byt
 	}
 	return b[:n], nil
 }
-
 func (m *PodSecurityPolicyList) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PodSecurityPolicyList.Merge(m, src)
 }
-
 func (m *PodSecurityPolicyList) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PodSecurityPolicyList) XXX_DiscardUnknown() {
 	xxx_messageInfo_PodSecurityPolicyList.DiscardUnknown(m)
 }
@@ -486,11 +418,9 @@ func (*PodSecurityPolicySpec) ProtoMessage() {}
 func (*PodSecurityPolicySpec) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{13}
 }
-
 func (m *PodSecurityPolicySpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PodSecurityPolicySpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -499,15 +429,12 @@ func (m *PodSecurityPolicySpec) XXX_Marshal(b []byte, deterministic bool) ([]byt
 	}
 	return b[:n], nil
 }
-
 func (m *PodSecurityPolicySpec) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PodSecurityPolicySpec.Merge(m, src)
 }
-
 func (m *PodSecurityPolicySpec) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PodSecurityPolicySpec) XXX_DiscardUnknown() {
 	xxx_messageInfo_PodSecurityPolicySpec.DiscardUnknown(m)
 }
@@ -519,11 +446,9 @@ func (*RunAsGroupStrategyOptions) ProtoMessage() {}
 func (*RunAsGroupStrategyOptions) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{14}
 }
-
 func (m *RunAsGroupStrategyOptions) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *RunAsGroupStrategyOptions) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -532,15 +457,12 @@ func (m *RunAsGroupStrategyOptions) XXX_Marshal(b []byte, deterministic bool) ([
 	}
 	return b[:n], nil
 }
-
 func (m *RunAsGroupStrategyOptions) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_RunAsGroupStrategyOptions.Merge(m, src)
 }
-
 func (m *RunAsGroupStrategyOptions) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *RunAsGroupStrategyOptions) XXX_DiscardUnknown() {
 	xxx_messageInfo_RunAsGroupStrategyOptions.DiscardUnknown(m)
 }
@@ -552,11 +474,9 @@ func (*RunAsUserStrategyOptions) ProtoMessage() {}
 func (*RunAsUserStrategyOptions) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{15}
 }
-
 func (m *RunAsUserStrategyOptions) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *RunAsUserStrategyOptions) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -565,15 +485,12 @@ func (m *RunAsUserStrategyOptions) XXX_Marshal(b []byte, deterministic bool) ([]
 	}
 	return b[:n], nil
 }
-
 func (m *RunAsUserStrategyOptions) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_RunAsUserStrategyOptions.Merge(m, src)
 }
-
 func (m *RunAsUserStrategyOptions) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *RunAsUserStrategyOptions) XXX_DiscardUnknown() {
 	xxx_messageInfo_RunAsUserStrategyOptions.DiscardUnknown(m)
 }
@@ -585,11 +502,9 @@ func (*RuntimeClassStrategyOptions) ProtoMessage() {}
 func (*RuntimeClassStrategyOptions) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{16}
 }
-
 func (m *RuntimeClassStrategyOptions) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *RuntimeClassStrategyOptions) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -598,15 +513,12 @@ func (m *RuntimeClassStrategyOptions) XXX_Marshal(b []byte, deterministic bool) 
 	}
 	return b[:n], nil
 }
-
 func (m *RuntimeClassStrategyOptions) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_RuntimeClassStrategyOptions.Merge(m, src)
 }
-
 func (m *RuntimeClassStrategyOptions) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *RuntimeClassStrategyOptions) XXX_DiscardUnknown() {
 	xxx_messageInfo_RuntimeClassStrategyOptions.DiscardUnknown(m)
 }
@@ -618,11 +530,9 @@ func (*SELinuxStrategyOptions) ProtoMessage() {}
 func (*SELinuxStrategyOptions) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{17}
 }
-
 func (m *SELinuxStrategyOptions) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *SELinuxStrategyOptions) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -631,15 +541,12 @@ func (m *SELinuxStrategyOptions) XXX_Marshal(b []byte, deterministic bool) ([]by
 	}
 	return b[:n], nil
 }
-
 func (m *SELinuxStrategyOptions) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_SELinuxStrategyOptions.Merge(m, src)
 }
-
 func (m *SELinuxStrategyOptions) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *SELinuxStrategyOptions) XXX_DiscardUnknown() {
 	xxx_messageInfo_SELinuxStrategyOptions.DiscardUnknown(m)
 }
@@ -651,11 +558,9 @@ func (*SupplementalGroupsStrategyOptions) ProtoMessage() {}
 func (*SupplementalGroupsStrategyOptions) Descriptor() ([]byte, []int) {
 	return fileDescriptor_014060e454a820dc, []int{18}
 }
-
 func (m *SupplementalGroupsStrategyOptions) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *SupplementalGroupsStrategyOptions) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -664,15 +569,12 @@ func (m *SupplementalGroupsStrategyOptions) XXX_Marshal(b []byte, deterministic 
 	}
 	return b[:n], nil
 }
-
 func (m *SupplementalGroupsStrategyOptions) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_SupplementalGroupsStrategyOptions.Merge(m, src)
 }
-
 func (m *SupplementalGroupsStrategyOptions) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *SupplementalGroupsStrategyOptions) XXX_DiscardUnknown() {
 	xxx_messageInfo_SupplementalGroupsStrategyOptions.DiscardUnknown(m)
 }
@@ -1897,7 +1799,6 @@ func encodeVarintGenerated(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-
 func (m *AllowedCSIDriver) Size() (n int) {
 	if m == nil {
 		return 0
@@ -2288,61 +2189,51 @@ func (m *SupplementalGroupsStrategyOptions) Size() (n int) {
 func sovGenerated(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
-
 func sozGenerated(x uint64) (n int) {
 	return sovGenerated(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-
 func (this *AllowedCSIDriver) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&AllowedCSIDriver{`,
+	s := strings.Join([]string{`&AllowedCSIDriver{`,
 		`Name:` + fmt.Sprintf("%v", this.Name) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *AllowedFlexVolume) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&AllowedFlexVolume{`,
+	s := strings.Join([]string{`&AllowedFlexVolume{`,
 		`Driver:` + fmt.Sprintf("%v", this.Driver) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *AllowedHostPath) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&AllowedHostPath{`,
+	s := strings.Join([]string{`&AllowedHostPath{`,
 		`PathPrefix:` + fmt.Sprintf("%v", this.PathPrefix) + `,`,
 		`ReadOnly:` + fmt.Sprintf("%v", this.ReadOnly) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *Eviction) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&Eviction{`,
+	s := strings.Join([]string{`&Eviction{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`DeleteOptions:` + strings.Replace(fmt.Sprintf("%v", this.DeleteOptions), "DeleteOptions", "v1.DeleteOptions", 1) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *FSGroupStrategyOptions) String() string {
 	if this == nil {
 		return "nil"
@@ -2352,47 +2243,40 @@ func (this *FSGroupStrategyOptions) String() string {
 		repeatedStringForRanges += strings.Replace(strings.Replace(f.String(), "IDRange", "IDRange", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForRanges += "}"
-	s := strings.Join([]string{
-		`&FSGroupStrategyOptions{`,
+	s := strings.Join([]string{`&FSGroupStrategyOptions{`,
 		`Rule:` + fmt.Sprintf("%v", this.Rule) + `,`,
 		`Ranges:` + repeatedStringForRanges + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *HostPortRange) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&HostPortRange{`,
+	s := strings.Join([]string{`&HostPortRange{`,
 		`Min:` + fmt.Sprintf("%v", this.Min) + `,`,
 		`Max:` + fmt.Sprintf("%v", this.Max) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *IDRange) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&IDRange{`,
+	s := strings.Join([]string{`&IDRange{`,
 		`Min:` + fmt.Sprintf("%v", this.Min) + `,`,
 		`Max:` + fmt.Sprintf("%v", this.Max) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *PodDisruptionBudget) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&PodDisruptionBudget{`,
+	s := strings.Join([]string{`&PodDisruptionBudget{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "PodDisruptionBudgetSpec", "PodDisruptionBudgetSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "PodDisruptionBudgetStatus", "PodDisruptionBudgetStatus", 1), `&`, ``, 1) + `,`,
@@ -2400,7 +2284,6 @@ func (this *PodDisruptionBudget) String() string {
 	}, "")
 	return s
 }
-
 func (this *PodDisruptionBudgetList) String() string {
 	if this == nil {
 		return "nil"
@@ -2410,21 +2293,18 @@ func (this *PodDisruptionBudgetList) String() string {
 		repeatedStringForItems += strings.Replace(strings.Replace(f.String(), "PodDisruptionBudget", "PodDisruptionBudget", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForItems += "}"
-	s := strings.Join([]string{
-		`&PodDisruptionBudgetList{`,
+	s := strings.Join([]string{`&PodDisruptionBudgetList{`,
 		`ListMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ListMeta), "ListMeta", "v1.ListMeta", 1), `&`, ``, 1) + `,`,
 		`Items:` + repeatedStringForItems + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *PodDisruptionBudgetSpec) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&PodDisruptionBudgetSpec{`,
+	s := strings.Join([]string{`&PodDisruptionBudgetSpec{`,
 		`MinAvailable:` + strings.Replace(fmt.Sprintf("%v", this.MinAvailable), "IntOrString", "intstr.IntOrString", 1) + `,`,
 		`Selector:` + strings.Replace(fmt.Sprintf("%v", this.Selector), "LabelSelector", "v1.LabelSelector", 1) + `,`,
 		`MaxUnavailable:` + strings.Replace(fmt.Sprintf("%v", this.MaxUnavailable), "IntOrString", "intstr.IntOrString", 1) + `,`,
@@ -2432,7 +2312,6 @@ func (this *PodDisruptionBudgetSpec) String() string {
 	}, "")
 	return s
 }
-
 func (this *PodDisruptionBudgetStatus) String() string {
 	if this == nil {
 		return "nil"
@@ -2452,8 +2331,7 @@ func (this *PodDisruptionBudgetStatus) String() string {
 		mapStringForDisruptedPods += fmt.Sprintf("%v: %v,", k, this.DisruptedPods[k])
 	}
 	mapStringForDisruptedPods += "}"
-	s := strings.Join([]string{
-		`&PodDisruptionBudgetStatus{`,
+	s := strings.Join([]string{`&PodDisruptionBudgetStatus{`,
 		`ObservedGeneration:` + fmt.Sprintf("%v", this.ObservedGeneration) + `,`,
 		`DisruptedPods:` + mapStringForDisruptedPods + `,`,
 		`DisruptionsAllowed:` + fmt.Sprintf("%v", this.DisruptionsAllowed) + `,`,
@@ -2465,20 +2343,17 @@ func (this *PodDisruptionBudgetStatus) String() string {
 	}, "")
 	return s
 }
-
 func (this *PodSecurityPolicy) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&PodSecurityPolicy{`,
+	s := strings.Join([]string{`&PodSecurityPolicy{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "PodSecurityPolicySpec", "PodSecurityPolicySpec", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *PodSecurityPolicyList) String() string {
 	if this == nil {
 		return "nil"
@@ -2488,15 +2363,13 @@ func (this *PodSecurityPolicyList) String() string {
 		repeatedStringForItems += strings.Replace(strings.Replace(f.String(), "PodSecurityPolicy", "PodSecurityPolicy", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForItems += "}"
-	s := strings.Join([]string{
-		`&PodSecurityPolicyList{`,
+	s := strings.Join([]string{`&PodSecurityPolicyList{`,
 		`ListMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ListMeta), "ListMeta", "v1.ListMeta", 1), `&`, ``, 1) + `,`,
 		`Items:` + repeatedStringForItems + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *PodSecurityPolicySpec) String() string {
 	if this == nil {
 		return "nil"
@@ -2521,8 +2394,7 @@ func (this *PodSecurityPolicySpec) String() string {
 		repeatedStringForAllowedCSIDrivers += strings.Replace(strings.Replace(f.String(), "AllowedCSIDriver", "AllowedCSIDriver", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForAllowedCSIDrivers += "}"
-	s := strings.Join([]string{
-		`&PodSecurityPolicySpec{`,
+	s := strings.Join([]string{`&PodSecurityPolicySpec{`,
 		`Privileged:` + fmt.Sprintf("%v", this.Privileged) + `,`,
 		`DefaultAddCapabilities:` + fmt.Sprintf("%v", this.DefaultAddCapabilities) + `,`,
 		`RequiredDropCapabilities:` + fmt.Sprintf("%v", this.RequiredDropCapabilities) + `,`,
@@ -2551,7 +2423,6 @@ func (this *PodSecurityPolicySpec) String() string {
 	}, "")
 	return s
 }
-
 func (this *RunAsGroupStrategyOptions) String() string {
 	if this == nil {
 		return "nil"
@@ -2561,15 +2432,13 @@ func (this *RunAsGroupStrategyOptions) String() string {
 		repeatedStringForRanges += strings.Replace(strings.Replace(f.String(), "IDRange", "IDRange", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForRanges += "}"
-	s := strings.Join([]string{
-		`&RunAsGroupStrategyOptions{`,
+	s := strings.Join([]string{`&RunAsGroupStrategyOptions{`,
 		`Rule:` + fmt.Sprintf("%v", this.Rule) + `,`,
 		`Ranges:` + repeatedStringForRanges + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *RunAsUserStrategyOptions) String() string {
 	if this == nil {
 		return "nil"
@@ -2579,41 +2448,35 @@ func (this *RunAsUserStrategyOptions) String() string {
 		repeatedStringForRanges += strings.Replace(strings.Replace(f.String(), "IDRange", "IDRange", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForRanges += "}"
-	s := strings.Join([]string{
-		`&RunAsUserStrategyOptions{`,
+	s := strings.Join([]string{`&RunAsUserStrategyOptions{`,
 		`Rule:` + fmt.Sprintf("%v", this.Rule) + `,`,
 		`Ranges:` + repeatedStringForRanges + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *RuntimeClassStrategyOptions) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&RuntimeClassStrategyOptions{`,
+	s := strings.Join([]string{`&RuntimeClassStrategyOptions{`,
 		`AllowedRuntimeClassNames:` + fmt.Sprintf("%v", this.AllowedRuntimeClassNames) + `,`,
 		`DefaultRuntimeClassName:` + valueToStringGenerated(this.DefaultRuntimeClassName) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *SELinuxStrategyOptions) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&SELinuxStrategyOptions{`,
+	s := strings.Join([]string{`&SELinuxStrategyOptions{`,
 		`Rule:` + fmt.Sprintf("%v", this.Rule) + `,`,
 		`SELinuxOptions:` + strings.Replace(fmt.Sprintf("%v", this.SELinuxOptions), "SELinuxOptions", "v11.SELinuxOptions", 1) + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *SupplementalGroupsStrategyOptions) String() string {
 	if this == nil {
 		return "nil"
@@ -2623,15 +2486,13 @@ func (this *SupplementalGroupsStrategyOptions) String() string {
 		repeatedStringForRanges += strings.Replace(strings.Replace(f.String(), "IDRange", "IDRange", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForRanges += "}"
-	s := strings.Join([]string{
-		`&SupplementalGroupsStrategyOptions{`,
+	s := strings.Join([]string{`&SupplementalGroupsStrategyOptions{`,
 		`Rule:` + fmt.Sprintf("%v", this.Rule) + `,`,
 		`Ranges:` + repeatedStringForRanges + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func valueToStringGenerated(v interface{}) string {
 	rv := reflect.ValueOf(v)
 	if rv.IsNil() {
@@ -2640,7 +2501,6 @@ func valueToStringGenerated(v interface{}) string {
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
 }
-
 func (m *AllowedCSIDriver) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2723,7 +2583,6 @@ func (m *AllowedCSIDriver) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *AllowedFlexVolume) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2806,7 +2665,6 @@ func (m *AllowedFlexVolume) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *AllowedHostPath) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2909,7 +2767,6 @@ func (m *AllowedHostPath) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *Eviction) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3029,7 +2886,6 @@ func (m *Eviction) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *FSGroupStrategyOptions) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3146,7 +3002,6 @@ func (m *FSGroupStrategyOptions) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *HostPortRange) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3235,7 +3090,6 @@ func (m *HostPortRange) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *IDRange) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3324,7 +3178,6 @@ func (m *IDRange) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PodDisruptionBudget) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3474,7 +3327,6 @@ func (m *PodDisruptionBudget) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PodDisruptionBudgetList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3592,7 +3444,6 @@ func (m *PodDisruptionBudgetList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PodDisruptionBudgetSpec) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3751,7 +3602,6 @@ func (m *PodDisruptionBudgetSpec) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PodDisruptionBudgetStatus) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4060,7 +3910,6 @@ func (m *PodDisruptionBudgetStatus) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PodSecurityPolicy) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4177,7 +4026,6 @@ func (m *PodSecurityPolicy) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PodSecurityPolicyList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4295,7 +4143,6 @@ func (m *PodSecurityPolicyList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PodSecurityPolicySpec) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -5052,7 +4899,6 @@ func (m *PodSecurityPolicySpec) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *RunAsGroupStrategyOptions) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -5169,7 +5015,6 @@ func (m *RunAsGroupStrategyOptions) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *RunAsUserStrategyOptions) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -5286,7 +5131,6 @@ func (m *RunAsUserStrategyOptions) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *RuntimeClassStrategyOptions) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -5402,7 +5246,6 @@ func (m *RuntimeClassStrategyOptions) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *SELinuxStrategyOptions) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -5521,7 +5364,6 @@ func (m *SELinuxStrategyOptions) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *SupplementalGroupsStrategyOptions) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -5638,7 +5480,6 @@ func (m *SupplementalGroupsStrategyOptions) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func skipGenerated(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

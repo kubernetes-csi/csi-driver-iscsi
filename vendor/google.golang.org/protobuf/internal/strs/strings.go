@@ -188,11 +188,9 @@ func TrimEnumPrefix(s, prefix string) string {
 func isASCIILower(c byte) bool {
 	return 'a' <= c && c <= 'z'
 }
-
 func isASCIIUpper(c byte) bool {
 	return 'A' <= c && c <= 'Z'
 }
-
 func isASCIIDigit(c byte) bool {
 	return '0' <= c && c <= '9'
 }

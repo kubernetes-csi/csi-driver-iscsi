@@ -36,10 +36,9 @@ func Parser() *typed.Parser {
 	return parser
 }
 
-var (
-	parserOnce sync.Once
-	parser     *typed.Parser
-	schemaYAML = typed.YAMLObject(`types:
+var parserOnce sync.Once
+var parser *typed.Parser
+var schemaYAML = typed.YAMLObject(`types:
 - name: io.k8s.api.admissionregistration.v1.MutatingWebhook
   map:
     fields:
@@ -11774,4 +11773,3 @@ var (
       namedType: __untyped_deduced_
     elementRelationship: separable
 `)
-)

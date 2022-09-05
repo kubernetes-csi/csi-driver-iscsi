@@ -45,11 +45,9 @@ type Unstructured struct {
 	Object map[string]interface{}
 }
 
-var (
-	_ metav1.Object        = &Unstructured{}
-	_ runtime.Unstructured = &Unstructured{}
-	_ metav1.ListInterface = &Unstructured{}
-)
+var _ metav1.Object = &Unstructured{}
+var _ runtime.Unstructured = &Unstructured{}
+var _ metav1.ListInterface = &Unstructured{}
 
 func (obj *Unstructured) GetObjectKind() schema.ObjectKind { return obj }
 
@@ -61,7 +59,6 @@ func (obj *Unstructured) IsList() bool {
 	_, ok = field.([]interface{})
 	return ok
 }
-
 func (obj *Unstructured) ToList() (*UnstructuredList, error) {
 	if !obj.IsList() {
 		// return an empty list back

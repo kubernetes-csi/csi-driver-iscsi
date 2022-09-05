@@ -99,7 +99,7 @@ func IsReady(dir string) bool {
 // directory.  It logs an error if the file cannot be
 // created.
 func SetReady(dir string) {
-	if err := os.MkdirAll(dir, 0o750); err != nil && !os.IsExist(err) {
+	if err := os.MkdirAll(dir, 0750); err != nil && !os.IsExist(err) {
 		klog.Errorf("Can't mkdir %s: %v", dir, err)
 		return
 	}

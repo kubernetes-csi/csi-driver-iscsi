@@ -1382,7 +1382,7 @@ func (t *http2Client) operateHeaders(frame *http2.MetaHeadersFrame) {
 	}
 
 	if !isGRPC || httpStatusErr != "" {
-		code := codes.Internal // when header does not include HTTP status, return INTERNAL
+		var code = codes.Internal // when header does not include HTTP status, return INTERNAL
 
 		if httpStatusCode != nil {
 			var ok bool

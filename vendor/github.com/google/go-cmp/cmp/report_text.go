@@ -103,14 +103,12 @@ type textWrap struct {
 func (s *textWrap) Len() int {
 	return len(s.Prefix) + s.Value.Len() + len(s.Suffix)
 }
-
 func (s1 *textWrap) Equal(s2 textNode) bool {
 	if s2, ok := s2.(*textWrap); ok {
 		return s1.Prefix == s2.Prefix && s1.Value.Equal(s2.Value) && s1.Suffix == s2.Suffix
 	}
 	return false
 }
-
 func (s *textWrap) String() string {
 	var d diffMode
 	var n indentMode
@@ -120,7 +118,6 @@ func (s *textWrap) String() string {
 	b = append(b, '\n')              // Trailing newline
 	return string(b)
 }
-
 func (s *textWrap) formatCompactTo(b []byte, d diffMode) ([]byte, textNode) {
 	n0 := len(b) // Original buffer length
 	b = append(b, s.Prefix...)
@@ -131,7 +128,6 @@ func (s *textWrap) formatCompactTo(b []byte, d diffMode) ([]byte, textNode) {
 	}
 	return b, s
 }
-
 func (s *textWrap) formatExpandedTo(b []byte, d diffMode, n indentMode) []byte {
 	b = append(b, s.Prefix...)
 	b = s.Value.formatExpandedTo(b, d, n)
@@ -143,7 +139,6 @@ func (s *textWrap) formatExpandedTo(b []byte, d diffMode, n indentMode) []byte {
 // The list may be formatted as multi-lines or single-line at the discretion
 // of the textList.formatCompactTo method.
 type textList []textRecord
-
 type textRecord struct {
 	Diff       diffMode     // e.g., 0 or '-' or '+'
 	Key        string       // e.g., "MyField"
@@ -351,22 +346,18 @@ var (
 func (s textLine) Len() int {
 	return len(s)
 }
-
 func (s1 textLine) Equal(s2 textNode) bool {
 	if s2, ok := s2.(textLine); ok {
 		return bytes.Equal([]byte(s1), []byte(s2))
 	}
 	return false
 }
-
 func (s textLine) String() string {
 	return string(s)
 }
-
 func (s textLine) formatCompactTo(b []byte, d diffMode) ([]byte, textNode) {
 	return append(b, s...), s
 }
-
 func (s textLine) formatExpandedTo(b []byte, _ diffMode, _ indentMode) []byte {
 	return append(b, s...)
 }

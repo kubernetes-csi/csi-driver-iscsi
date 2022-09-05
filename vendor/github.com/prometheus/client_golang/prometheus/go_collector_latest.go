@@ -54,8 +54,7 @@ const (
 )
 
 // runtime/metrics names required for runtimeMemStats like logic.
-var rmForMemStats = []string{
-	goGCHeapTinyAllocsObjects,
+var rmForMemStats = []string{goGCHeapTinyAllocsObjects,
 	goGCHeapAllocsObjects,
 	goGCHeapFreesObjects,
 	goGCHeapAllocsBytes,

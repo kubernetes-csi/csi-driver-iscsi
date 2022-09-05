@@ -34,11 +34,8 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-
-var (
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = fmt.Errorf
+var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -51,11 +48,9 @@ func (*ServerStorageVersion) ProtoMessage() {}
 func (*ServerStorageVersion) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a3903ff5e3cc7a03, []int{0}
 }
-
 func (m *ServerStorageVersion) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *ServerStorageVersion) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -64,15 +59,12 @@ func (m *ServerStorageVersion) XXX_Marshal(b []byte, deterministic bool) ([]byte
 	}
 	return b[:n], nil
 }
-
 func (m *ServerStorageVersion) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_ServerStorageVersion.Merge(m, src)
 }
-
 func (m *ServerStorageVersion) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *ServerStorageVersion) XXX_DiscardUnknown() {
 	xxx_messageInfo_ServerStorageVersion.DiscardUnknown(m)
 }
@@ -84,11 +76,9 @@ func (*StorageVersion) ProtoMessage() {}
 func (*StorageVersion) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a3903ff5e3cc7a03, []int{1}
 }
-
 func (m *StorageVersion) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *StorageVersion) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -97,15 +87,12 @@ func (m *StorageVersion) XXX_Marshal(b []byte, deterministic bool) ([]byte, erro
 	}
 	return b[:n], nil
 }
-
 func (m *StorageVersion) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_StorageVersion.Merge(m, src)
 }
-
 func (m *StorageVersion) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *StorageVersion) XXX_DiscardUnknown() {
 	xxx_messageInfo_StorageVersion.DiscardUnknown(m)
 }
@@ -117,11 +104,9 @@ func (*StorageVersionCondition) ProtoMessage() {}
 func (*StorageVersionCondition) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a3903ff5e3cc7a03, []int{2}
 }
-
 func (m *StorageVersionCondition) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *StorageVersionCondition) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -130,15 +115,12 @@ func (m *StorageVersionCondition) XXX_Marshal(b []byte, deterministic bool) ([]b
 	}
 	return b[:n], nil
 }
-
 func (m *StorageVersionCondition) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_StorageVersionCondition.Merge(m, src)
 }
-
 func (m *StorageVersionCondition) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *StorageVersionCondition) XXX_DiscardUnknown() {
 	xxx_messageInfo_StorageVersionCondition.DiscardUnknown(m)
 }
@@ -150,11 +132,9 @@ func (*StorageVersionList) ProtoMessage() {}
 func (*StorageVersionList) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a3903ff5e3cc7a03, []int{3}
 }
-
 func (m *StorageVersionList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *StorageVersionList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -163,15 +143,12 @@ func (m *StorageVersionList) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 	}
 	return b[:n], nil
 }
-
 func (m *StorageVersionList) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_StorageVersionList.Merge(m, src)
 }
-
 func (m *StorageVersionList) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *StorageVersionList) XXX_DiscardUnknown() {
 	xxx_messageInfo_StorageVersionList.DiscardUnknown(m)
 }
@@ -183,11 +160,9 @@ func (*StorageVersionSpec) ProtoMessage() {}
 func (*StorageVersionSpec) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a3903ff5e3cc7a03, []int{4}
 }
-
 func (m *StorageVersionSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *StorageVersionSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -196,15 +171,12 @@ func (m *StorageVersionSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 	}
 	return b[:n], nil
 }
-
 func (m *StorageVersionSpec) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_StorageVersionSpec.Merge(m, src)
 }
-
 func (m *StorageVersionSpec) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *StorageVersionSpec) XXX_DiscardUnknown() {
 	xxx_messageInfo_StorageVersionSpec.DiscardUnknown(m)
 }
@@ -216,11 +188,9 @@ func (*StorageVersionStatus) ProtoMessage() {}
 func (*StorageVersionStatus) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a3903ff5e3cc7a03, []int{5}
 }
-
 func (m *StorageVersionStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *StorageVersionStatus) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -229,15 +199,12 @@ func (m *StorageVersionStatus) XXX_Marshal(b []byte, deterministic bool) ([]byte
 	}
 	return b[:n], nil
 }
-
 func (m *StorageVersionStatus) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_StorageVersionStatus.Merge(m, src)
 }
-
 func (m *StorageVersionStatus) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *StorageVersionStatus) XXX_DiscardUnknown() {
 	xxx_messageInfo_StorageVersionStatus.DiscardUnknown(m)
 }
@@ -599,7 +566,6 @@ func encodeVarintGenerated(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-
 func (m *ServerStorageVersion) Size() (n int) {
 	if m == nil {
 		return 0
@@ -708,17 +674,14 @@ func (m *StorageVersionStatus) Size() (n int) {
 func sovGenerated(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
-
 func sozGenerated(x uint64) (n int) {
 	return sovGenerated(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-
 func (this *ServerStorageVersion) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&ServerStorageVersion{`,
+	s := strings.Join([]string{`&ServerStorageVersion{`,
 		`APIServerID:` + fmt.Sprintf("%v", this.APIServerID) + `,`,
 		`EncodingVersion:` + fmt.Sprintf("%v", this.EncodingVersion) + `,`,
 		`DecodableVersions:` + fmt.Sprintf("%v", this.DecodableVersions) + `,`,
@@ -726,13 +689,11 @@ func (this *ServerStorageVersion) String() string {
 	}, "")
 	return s
 }
-
 func (this *StorageVersion) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&StorageVersion{`,
+	s := strings.Join([]string{`&StorageVersion{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "StorageVersionSpec", "StorageVersionSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "StorageVersionStatus", "StorageVersionStatus", 1), `&`, ``, 1) + `,`,
@@ -740,13 +701,11 @@ func (this *StorageVersion) String() string {
 	}, "")
 	return s
 }
-
 func (this *StorageVersionCondition) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&StorageVersionCondition{`,
+	s := strings.Join([]string{`&StorageVersionCondition{`,
 		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
 		`Status:` + fmt.Sprintf("%v", this.Status) + `,`,
 		`ObservedGeneration:` + fmt.Sprintf("%v", this.ObservedGeneration) + `,`,
@@ -757,7 +716,6 @@ func (this *StorageVersionCondition) String() string {
 	}, "")
 	return s
 }
-
 func (this *StorageVersionList) String() string {
 	if this == nil {
 		return "nil"
@@ -767,26 +725,22 @@ func (this *StorageVersionList) String() string {
 		repeatedStringForItems += strings.Replace(strings.Replace(f.String(), "StorageVersion", "StorageVersion", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForItems += "}"
-	s := strings.Join([]string{
-		`&StorageVersionList{`,
+	s := strings.Join([]string{`&StorageVersionList{`,
 		`ListMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ListMeta), "ListMeta", "v1.ListMeta", 1), `&`, ``, 1) + `,`,
 		`Items:` + repeatedStringForItems + `,`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *StorageVersionSpec) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{
-		`&StorageVersionSpec{`,
+	s := strings.Join([]string{`&StorageVersionSpec{`,
 		`}`,
 	}, "")
 	return s
 }
-
 func (this *StorageVersionStatus) String() string {
 	if this == nil {
 		return "nil"
@@ -801,8 +755,7 @@ func (this *StorageVersionStatus) String() string {
 		repeatedStringForConditions += strings.Replace(strings.Replace(f.String(), "StorageVersionCondition", "StorageVersionCondition", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForConditions += "}"
-	s := strings.Join([]string{
-		`&StorageVersionStatus{`,
+	s := strings.Join([]string{`&StorageVersionStatus{`,
 		`StorageVersions:` + repeatedStringForStorageVersions + `,`,
 		`CommonEncodingVersion:` + valueToStringGenerated(this.CommonEncodingVersion) + `,`,
 		`Conditions:` + repeatedStringForConditions + `,`,
@@ -810,7 +763,6 @@ func (this *StorageVersionStatus) String() string {
 	}, "")
 	return s
 }
-
 func valueToStringGenerated(v interface{}) string {
 	rv := reflect.ValueOf(v)
 	if rv.IsNil() {
@@ -819,7 +771,6 @@ func valueToStringGenerated(v interface{}) string {
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
 }
-
 func (m *ServerStorageVersion) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -966,7 +917,6 @@ func (m *ServerStorageVersion) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *StorageVersion) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1116,7 +1066,6 @@ func (m *StorageVersion) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *StorageVersionCondition) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1347,7 +1296,6 @@ func (m *StorageVersionCondition) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *StorageVersionList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1465,7 +1413,6 @@ func (m *StorageVersionList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *StorageVersionSpec) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1516,7 +1463,6 @@ func (m *StorageVersionSpec) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *StorageVersionStatus) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1668,7 +1614,6 @@ func (m *StorageVersionStatus) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func skipGenerated(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

@@ -233,10 +233,8 @@ func (t *Terminal) queue(data []rune) {
 	t.outBuf = append(t.outBuf, []byte(string(data))...)
 }
 
-var (
-	eraseUnderCursor = []rune{' ', keyEscape, '[', 'D'}
-	space            = []rune{' '}
-)
+var eraseUnderCursor = []rune{' ', keyEscape, '[', 'D'}
+var space = []rune{' '}
 
 func isPrintable(key rune) bool {
 	isInSurrogateArea := key >= 0xd800 && key <= 0xdbff

@@ -30,10 +30,8 @@ import (
 	"google.golang.org/grpc/resolver"
 )
 
-var (
-	errBalancerClosed                   = errors.New("gracefulSwitchBalancer is closed")
-	_                 balancer.Balancer = (*Balancer)(nil)
-)
+var errBalancerClosed = errors.New("gracefulSwitchBalancer is closed")
+var _ balancer.Balancer = (*Balancer)(nil)
 
 // NewBalancer returns a graceful switch Balancer.
 func NewBalancer(cc balancer.ClientConn, opts balancer.BuildOptions) *Balancer {

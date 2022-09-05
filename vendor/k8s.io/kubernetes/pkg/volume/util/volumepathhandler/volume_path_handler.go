@@ -68,7 +68,8 @@ func NewBlockVolumePathHandler() BlockVolumePathHandler {
 }
 
 // VolumePathHandler is path related operation handlers for block volume
-type VolumePathHandler struct{}
+type VolumePathHandler struct {
+}
 
 // MapDevice creates a symbolic link to block device under specified map path
 func (v VolumePathHandler) MapDevice(devicePath string, mapPath string, linkName string, bindMount bool) error {
@@ -97,7 +98,7 @@ func (v VolumePathHandler) MapDevice(devicePath string, mapPath string, linkName
 	if err != nil && !os.IsNotExist(err) {
 		return fmt.Errorf("cannot validate map path: %s: %v", mapPath, err)
 	}
-	if err = os.MkdirAll(mapPath, 0o750); err != nil {
+	if err = os.MkdirAll(mapPath, 0750); err != nil {
 		return fmt.Errorf("failed to mkdir %s: %v", mapPath, err)
 	}
 
@@ -118,7 +119,7 @@ func mapBindMountDevice(v VolumePathHandler, devicePath string, mapPath string, 
 		}
 
 		// Create file
-		newFile, err := os.OpenFile(linkPath, os.O_CREATE|os.O_RDWR, 0o750)
+		newFile, err := os.OpenFile(linkPath, os.O_CREATE|os.O_RDWR, 0750)
 		if err != nil {
 			return fmt.Errorf("failed to open file %s: %v", linkPath, err)
 		}

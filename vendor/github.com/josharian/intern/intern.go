@@ -8,11 +8,13 @@ package intern
 
 import "sync"
 
-var pool sync.Pool = sync.Pool{
-	New: func() interface{} {
-		return make(map[string]string)
-	},
-}
+var (
+	pool sync.Pool = sync.Pool{
+		New: func() interface{} {
+			return make(map[string]string)
+		},
+	}
+)
 
 // String returns s, interned.
 func String(s string) string {

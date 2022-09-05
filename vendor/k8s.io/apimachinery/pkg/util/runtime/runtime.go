@@ -26,11 +26,13 @@ import (
 	"k8s.io/klog/v2"
 )
 
-// ReallyCrash controls the behavior of HandleCrash and defaults to
-// true. It's exposed so components can optionally set to false
-// to restore prior behavior. This flag is mostly used for tests to validate
-// crash conditions.
-var ReallyCrash = true
+var (
+	// ReallyCrash controls the behavior of HandleCrash and defaults to
+	// true. It's exposed so components can optionally set to false
+	// to restore prior behavior. This flag is mostly used for tests to validate
+	// crash conditions.
+	ReallyCrash = true
+)
 
 // PanicHandlers is a list of functions which will be invoked when a panic happens.
 var PanicHandlers = []func(interface{}){logPanic}

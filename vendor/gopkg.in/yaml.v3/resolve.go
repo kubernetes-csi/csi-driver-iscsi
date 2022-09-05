@@ -29,10 +29,8 @@ type resolveMapItem struct {
 	tag   string
 }
 
-var (
-	resolveTable = make([]byte, 256)
-	resolveMap   = make(map[string]resolveMapItem)
-)
+var resolveTable = make([]byte, 256)
+var resolveMap = make(map[string]resolveMapItem)
 
 func init() {
 	t := resolveTable
@@ -46,7 +44,7 @@ func init() {
 	}
 	t[int('.')] = '.' // Float (potentially in map)
 
-	resolveMapList := []struct {
+	var resolveMapList = []struct {
 		v   interface{}
 		tag string
 		l   []string
@@ -82,10 +80,8 @@ const (
 	mergeTag     = "!!merge"
 )
 
-var (
-	longTags  = make(map[string]string)
-	shortTags = make(map[string]string)
-)
+var longTags = make(map[string]string)
+var shortTags = make(map[string]string)
 
 func init() {
 	for _, stag := range []string{nullTag, boolTag, strTag, intTag, floatTag, timestampTag, seqTag, mapTag, binaryTag, mergeTag} {

@@ -236,10 +236,8 @@ func (s *ConnEnd) IsClient() bool { return s.Client }
 
 func (s *ConnEnd) isConnStats() {}
 
-type (
-	incomingTagsKey struct{}
-	outgoingTagsKey struct{}
-)
+type incomingTagsKey struct{}
+type outgoingTagsKey struct{}
 
 // SetTags attaches stats tagging data to the context, which will be sent in
 // the outgoing RPC with the header grpc-tags-bin.  Subsequent calls to
@@ -280,10 +278,8 @@ func OutgoingTags(ctx context.Context) []byte {
 	return b
 }
 
-type (
-	incomingTraceKey struct{}
-	outgoingTraceKey struct{}
-)
+type incomingTraceKey struct{}
+type outgoingTraceKey struct{}
 
 // SetTrace attaches stats tagging data to the context, which will be sent in
 // the outgoing RPC with the header grpc-trace-bin.  Subsequent calls to

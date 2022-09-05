@@ -15,6 +15,6 @@ func ReadDirent(fd int, buf []byte) (n int, err error) {
 	// 64 bits should be enough. (32 bits isn't even on 386). Since the
 	// actual system call is getdirentries64, 64 is a good guess.
 	// TODO(rsc): Can we use a single global basep for all calls?
-	base := (*uintptr)(unsafe.Pointer(new(uint64)))
+	var base = (*uintptr)(unsafe.Pointer(new(uint64)))
 	return Getdirentries(fd, buf, base)
 }

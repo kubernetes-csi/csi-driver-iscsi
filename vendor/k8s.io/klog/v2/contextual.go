@@ -33,9 +33,11 @@ import (
 // parts of a program (init, serial tests) and therefore are not protected by
 // mutex locking.
 
-// klogLogger is used as fallback for logging through the normal klog code
-// when no Logger is set.
-var klogLogger logr.Logger = logr.New(&klogger{})
+var (
+	// klogLogger is used as fallback for logging through the normal klog code
+	// when no Logger is set.
+	klogLogger logr.Logger = logr.New(&klogger{})
+)
 
 // SetLogger sets a Logger implementation that will be used as backing
 // implementation of the traditional klog log calls. klog will do its own

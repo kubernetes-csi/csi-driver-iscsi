@@ -334,6 +334,7 @@ func MapIPsByIPFamily(ipStrings []string) map[v1.IPFamily][]string {
 			// check for empty string
 			if len(strings.TrimSpace(ip)) != 0 {
 				klog.ErrorS(nil, "Skipping invalid IP", "ip", ip)
+
 			}
 		}
 	}

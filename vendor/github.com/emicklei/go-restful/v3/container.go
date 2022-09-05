@@ -43,8 +43,7 @@ func NewContainer() *Container {
 		recoverHandleFunc:      logStackOnRecover,
 		serviceErrorHandleFunc: writeServiceError,
 		router:                 CurlyRouter{},
-		contentEncodingEnabled: false,
-	}
+		contentEncodingEnabled: false}
 }
 
 // RecoverHandleFunction declares functions that can be used to handle a panic situation.
