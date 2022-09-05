@@ -582,7 +582,7 @@ func writeInSCSIDeviceFile(hctl string, file string, content string) error {
 	filename := filepath.Join("/sys/class/scsi_device", hctl, "device", file)
 	debug.Printf("Write %q in %q.\n", content, filename)
 
-	f, err := osOpenFile(filename, os.O_TRUNC|os.O_WRONLY, 0200)
+	f, err := osOpenFile(filename, os.O_TRUNC|os.O_WRONLY, 0o200)
 	if err != nil {
 		debug.Printf("Error while opening file %v: %v\n", filename, err)
 		return err

@@ -40,7 +40,8 @@ func main() {
 		SessionSecrets: iscsi.Secrets{
 			UserName:    *username,
 			Password:    *password,
-			SecretsType: "chap"},
+			SecretsType: "chap",
+		},
 		// Lun is the lun number the devices uses for exports
 		Lun: int32(*lun),
 		// Number of times we check for device path, waiting for CheckInterval seconds in between each check (defaults to 10 if omitted)

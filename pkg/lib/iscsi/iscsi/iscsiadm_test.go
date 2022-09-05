@@ -185,7 +185,6 @@ func TestCreateDBEntry(t *testing.T) {
 			}
 		})
 	}
-
 }
 
 func TestListInterfaces(t *testing.T) {
