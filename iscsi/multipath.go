@@ -10,7 +10,15 @@ import (
 	"time"
 )
 
-// ExecWithTimeout execute a command with a timeout and returns an error if timeout is excedeed
+type pathGroup struct {
+	Paths []path `json:"paths"`
+}
+
+type path struct {
+	Device string `json:"dev"`
+}
+
+// ExecWithTimeout execute a command with a timeout and returns an error if timeout is exceeded
 func ExecWithTimeout(command string, args []string, timeout time.Duration) ([]byte, error) {
 	debug.Printf("Executing command '%v' with args: '%v'.\n", command, args)
 
@@ -52,7 +60,6 @@ func FlushMultipathDevice(device *Device) error {
 
 	timeout := 5 * time.Second
 	_, err := execWithTimeout("multipath", []string{"-f", devicePath}, timeout)
-
 	if err != nil {
 		if _, e := osStat(devicePath); os.IsNotExist(e) {
 			debug.Printf("Multipath device %v has been removed.\n", devicePath)
@@ -65,7 +72,7 @@ func FlushMultipathDevice(device *Device) error {
 		}
 	}
 
-	debug.Printf("Finshed flushing multipath device %v.\n", devicePath)
+	debug.Printf("Finished flushing multipath device %v.\n", devicePath)
 	return nil
 }
 
