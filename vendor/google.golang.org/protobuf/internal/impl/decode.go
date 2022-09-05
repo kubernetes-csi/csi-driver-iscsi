@@ -17,8 +17,10 @@ import (
 	piface "google.golang.org/protobuf/runtime/protoiface"
 )
 
-var errDecode = errors.New("cannot parse invalid wire-format data")
-var errRecursionDepth = errors.New("exceeded maximum recursion depth")
+var (
+	errDecode         = errors.New("cannot parse invalid wire-format data")
+	errRecursionDepth = errors.New("exceeded maximum recursion depth")
+)
 
 type unmarshalOptions struct {
 	flags    protoiface.UnmarshalInputFlags

@@ -22,9 +22,9 @@ import (
 	"sync"
 
 	"google.golang.org/grpc"
+	klog "k8s.io/klog/v2"
 
 	"github.com/container-storage-interface/spec/lib/go/csi"
-	"k8s.io/klog/v2"
 )
 
 // Defines Non blocking GRPC server interfaces.

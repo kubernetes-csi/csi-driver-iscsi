@@ -153,7 +153,6 @@ func (c *codec) Decode(data []byte, defaultGVK *schema.GroupVersionKind, into ru
 				strictDecodingErrs = append(strictDecodingErrs, strictErr.Errors()...)
 			} else {
 				return nil, gvk, err
-
 			}
 		}
 	}

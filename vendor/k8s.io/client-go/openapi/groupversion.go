@@ -45,7 +45,6 @@ func (g *groupversion) Schema() (*openapi_v3.Document, error) {
 		SetHeader("Accept", openAPIV3mimePb).
 		Do(context.TODO()).
 		Raw()
-
 	if err != nil {
 		return nil, err
 	}

@@ -1198,7 +1198,7 @@ type SecretVolumeSource struct {
 }
 
 const (
-	SecretVolumeSourceDefaultMode int32 = 0644
+	SecretVolumeSourceDefaultMode int32 = 0o644
 )
 
 // Adapts a secret into a projected volume.
@@ -1628,7 +1628,7 @@ type ConfigMapVolumeSource struct {
 }
 
 const (
-	ConfigMapVolumeSourceDefaultMode int32 = 0644
+	ConfigMapVolumeSourceDefaultMode int32 = 0o644
 )
 
 // Adapts a ConfigMap into a projected volume.
@@ -1712,7 +1712,7 @@ type VolumeProjection struct {
 }
 
 const (
-	ProjectedVolumeSourceDefaultMode int32 = 0644
+	ProjectedVolumeSourceDefaultMode int32 = 0o644
 )
 
 // Maps a string key to a path within a volume.
@@ -2739,7 +2739,7 @@ const (
 // by the node selector terms.
 // +structType=atomic
 type NodeSelector struct {
-	//Required. A list of node selector terms. The terms are ORed.
+	// Required. A list of node selector terms. The terms are ORed.
 	NodeSelectorTerms []NodeSelectorTerm `json:"nodeSelectorTerms" protobuf:"bytes,1,rep,name=nodeSelectorTerms"`
 }
 
@@ -4522,7 +4522,7 @@ type ServiceSpec struct {
 	SessionAffinityConfig *SessionAffinityConfig `json:"sessionAffinityConfig,omitempty" protobuf:"bytes,14,opt,name=sessionAffinityConfig"`
 
 	// TopologyKeys is tombstoned to show why 16 is reserved protobuf tag.
-	//TopologyKeys []string `json:"topologyKeys,omitempty" protobuf:"bytes,16,opt,name=topologyKeys"`
+	// TopologyKeys []string `json:"topologyKeys,omitempty" protobuf:"bytes,16,opt,name=topologyKeys"`
 
 	// IPFamily is tombstoned to show why 15 is a reserved protobuf tag.
 	// IPFamily *IPFamily `json:"ipFamily,omitempty" protobuf:"bytes,15,opt,name=ipFamily,Configcasttype=IPFamily"`
@@ -6375,7 +6375,7 @@ type DownwardAPIVolumeSource struct {
 }
 
 const (
-	DownwardAPIVolumeSourceDefaultMode int32 = 0644
+	DownwardAPIVolumeSourceDefaultMode int32 = 0o644
 )
 
 // DownwardAPIVolumeFile represents information to create the file containing the pod field

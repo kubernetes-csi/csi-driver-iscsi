@@ -254,9 +254,11 @@ type sortableRouteCandidates struct {
 func (rcs *sortableRouteCandidates) Len() int {
 	return len(rcs.candidates)
 }
+
 func (rcs *sortableRouteCandidates) Swap(i, j int) {
 	rcs.candidates[i], rcs.candidates[j] = rcs.candidates[j], rcs.candidates[i]
 }
+
 func (rcs *sortableRouteCandidates) Less(i, j int) bool {
 	ci := rcs.candidates[i]
 	cj := rcs.candidates[j]
@@ -294,6 +296,7 @@ type dispatcherCandidate struct {
 	literalCount    int // the number of literal characters (means those not resulting from template variable substitution)
 	nonDefaultCount int // the number of capturing groups with non-default regular expressions (i.e. not ‘([^  /]+?)’)
 }
+
 type sortableDispatcherCandidates struct {
 	candidates []dispatcherCandidate
 }
@@ -301,9 +304,11 @@ type sortableDispatcherCandidates struct {
 func (dc *sortableDispatcherCandidates) Len() int {
 	return len(dc.candidates)
 }
+
 func (dc *sortableDispatcherCandidates) Swap(i, j int) {
 	dc.candidates[i], dc.candidates[j] = dc.candidates[j], dc.candidates[i]
 }
+
 func (dc *sortableDispatcherCandidates) Less(i, j int) bool {
 	ci := dc.candidates[i]
 	cj := dc.candidates[j]

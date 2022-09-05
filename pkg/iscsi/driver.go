@@ -21,7 +21,7 @@ import (
 	"os"
 
 	"github.com/container-storage-interface/spec/lib/go/csi"
-	"k8s.io/klog/v2"
+	klog "k8s.io/klog/v2"
 )
 
 type driver struct {
@@ -40,7 +40,7 @@ const (
 var version = "0.2.0"
 
 func NewDriver(nodeID, endpoint string) *driver {
-	klog.Infof("driver: %s version: %s nodeID: %s endpoint: %s", driverName, version, nodeID, endpoint)
+	klog.V(1).Infof("driver: %s version: %s nodeID: %s endpoint: %s", driverName, version, nodeID, endpoint)
 
 	d := &driver{
 		name:     driverName,

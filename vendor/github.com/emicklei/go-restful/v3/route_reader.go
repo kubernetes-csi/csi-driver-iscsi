@@ -24,21 +24,27 @@ type routeAccessor struct {
 func (r routeAccessor) Method() string {
 	return r.route.Method
 }
+
 func (r routeAccessor) Consumes() []string {
 	return r.route.Consumes[:]
 }
+
 func (r routeAccessor) Path() string {
 	return r.route.Path
 }
+
 func (r routeAccessor) Doc() string {
 	return r.route.Doc
 }
+
 func (r routeAccessor) Notes() string {
 	return r.route.Notes
 }
+
 func (r routeAccessor) Operation() string {
 	return r.route.Operation
 }
+
 func (r routeAccessor) ParameterDocs() []*Parameter {
 	return r.route.ParameterDocs[:]
 }
@@ -47,6 +53,7 @@ func (r routeAccessor) ParameterDocs() []*Parameter {
 func (r routeAccessor) Metadata() map[string]interface{} {
 	return copyMap(r.route.Metadata)
 }
+
 func (r routeAccessor) Deprecated() bool {
 	return r.route.Deprecated
 }

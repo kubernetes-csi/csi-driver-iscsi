@@ -21,7 +21,7 @@ import (
 	"os"
 
 	"github.com/kubernetes-csi/csi-driver-iscsi/pkg/iscsi"
-	"k8s.io/klog/v2"
+	klog "k8s.io/klog/v2"
 )
 
 var (

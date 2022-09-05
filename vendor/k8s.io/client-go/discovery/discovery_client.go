@@ -511,7 +511,6 @@ func NewDiscoveryClientForConfigOrDie(c *restclient.Config) *DiscoveryClient {
 		panic(err)
 	}
 	return client
-
 }
 
 // NewDiscoveryClient returns a new DiscoveryClient for the given RESTClient.

@@ -145,10 +145,12 @@ func (Export) MessageStateOf(p Pointer) *messageState {
 	// Super-tricky - see documentation on MessageState.
 	return (*messageState)(unsafe.Pointer(p))
 }
+
 func (ms *messageState) pointer() pointer {
 	// Super-tricky - see documentation on MessageState.
 	return pointer{p: unsafe.Pointer(ms)}
 }
+
 func (ms *messageState) messageInfo() *MessageInfo {
 	mi := ms.LoadMessageInfo()
 	if mi == nil {
@@ -156,9 +158,11 @@ func (ms *messageState) messageInfo() *MessageInfo {
 	}
 	return mi
 }
+
 func (ms *messageState) LoadMessageInfo() *MessageInfo {
 	return (*MessageInfo)(atomic.LoadPointer((*unsafe.Pointer)(unsafe.Pointer(&ms.atomicMessageInfo))))
 }
+
 func (ms *messageState) StoreMessageInfo(mi *MessageInfo) {
 	atomic.StorePointer((*unsafe.Pointer)(unsafe.Pointer(&ms.atomicMessageInfo)), unsafe.Pointer(mi))
 }

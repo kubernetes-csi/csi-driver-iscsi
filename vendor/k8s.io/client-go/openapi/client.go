@@ -44,7 +44,6 @@ func (c *client) Paths() (map[string]GroupVersion, error) {
 		AbsPath("/openapi/v3").
 		Do(context.TODO()).
 		Raw()
-
 	if err != nil {
 		return nil, err
 	}

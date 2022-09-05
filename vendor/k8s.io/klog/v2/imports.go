@@ -32,7 +32,5 @@ type LogSink = logr.LogSink
 // Runtimeinfo in this package is exactly the same as logr.RuntimeInfo.
 type RuntimeInfo = logr.RuntimeInfo
 
-var (
-	// New is an alias for logr.New.
-	New = logr.New
-)
+// New is an alias for logr.New.
+var New = logr.New

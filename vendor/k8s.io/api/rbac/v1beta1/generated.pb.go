@@ -35,8 +35,11 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-var _ = fmt.Errorf
-var _ = math.Inf
+
+var (
+	_ = fmt.Errorf
+	_ = math.Inf
+)
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -49,9 +52,11 @@ func (*AggregationRule) ProtoMessage() {}
 func (*AggregationRule) Descriptor() ([]byte, []int) {
 	return fileDescriptor_99f6bec96facc83d, []int{0}
 }
+
 func (m *AggregationRule) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *AggregationRule) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -60,12 +65,15 @@ func (m *AggregationRule) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 	}
 	return b[:n], nil
 }
+
 func (m *AggregationRule) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_AggregationRule.Merge(m, src)
 }
+
 func (m *AggregationRule) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *AggregationRule) XXX_DiscardUnknown() {
 	xxx_messageInfo_AggregationRule.DiscardUnknown(m)
 }
@@ -77,9 +85,11 @@ func (*ClusterRole) ProtoMessage() {}
 func (*ClusterRole) Descriptor() ([]byte, []int) {
 	return fileDescriptor_99f6bec96facc83d, []int{1}
 }
+
 func (m *ClusterRole) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *ClusterRole) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -88,12 +98,15 @@ func (m *ClusterRole) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) 
 	}
 	return b[:n], nil
 }
+
 func (m *ClusterRole) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_ClusterRole.Merge(m, src)
 }
+
 func (m *ClusterRole) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *ClusterRole) XXX_DiscardUnknown() {
 	xxx_messageInfo_ClusterRole.DiscardUnknown(m)
 }
@@ -105,9 +118,11 @@ func (*ClusterRoleBinding) ProtoMessage() {}
 func (*ClusterRoleBinding) Descriptor() ([]byte, []int) {
 	return fileDescriptor_99f6bec96facc83d, []int{2}
 }
+
 func (m *ClusterRoleBinding) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *ClusterRoleBinding) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -116,12 +131,15 @@ func (m *ClusterRoleBinding) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 	}
 	return b[:n], nil
 }
+
 func (m *ClusterRoleBinding) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_ClusterRoleBinding.Merge(m, src)
 }
+
 func (m *ClusterRoleBinding) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *ClusterRoleBinding) XXX_DiscardUnknown() {
 	xxx_messageInfo_ClusterRoleBinding.DiscardUnknown(m)
 }
@@ -133,9 +151,11 @@ func (*ClusterRoleBindingList) ProtoMessage() {}
 func (*ClusterRoleBindingList) Descriptor() ([]byte, []int) {
 	return fileDescriptor_99f6bec96facc83d, []int{3}
 }
+
 func (m *ClusterRoleBindingList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *ClusterRoleBindingList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -144,12 +164,15 @@ func (m *ClusterRoleBindingList) XXX_Marshal(b []byte, deterministic bool) ([]by
 	}
 	return b[:n], nil
 }
+
 func (m *ClusterRoleBindingList) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_ClusterRoleBindingList.Merge(m, src)
 }
+
 func (m *ClusterRoleBindingList) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *ClusterRoleBindingList) XXX_DiscardUnknown() {
 	xxx_messageInfo_ClusterRoleBindingList.DiscardUnknown(m)
 }
@@ -161,9 +184,11 @@ func (*ClusterRoleList) ProtoMessage() {}
 func (*ClusterRoleList) Descriptor() ([]byte, []int) {
 	return fileDescriptor_99f6bec96facc83d, []int{4}
 }
+
 func (m *ClusterRoleList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *ClusterRoleList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -172,12 +197,15 @@ func (m *ClusterRoleList) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 	}
 	return b[:n], nil
 }
+
 func (m *ClusterRoleList) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_ClusterRoleList.Merge(m, src)
 }
+
 func (m *ClusterRoleList) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *ClusterRoleList) XXX_DiscardUnknown() {
 	xxx_messageInfo_ClusterRoleList.DiscardUnknown(m)
 }
@@ -189,9 +217,11 @@ func (*PolicyRule) ProtoMessage() {}
 func (*PolicyRule) Descriptor() ([]byte, []int) {
 	return fileDescriptor_99f6bec96facc83d, []int{5}
 }
+
 func (m *PolicyRule) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *PolicyRule) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -200,12 +230,15 @@ func (m *PolicyRule) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
+
 func (m *PolicyRule) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PolicyRule.Merge(m, src)
 }
+
 func (m *PolicyRule) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *PolicyRule) XXX_DiscardUnknown() {
 	xxx_messageInfo_PolicyRule.DiscardUnknown(m)
 }
@@ -217,9 +250,11 @@ func (*Role) ProtoMessage() {}
 func (*Role) Descriptor() ([]byte, []int) {
 	return fileDescriptor_99f6bec96facc83d, []int{6}
 }
+
 func (m *Role) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *Role) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -228,12 +263,15 @@ func (m *Role) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
+
 func (m *Role) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_Role.Merge(m, src)
 }
+
 func (m *Role) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *Role) XXX_DiscardUnknown() {
 	xxx_messageInfo_Role.DiscardUnknown(m)
 }
@@ -245,9 +283,11 @@ func (*RoleBinding) ProtoMessage() {}
 func (*RoleBinding) Descriptor() ([]byte, []int) {
 	return fileDescriptor_99f6bec96facc83d, []int{7}
 }
+
 func (m *RoleBinding) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *RoleBinding) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -256,12 +296,15 @@ func (m *RoleBinding) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) 
 	}
 	return b[:n], nil
 }
+
 func (m *RoleBinding) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_RoleBinding.Merge(m, src)
 }
+
 func (m *RoleBinding) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *RoleBinding) XXX_DiscardUnknown() {
 	xxx_messageInfo_RoleBinding.DiscardUnknown(m)
 }
@@ -273,9 +316,11 @@ func (*RoleBindingList) ProtoMessage() {}
 func (*RoleBindingList) Descriptor() ([]byte, []int) {
 	return fileDescriptor_99f6bec96facc83d, []int{8}
 }
+
 func (m *RoleBindingList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *RoleBindingList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -284,12 +329,15 @@ func (m *RoleBindingList) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 	}
 	return b[:n], nil
 }
+
 func (m *RoleBindingList) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_RoleBindingList.Merge(m, src)
 }
+
 func (m *RoleBindingList) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *RoleBindingList) XXX_DiscardUnknown() {
 	xxx_messageInfo_RoleBindingList.DiscardUnknown(m)
 }
@@ -301,9 +349,11 @@ func (*RoleList) ProtoMessage() {}
 func (*RoleList) Descriptor() ([]byte, []int) {
 	return fileDescriptor_99f6bec96facc83d, []int{9}
 }
+
 func (m *RoleList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *RoleList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -312,12 +362,15 @@ func (m *RoleList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
+
 func (m *RoleList) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_RoleList.Merge(m, src)
 }
+
 func (m *RoleList) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *RoleList) XXX_DiscardUnknown() {
 	xxx_messageInfo_RoleList.DiscardUnknown(m)
 }
@@ -329,9 +382,11 @@ func (*RoleRef) ProtoMessage() {}
 func (*RoleRef) Descriptor() ([]byte, []int) {
 	return fileDescriptor_99f6bec96facc83d, []int{10}
 }
+
 func (m *RoleRef) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *RoleRef) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -340,12 +395,15 @@ func (m *RoleRef) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
+
 func (m *RoleRef) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_RoleRef.Merge(m, src)
 }
+
 func (m *RoleRef) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *RoleRef) XXX_DiscardUnknown() {
 	xxx_messageInfo_RoleRef.DiscardUnknown(m)
 }
@@ -357,9 +415,11 @@ func (*Subject) ProtoMessage() {}
 func (*Subject) Descriptor() ([]byte, []int) {
 	return fileDescriptor_99f6bec96facc83d, []int{11}
 }
+
 func (m *Subject) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *Subject) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -368,12 +428,15 @@ func (m *Subject) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
+
 func (m *Subject) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_Subject.Merge(m, src)
 }
+
 func (m *Subject) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *Subject) XXX_DiscardUnknown() {
 	xxx_messageInfo_Subject.DiscardUnknown(m)
 }
@@ -1059,6 +1122,7 @@ func encodeVarintGenerated(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+
 func (m *AggregationRule) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1292,9 +1356,11 @@ func (m *Subject) Size() (n int) {
 func sovGenerated(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
+
 func sozGenerated(x uint64) (n int) {
 	return sovGenerated(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
+
 func (this *AggregationRule) String() string {
 	if this == nil {
 		return "nil"
@@ -1304,12 +1370,14 @@ func (this *AggregationRule) String() string {
 		repeatedStringForClusterRoleSelectors += fmt.Sprintf("%v", f) + ","
 	}
 	repeatedStringForClusterRoleSelectors += "}"
-	s := strings.Join([]string{`&AggregationRule{`,
+	s := strings.Join([]string{
+		`&AggregationRule{`,
 		`ClusterRoleSelectors:` + repeatedStringForClusterRoleSelectors + `,`,
 		`}`,
 	}, "")
 	return s
 }
+
 func (this *ClusterRole) String() string {
 	if this == nil {
 		return "nil"
@@ -1319,7 +1387,8 @@ func (this *ClusterRole) String() string {
 		repeatedStringForRules += strings.Replace(strings.Replace(f.String(), "PolicyRule", "PolicyRule", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForRules += "}"
-	s := strings.Join([]string{`&ClusterRole{`,
+	s := strings.Join([]string{
+		`&ClusterRole{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Rules:` + repeatedStringForRules + `,`,
 		`AggregationRule:` + strings.Replace(this.AggregationRule.String(), "AggregationRule", "AggregationRule", 1) + `,`,
@@ -1327,6 +1396,7 @@ func (this *ClusterRole) String() string {
 	}, "")
 	return s
 }
+
 func (this *ClusterRoleBinding) String() string {
 	if this == nil {
 		return "nil"
@@ -1336,7 +1406,8 @@ func (this *ClusterRoleBinding) String() string {
 		repeatedStringForSubjects += strings.Replace(strings.Replace(f.String(), "Subject", "Subject", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForSubjects += "}"
-	s := strings.Join([]string{`&ClusterRoleBinding{`,
+	s := strings.Join([]string{
+		`&ClusterRoleBinding{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Subjects:` + repeatedStringForSubjects + `,`,
 		`RoleRef:` + strings.Replace(strings.Replace(this.RoleRef.String(), "RoleRef", "RoleRef", 1), `&`, ``, 1) + `,`,
@@ -1344,6 +1415,7 @@ func (this *ClusterRoleBinding) String() string {
 	}, "")
 	return s
 }
+
 func (this *ClusterRoleBindingList) String() string {
 	if this == nil {
 		return "nil"
@@ -1353,13 +1425,15 @@ func (this *ClusterRoleBindingList) String() string {
 		repeatedStringForItems += strings.Replace(strings.Replace(f.String(), "ClusterRoleBinding", "ClusterRoleBinding", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForItems += "}"
-	s := strings.Join([]string{`&ClusterRoleBindingList{`,
+	s := strings.Join([]string{
+		`&ClusterRoleBindingList{`,
 		`ListMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ListMeta), "ListMeta", "v1.ListMeta", 1), `&`, ``, 1) + `,`,
 		`Items:` + repeatedStringForItems + `,`,
 		`}`,
 	}, "")
 	return s
 }
+
 func (this *ClusterRoleList) String() string {
 	if this == nil {
 		return "nil"
@@ -1369,18 +1443,21 @@ func (this *ClusterRoleList) String() string {
 		repeatedStringForItems += strings.Replace(strings.Replace(f.String(), "ClusterRole", "ClusterRole", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForItems += "}"
-	s := strings.Join([]string{`&ClusterRoleList{`,
+	s := strings.Join([]string{
+		`&ClusterRoleList{`,
 		`ListMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ListMeta), "ListMeta", "v1.ListMeta", 1), `&`, ``, 1) + `,`,
 		`Items:` + repeatedStringForItems + `,`,
 		`}`,
 	}, "")
 	return s
 }
+
 func (this *PolicyRule) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&PolicyRule{`,
+	s := strings.Join([]string{
+		`&PolicyRule{`,
 		`Verbs:` + fmt.Sprintf("%v", this.Verbs) + `,`,
 		`APIGroups:` + fmt.Sprintf("%v", this.APIGroups) + `,`,
 		`Resources:` + fmt.Sprintf("%v", this.Resources) + `,`,
@@ -1390,6 +1467,7 @@ func (this *PolicyRule) String() string {
 	}, "")
 	return s
 }
+
 func (this *Role) String() string {
 	if this == nil {
 		return "nil"
@@ -1399,13 +1477,15 @@ func (this *Role) String() string {
 		repeatedStringForRules += strings.Replace(strings.Replace(f.String(), "PolicyRule", "PolicyRule", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForRules += "}"
-	s := strings.Join([]string{`&Role{`,
+	s := strings.Join([]string{
+		`&Role{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Rules:` + repeatedStringForRules + `,`,
 		`}`,
 	}, "")
 	return s
 }
+
 func (this *RoleBinding) String() string {
 	if this == nil {
 		return "nil"
@@ -1415,7 +1495,8 @@ func (this *RoleBinding) String() string {
 		repeatedStringForSubjects += strings.Replace(strings.Replace(f.String(), "Subject", "Subject", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForSubjects += "}"
-	s := strings.Join([]string{`&RoleBinding{`,
+	s := strings.Join([]string{
+		`&RoleBinding{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Subjects:` + repeatedStringForSubjects + `,`,
 		`RoleRef:` + strings.Replace(strings.Replace(this.RoleRef.String(), "RoleRef", "RoleRef", 1), `&`, ``, 1) + `,`,
@@ -1423,6 +1504,7 @@ func (this *RoleBinding) String() string {
 	}, "")
 	return s
 }
+
 func (this *RoleBindingList) String() string {
 	if this == nil {
 		return "nil"
@@ -1432,13 +1514,15 @@ func (this *RoleBindingList) String() string {
 		repeatedStringForItems += strings.Replace(strings.Replace(f.String(), "RoleBinding", "RoleBinding", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForItems += "}"
-	s := strings.Join([]string{`&RoleBindingList{`,
+	s := strings.Join([]string{
+		`&RoleBindingList{`,
 		`ListMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ListMeta), "ListMeta", "v1.ListMeta", 1), `&`, ``, 1) + `,`,
 		`Items:` + repeatedStringForItems + `,`,
 		`}`,
 	}, "")
 	return s
 }
+
 func (this *RoleList) String() string {
 	if this == nil {
 		return "nil"
@@ -1448,18 +1532,21 @@ func (this *RoleList) String() string {
 		repeatedStringForItems += strings.Replace(strings.Replace(f.String(), "Role", "Role", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForItems += "}"
-	s := strings.Join([]string{`&RoleList{`,
+	s := strings.Join([]string{
+		`&RoleList{`,
 		`ListMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ListMeta), "ListMeta", "v1.ListMeta", 1), `&`, ``, 1) + `,`,
 		`Items:` + repeatedStringForItems + `,`,
 		`}`,
 	}, "")
 	return s
 }
+
 func (this *RoleRef) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&RoleRef{`,
+	s := strings.Join([]string{
+		`&RoleRef{`,
 		`APIGroup:` + fmt.Sprintf("%v", this.APIGroup) + `,`,
 		`Kind:` + fmt.Sprintf("%v", this.Kind) + `,`,
 		`Name:` + fmt.Sprintf("%v", this.Name) + `,`,
@@ -1467,11 +1554,13 @@ func (this *RoleRef) String() string {
 	}, "")
 	return s
 }
+
 func (this *Subject) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&Subject{`,
+	s := strings.Join([]string{
+		`&Subject{`,
 		`Kind:` + fmt.Sprintf("%v", this.Kind) + `,`,
 		`APIGroup:` + fmt.Sprintf("%v", this.APIGroup) + `,`,
 		`Name:` + fmt.Sprintf("%v", this.Name) + `,`,
@@ -1480,6 +1569,7 @@ func (this *Subject) String() string {
 	}, "")
 	return s
 }
+
 func valueToStringGenerated(v interface{}) string {
 	rv := reflect.ValueOf(v)
 	if rv.IsNil() {
@@ -1488,6 +1578,7 @@ func valueToStringGenerated(v interface{}) string {
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
 }
+
 func (m *AggregationRule) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1572,6 +1663,7 @@ func (m *AggregationRule) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *ClusterRole) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1725,6 +1817,7 @@ func (m *ClusterRole) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *ClusterRoleBinding) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1875,6 +1968,7 @@ func (m *ClusterRoleBinding) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *ClusterRoleBindingList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1992,6 +2086,7 @@ func (m *ClusterRoleBindingList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *ClusterRoleList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2109,6 +2204,7 @@ func (m *ClusterRoleList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *PolicyRule) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2319,6 +2415,7 @@ func (m *PolicyRule) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *Role) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2436,6 +2533,7 @@ func (m *Role) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *RoleBinding) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2586,6 +2684,7 @@ func (m *RoleBinding) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *RoleBindingList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2703,6 +2802,7 @@ func (m *RoleBindingList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *RoleList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2820,6 +2920,7 @@ func (m *RoleList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *RoleRef) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2966,6 +3067,7 @@ func (m *RoleRef) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *Subject) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3144,6 +3246,7 @@ func (m *Subject) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func skipGenerated(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

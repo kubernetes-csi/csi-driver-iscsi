@@ -80,7 +80,6 @@ func CreateDBEntry(tgtIQN, portal, iFace string, discoverySecrets, sessionSecret
 	}
 
 	return err
-
 }
 
 // Discoverydb discovers the iscsi target
@@ -100,7 +99,7 @@ func Discoverydb(tp, iface string, discoverySecrets Secrets, chapDiscovery bool)
 
 	_, err = iscsiCmd(append(baseArgs, []string{"--discover"}...)...)
 	if err != nil {
-		//delete the discoverydb record
+		// delete the discoverydb record
 		iscsiCmd(append(baseArgs, []string{"-o", "delete"}...)...)
 		return fmt.Errorf("failed to sendtargets to portal %s, err: %v", tp, err)
 	}
@@ -111,10 +110,12 @@ func createCHAPEntries(baseArgs []string, secrets Secrets, discovery bool) error
 	args := []string{}
 	debug.Printf("Begin createCHAPEntries (discovery=%t)...", discovery)
 	if discovery {
-		args = append(baseArgs, []string{"-o", "update",
+		args = append(baseArgs, []string{
+			"-o", "update",
 			"-n", "discovery.sendtargets.auth.authmethod", "-v", "CHAP",
 			"-n", "discovery.sendtargets.auth.username", "-v", secrets.UserName,
-			"-n", "discovery.sendtargets.auth.password", "-v", secrets.Password}...)
+			"-n", "discovery.sendtargets.auth.password", "-v", secrets.Password,
+		}...)
 		if secrets.UserNameIn != "" {
 			args = append(args, []string{"-n", "discovery.sendtargets.auth.username_in", "-v", secrets.UserNameIn}...)
 		}
@@ -124,10 +125,12 @@ func createCHAPEntries(baseArgs []string, secrets Secrets, discovery bool) error
 
 	} else {
 
-		args = append(baseArgs, []string{"-o", "update",
+		args = append(baseArgs, []string{
+			"-o", "update",
 			"-n", "node.session.auth.authmethod", "-v", "CHAP",
 			"-n", "node.session.auth.username", "-v", secrets.UserName,
-			"-n", "node.session.auth.password", "-v", secrets.Password}...)
+			"-n", "node.session.auth.password", "-v", secrets.Password,
+		}...)
 		if secrets.UserNameIn != "" {
 			args = append(args, []string{"-n", "node.session.auth.username_in", "-v", secrets.UserNameIn}...)
 		}
@@ -156,7 +159,7 @@ func Login(tgtIQN, portal string) error {
 	debug.Println("Begin Login...")
 	baseArgs := []string{"-m", "node", "-T", tgtIQN, "-p", portal}
 	if _, err := iscsiCmd(append(baseArgs, []string{"-l"}...)...); err != nil {
-		//delete the node record from database
+		// delete the node record from database
 		iscsiCmd(append(baseArgs, []string{"-o", "delete"}...)...)
 		return fmt.Errorf("failed to sendtargets to portal %s, err: %v", portal, err)
 	}

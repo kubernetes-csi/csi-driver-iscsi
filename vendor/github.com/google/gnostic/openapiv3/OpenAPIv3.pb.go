@@ -23,11 +23,12 @@
 package openapi_v3
 
 import (
+	reflect "reflect"
+	sync "sync"
+
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
-	reflect "reflect"
-	sync "sync"
 )
 
 const (
@@ -6781,88 +6782,90 @@ func file_openapiv3_OpenAPIv3_proto_rawDescGZIP() []byte {
 	return file_openapiv3_OpenAPIv3_proto_rawDescData
 }
 
-var file_openapiv3_OpenAPIv3_proto_msgTypes = make([]protoimpl.MessageInfo, 78)
-var file_openapiv3_OpenAPIv3_proto_goTypes = []interface{}{
-	(*AdditionalPropertiesItem)(nil),       // 0: openapi.v3.AdditionalPropertiesItem
-	(*Any)(nil),                            // 1: openapi.v3.Any
-	(*AnyOrExpression)(nil),                // 2: openapi.v3.AnyOrExpression
-	(*Callback)(nil),                       // 3: openapi.v3.Callback
-	(*CallbackOrReference)(nil),            // 4: openapi.v3.CallbackOrReference
-	(*CallbacksOrReferences)(nil),          // 5: openapi.v3.CallbacksOrReferences
-	(*Components)(nil),                     // 6: openapi.v3.Components
-	(*Contact)(nil),                        // 7: openapi.v3.Contact
-	(*DefaultType)(nil),                    // 8: openapi.v3.DefaultType
-	(*Discriminator)(nil),                  // 9: openapi.v3.Discriminator
-	(*Document)(nil),                       // 10: openapi.v3.Document
-	(*Encoding)(nil),                       // 11: openapi.v3.Encoding
-	(*Encodings)(nil),                      // 12: openapi.v3.Encodings
-	(*Example)(nil),                        // 13: openapi.v3.Example
-	(*ExampleOrReference)(nil),             // 14: openapi.v3.ExampleOrReference
-	(*ExamplesOrReferences)(nil),           // 15: openapi.v3.ExamplesOrReferences
-	(*Expression)(nil),                     // 16: openapi.v3.Expression
-	(*ExternalDocs)(nil),                   // 17: openapi.v3.ExternalDocs
-	(*Header)(nil),                         // 18: openapi.v3.Header
-	(*HeaderOrReference)(nil),              // 19: openapi.v3.HeaderOrReference
-	(*HeadersOrReferences)(nil),            // 20: openapi.v3.HeadersOrReferences
-	(*Info)(nil),                           // 21: openapi.v3.Info
-	(*ItemsItem)(nil),                      // 22: openapi.v3.ItemsItem
-	(*License)(nil),                        // 23: openapi.v3.License
-	(*Link)(nil),                           // 24: openapi.v3.Link
-	(*LinkOrReference)(nil),                // 25: openapi.v3.LinkOrReference
-	(*LinksOrReferences)(nil),              // 26: openapi.v3.LinksOrReferences
-	(*MediaType)(nil),                      // 27: openapi.v3.MediaType
-	(*MediaTypes)(nil),                     // 28: openapi.v3.MediaTypes
-	(*NamedAny)(nil),                       // 29: openapi.v3.NamedAny
-	(*NamedCallbackOrReference)(nil),       // 30: openapi.v3.NamedCallbackOrReference
-	(*NamedEncoding)(nil),                  // 31: openapi.v3.NamedEncoding
-	(*NamedExampleOrReference)(nil),        // 32: openapi.v3.NamedExampleOrReference
-	(*NamedHeaderOrReference)(nil),         // 33: openapi.v3.NamedHeaderOrReference
-	(*NamedLinkOrReference)(nil),           // 34: openapi.v3.NamedLinkOrReference
-	(*NamedMediaType)(nil),                 // 35: openapi.v3.NamedMediaType
-	(*NamedParameterOrReference)(nil),      // 36: openapi.v3.NamedParameterOrReference
-	(*NamedPathItem)(nil),                  // 37: openapi.v3.NamedPathItem
-	(*NamedRequestBodyOrReference)(nil),    // 38: openapi.v3.NamedRequestBodyOrReference
-	(*NamedResponseOrReference)(nil),       // 39: openapi.v3.NamedResponseOrReference
-	(*NamedSchemaOrReference)(nil),         // 40: openapi.v3.NamedSchemaOrReference
-	(*NamedSecuritySchemeOrReference)(nil), // 41: openapi.v3.NamedSecuritySchemeOrReference
-	(*NamedServerVariable)(nil),            // 42: openapi.v3.NamedServerVariable
-	(*NamedString)(nil),                    // 43: openapi.v3.NamedString
-	(*NamedStringArray)(nil),               // 44: openapi.v3.NamedStringArray
-	(*OauthFlow)(nil),                      // 45: openapi.v3.OauthFlow
-	(*OauthFlows)(nil),                     // 46: openapi.v3.OauthFlows
-	(*Object)(nil),                         // 47: openapi.v3.Object
-	(*Operation)(nil),                      // 48: openapi.v3.Operation
-	(*Parameter)(nil),                      // 49: openapi.v3.Parameter
-	(*ParameterOrReference)(nil),           // 50: openapi.v3.ParameterOrReference
-	(*ParametersOrReferences)(nil),         // 51: openapi.v3.ParametersOrReferences
-	(*PathItem)(nil),                       // 52: openapi.v3.PathItem
-	(*Paths)(nil),                          // 53: openapi.v3.Paths
-	(*Properties)(nil),                     // 54: openapi.v3.Properties
-	(*Reference)(nil),                      // 55: openapi.v3.Reference
-	(*RequestBodiesOrReferences)(nil),      // 56: openapi.v3.RequestBodiesOrReferences
-	(*RequestBody)(nil),                    // 57: openapi.v3.RequestBody
-	(*RequestBodyOrReference)(nil),         // 58: openapi.v3.RequestBodyOrReference
-	(*Response)(nil),                       // 59: openapi.v3.Response
-	(*ResponseOrReference)(nil),            // 60: openapi.v3.ResponseOrReference
-	(*Responses)(nil),                      // 61: openapi.v3.Responses
-	(*ResponsesOrReferences)(nil),          // 62: openapi.v3.ResponsesOrReferences
-	(*Schema)(nil),                         // 63: openapi.v3.Schema
-	(*SchemaOrReference)(nil),              // 64: openapi.v3.SchemaOrReference
-	(*SchemasOrReferences)(nil),            // 65: openapi.v3.SchemasOrReferences
-	(*SecurityRequirement)(nil),            // 66: openapi.v3.SecurityRequirement
-	(*SecurityScheme)(nil),                 // 67: openapi.v3.SecurityScheme
-	(*SecuritySchemeOrReference)(nil),      // 68: openapi.v3.SecuritySchemeOrReference
-	(*SecuritySchemesOrReferences)(nil),    // 69: openapi.v3.SecuritySchemesOrReferences
-	(*Server)(nil),                         // 70: openapi.v3.Server
-	(*ServerVariable)(nil),                 // 71: openapi.v3.ServerVariable
-	(*ServerVariables)(nil),                // 72: openapi.v3.ServerVariables
-	(*SpecificationExtension)(nil),         // 73: openapi.v3.SpecificationExtension
-	(*StringArray)(nil),                    // 74: openapi.v3.StringArray
-	(*Strings)(nil),                        // 75: openapi.v3.Strings
-	(*Tag)(nil),                            // 76: openapi.v3.Tag
-	(*Xml)(nil),                            // 77: openapi.v3.Xml
-	(*anypb.Any)(nil),                      // 78: google.protobuf.Any
-}
+var (
+	file_openapiv3_OpenAPIv3_proto_msgTypes = make([]protoimpl.MessageInfo, 78)
+	file_openapiv3_OpenAPIv3_proto_goTypes  = []interface{}{
+		(*AdditionalPropertiesItem)(nil),       // 0: openapi.v3.AdditionalPropertiesItem
+		(*Any)(nil),                            // 1: openapi.v3.Any
+		(*AnyOrExpression)(nil),                // 2: openapi.v3.AnyOrExpression
+		(*Callback)(nil),                       // 3: openapi.v3.Callback
+		(*CallbackOrReference)(nil),            // 4: openapi.v3.CallbackOrReference
+		(*CallbacksOrReferences)(nil),          // 5: openapi.v3.CallbacksOrReferences
+		(*Components)(nil),                     // 6: openapi.v3.Components
+		(*Contact)(nil),                        // 7: openapi.v3.Contact
+		(*DefaultType)(nil),                    // 8: openapi.v3.DefaultType
+		(*Discriminator)(nil),                  // 9: openapi.v3.Discriminator
+		(*Document)(nil),                       // 10: openapi.v3.Document
+		(*Encoding)(nil),                       // 11: openapi.v3.Encoding
+		(*Encodings)(nil),                      // 12: openapi.v3.Encodings
+		(*Example)(nil),                        // 13: openapi.v3.Example
+		(*ExampleOrReference)(nil),             // 14: openapi.v3.ExampleOrReference
+		(*ExamplesOrReferences)(nil),           // 15: openapi.v3.ExamplesOrReferences
+		(*Expression)(nil),                     // 16: openapi.v3.Expression
+		(*ExternalDocs)(nil),                   // 17: openapi.v3.ExternalDocs
+		(*Header)(nil),                         // 18: openapi.v3.Header
+		(*HeaderOrReference)(nil),              // 19: openapi.v3.HeaderOrReference
+		(*HeadersOrReferences)(nil),            // 20: openapi.v3.HeadersOrReferences
+		(*Info)(nil),                           // 21: openapi.v3.Info
+		(*ItemsItem)(nil),                      // 22: openapi.v3.ItemsItem
+		(*License)(nil),                        // 23: openapi.v3.License
+		(*Link)(nil),                           // 24: openapi.v3.Link
+		(*LinkOrReference)(nil),                // 25: openapi.v3.LinkOrReference
+		(*LinksOrReferences)(nil),              // 26: openapi.v3.LinksOrReferences
+		(*MediaType)(nil),                      // 27: openapi.v3.MediaType
+		(*MediaTypes)(nil),                     // 28: openapi.v3.MediaTypes
+		(*NamedAny)(nil),                       // 29: openapi.v3.NamedAny
+		(*NamedCallbackOrReference)(nil),       // 30: openapi.v3.NamedCallbackOrReference
+		(*NamedEncoding)(nil),                  // 31: openapi.v3.NamedEncoding
+		(*NamedExampleOrReference)(nil),        // 32: openapi.v3.NamedExampleOrReference
+		(*NamedHeaderOrReference)(nil),         // 33: openapi.v3.NamedHeaderOrReference
+		(*NamedLinkOrReference)(nil),           // 34: openapi.v3.NamedLinkOrReference
+		(*NamedMediaType)(nil),                 // 35: openapi.v3.NamedMediaType
+		(*NamedParameterOrReference)(nil),      // 36: openapi.v3.NamedParameterOrReference
+		(*NamedPathItem)(nil),                  // 37: openapi.v3.NamedPathItem
+		(*NamedRequestBodyOrReference)(nil),    // 38: openapi.v3.NamedRequestBodyOrReference
+		(*NamedResponseOrReference)(nil),       // 39: openapi.v3.NamedResponseOrReference
+		(*NamedSchemaOrReference)(nil),         // 40: openapi.v3.NamedSchemaOrReference
+		(*NamedSecuritySchemeOrReference)(nil), // 41: openapi.v3.NamedSecuritySchemeOrReference
+		(*NamedServerVariable)(nil),            // 42: openapi.v3.NamedServerVariable
+		(*NamedString)(nil),                    // 43: openapi.v3.NamedString
+		(*NamedStringArray)(nil),               // 44: openapi.v3.NamedStringArray
+		(*OauthFlow)(nil),                      // 45: openapi.v3.OauthFlow
+		(*OauthFlows)(nil),                     // 46: openapi.v3.OauthFlows
+		(*Object)(nil),                         // 47: openapi.v3.Object
+		(*Operation)(nil),                      // 48: openapi.v3.Operation
+		(*Parameter)(nil),                      // 49: openapi.v3.Parameter
+		(*ParameterOrReference)(nil),           // 50: openapi.v3.ParameterOrReference
+		(*ParametersOrReferences)(nil),         // 51: openapi.v3.ParametersOrReferences
+		(*PathItem)(nil),                       // 52: openapi.v3.PathItem
+		(*Paths)(nil),                          // 53: openapi.v3.Paths
+		(*Properties)(nil),                     // 54: openapi.v3.Properties
+		(*Reference)(nil),                      // 55: openapi.v3.Reference
+		(*RequestBodiesOrReferences)(nil),      // 56: openapi.v3.RequestBodiesOrReferences
+		(*RequestBody)(nil),                    // 57: openapi.v3.RequestBody
+		(*RequestBodyOrReference)(nil),         // 58: openapi.v3.RequestBodyOrReference
+		(*Response)(nil),                       // 59: openapi.v3.Response
+		(*ResponseOrReference)(nil),            // 60: openapi.v3.ResponseOrReference
+		(*Responses)(nil),                      // 61: openapi.v3.Responses
+		(*ResponsesOrReferences)(nil),          // 62: openapi.v3.ResponsesOrReferences
+		(*Schema)(nil),                         // 63: openapi.v3.Schema
+		(*SchemaOrReference)(nil),              // 64: openapi.v3.SchemaOrReference
+		(*SchemasOrReferences)(nil),            // 65: openapi.v3.SchemasOrReferences
+		(*SecurityRequirement)(nil),            // 66: openapi.v3.SecurityRequirement
+		(*SecurityScheme)(nil),                 // 67: openapi.v3.SecurityScheme
+		(*SecuritySchemeOrReference)(nil),      // 68: openapi.v3.SecuritySchemeOrReference
+		(*SecuritySchemesOrReferences)(nil),    // 69: openapi.v3.SecuritySchemesOrReferences
+		(*Server)(nil),                         // 70: openapi.v3.Server
+		(*ServerVariable)(nil),                 // 71: openapi.v3.ServerVariable
+		(*ServerVariables)(nil),                // 72: openapi.v3.ServerVariables
+		(*SpecificationExtension)(nil),         // 73: openapi.v3.SpecificationExtension
+		(*StringArray)(nil),                    // 74: openapi.v3.StringArray
+		(*Strings)(nil),                        // 75: openapi.v3.Strings
+		(*Tag)(nil),                            // 76: openapi.v3.Tag
+		(*Xml)(nil),                            // 77: openapi.v3.Xml
+		(*anypb.Any)(nil),                      // 78: google.protobuf.Any
+	}
+)
 var file_openapiv3_OpenAPIv3_proto_depIdxs = []int32{
 	64,  // 0: openapi.v3.AdditionalPropertiesItem.schema_or_reference:type_name -> openapi.v3.SchemaOrReference
 	78,  // 1: openapi.v3.Any.value:type_name -> google.protobuf.Any

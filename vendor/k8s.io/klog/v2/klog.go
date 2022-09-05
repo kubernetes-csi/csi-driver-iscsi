@@ -853,7 +853,7 @@ func LogToStderr(stderr bool) {
 
 // output writes the data to the log files and releases the buffer.
 func (l *loggingT) output(s severity.Severity, log *logr.Logger, buf *buffer.Buffer, depth int, file string, line int, alsoToStderr bool) {
-	var isLocked = true
+	isLocked := true
 	l.mu.Lock()
 	defer func() {
 		if isLocked {

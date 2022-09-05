@@ -136,9 +136,11 @@ type weightedHistogram struct {
 // distinct minority of cases.
 const initialHotCount = -15
 
-var _ WeightedHistogram = &weightedHistogram{}
-var _ prometheus.Metric = &weightedHistogram{}
-var _ prometheus.Collector = &weightedHistogram{}
+var (
+	_ WeightedHistogram    = &weightedHistogram{}
+	_ prometheus.Metric    = &weightedHistogram{}
+	_ prometheus.Collector = &weightedHistogram{}
+)
 
 func (sh *weightedHistogram) ObserveWithWeight(value float64, weight uint64) {
 	idx := sort.SearchFloat64s(sh.upperBounds, value)

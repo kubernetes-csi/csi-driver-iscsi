@@ -50,7 +50,7 @@ func (a *TypeRef) Equals(b *TypeRef) bool {
 		if *a.NamedType != *b.NamedType {
 			return false
 		}
-		//return true
+		// return true
 	}
 	if a.ElementRelationship != b.ElementRelationship {
 		return false

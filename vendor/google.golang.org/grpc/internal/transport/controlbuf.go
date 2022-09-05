@@ -182,8 +182,7 @@ type outgoingSettings struct {
 
 func (*outgoingSettings) isTransportResponseFrame() bool { return false }
 
-type incomingGoAway struct {
-}
+type incomingGoAway struct{}
 
 func (*incomingGoAway) isTransportResponseFrame() bool { return false }
 
@@ -741,7 +740,6 @@ func (l *loopyWriter) pingHandler(p *ping) error {
 		l.bdpEst.timesnap(p.data)
 	}
 	return l.framer.fr.WritePing(p.ack, p.data)
-
 }
 
 func (l *loopyWriter) outFlowControlSizeRequestHandler(o *outFlowControlSizeRequest) error {
@@ -910,9 +908,7 @@ func (l *loopyWriter) processData() (bool, error) {
 		}
 		return false, nil
 	}
-	var (
-		buf []byte
-	)
+	var buf []byte
 	// Figure out the maximum size we can send
 	maxSize := http2MaxFrameLen
 	if strQuota := int(l.oiws) - str.bytesOutStanding; strQuota <= 0 { // stream-level flow control.

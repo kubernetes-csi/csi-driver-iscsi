@@ -204,10 +204,13 @@ func (c *selfCollector) Collect(ch chan<- prometheus.Metric) {
 
 // no-op vecs for convenience
 var noopCounterVec = &prometheus.CounterVec{}
-var noopHistogramVec = &prometheus.HistogramVec{}
-var noopTimingHistogramVec = &promext.TimingHistogramVec{}
-var noopGaugeVec = &prometheus.GaugeVec{}
-var noopObserverVec = &noopObserverVector{}
+
+var (
+	noopHistogramVec       = &prometheus.HistogramVec{}
+	noopTimingHistogramVec = &promext.TimingHistogramVec{}
+	noopGaugeVec           = &prometheus.GaugeVec{}
+	noopObserverVec        = &noopObserverVector{}
+)
 
 // just use a convenience struct for all the no-ops
 var noop = &noopMetric{}
@@ -232,6 +235,7 @@ type noopObserverVector struct{}
 func (noopObserverVector) GetMetricWith(prometheus.Labels) (prometheus.Observer, error) {
 	return noop, nil
 }
+
 func (noopObserverVector) GetMetricWithLabelValues(...string) (prometheus.Observer, error) {
 	return noop, nil
 }
@@ -240,6 +244,7 @@ func (noopObserverVector) WithLabelValues(...string) prometheus.Observer { retur
 func (noopObserverVector) CurryWith(prometheus.Labels) (prometheus.ObserverVec, error) {
 	return noopObserverVec, nil
 }
+
 func (noopObserverVector) MustCurryWith(prometheus.Labels) prometheus.ObserverVec {
 	return noopObserverVec
 }

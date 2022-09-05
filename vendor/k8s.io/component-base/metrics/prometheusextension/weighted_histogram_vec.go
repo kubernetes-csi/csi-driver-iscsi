@@ -36,8 +36,10 @@ type WeightedHistogramVec struct {
 	*prometheus.MetricVec
 }
 
-var _ WeightedObserverVec = &WeightedHistogramVec{}
-var _ prometheus.Collector = &WeightedHistogramVec{}
+var (
+	_ WeightedObserverVec  = &WeightedHistogramVec{}
+	_ prometheus.Collector = &WeightedHistogramVec{}
+)
 
 func NewWeightedHistogramVec(opts WeightedHistogramOpts, labelNames ...string) *WeightedHistogramVec {
 	desc := prometheus.NewDesc(

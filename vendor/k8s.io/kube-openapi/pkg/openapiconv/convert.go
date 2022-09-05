@@ -25,8 +25,10 @@ import (
 	"k8s.io/kube-openapi/pkg/validation/spec"
 )
 
-var OpenAPIV2DefPrefix = "#/definitions/"
-var OpenAPIV3DefPrefix = "#/components/schemas/"
+var (
+	OpenAPIV2DefPrefix = "#/definitions/"
+	OpenAPIV3DefPrefix = "#/components/schemas/"
+)
 
 // ConvertV2ToV3 converts an OpenAPI V2 object into V3.
 // Certain references may be shared between the V2 and V3 objects in the conversion.
@@ -238,9 +240,10 @@ func ConvertOperation(v2Operation *spec.Operation) *spec3.Operation {
 		}
 	}
 
-	operation.Responses = &spec3.Responses{ResponsesProps: spec3.ResponsesProps{
-		Default: ConvertResponse(v2Operation.Responses.Default, v2Operation.Produces),
-	},
+	operation.Responses = &spec3.Responses{
+		ResponsesProps: spec3.ResponsesProps{
+			Default: ConvertResponse(v2Operation.Responses.Default, v2Operation.Produces),
+		},
 		VendorExtensible: v2Operation.Responses.VendorExtensible,
 	}
 

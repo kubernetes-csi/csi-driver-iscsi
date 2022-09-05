@@ -83,5 +83,7 @@ func (l klogger) WithCallDepth(depth int) logr.LogSink {
 	return &l
 }
 
-var _ logr.LogSink = &klogger{}
-var _ logr.CallDepthLogSink = &klogger{}
+var (
+	_ logr.LogSink          = &klogger{}
+	_ logr.CallDepthLogSink = &klogger{}
+)

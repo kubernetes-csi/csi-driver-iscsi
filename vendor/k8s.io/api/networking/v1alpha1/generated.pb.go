@@ -35,8 +35,11 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-var _ = fmt.Errorf
-var _ = math.Inf
+
+var (
+	_ = fmt.Errorf
+	_ = math.Inf
+)
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -49,9 +52,11 @@ func (*ClusterCIDR) ProtoMessage() {}
 func (*ClusterCIDR) Descriptor() ([]byte, []int) {
 	return fileDescriptor_c1b7ac8d7d97acec, []int{0}
 }
+
 func (m *ClusterCIDR) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *ClusterCIDR) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -60,12 +65,15 @@ func (m *ClusterCIDR) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) 
 	}
 	return b[:n], nil
 }
+
 func (m *ClusterCIDR) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_ClusterCIDR.Merge(m, src)
 }
+
 func (m *ClusterCIDR) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *ClusterCIDR) XXX_DiscardUnknown() {
 	xxx_messageInfo_ClusterCIDR.DiscardUnknown(m)
 }
@@ -77,9 +85,11 @@ func (*ClusterCIDRList) ProtoMessage() {}
 func (*ClusterCIDRList) Descriptor() ([]byte, []int) {
 	return fileDescriptor_c1b7ac8d7d97acec, []int{1}
 }
+
 func (m *ClusterCIDRList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *ClusterCIDRList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -88,12 +98,15 @@ func (m *ClusterCIDRList) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 	}
 	return b[:n], nil
 }
+
 func (m *ClusterCIDRList) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_ClusterCIDRList.Merge(m, src)
 }
+
 func (m *ClusterCIDRList) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *ClusterCIDRList) XXX_DiscardUnknown() {
 	xxx_messageInfo_ClusterCIDRList.DiscardUnknown(m)
 }
@@ -105,9 +118,11 @@ func (*ClusterCIDRSpec) ProtoMessage() {}
 func (*ClusterCIDRSpec) Descriptor() ([]byte, []int) {
 	return fileDescriptor_c1b7ac8d7d97acec, []int{2}
 }
+
 func (m *ClusterCIDRSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *ClusterCIDRSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -116,12 +131,15 @@ func (m *ClusterCIDRSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 	}
 	return b[:n], nil
 }
+
 func (m *ClusterCIDRSpec) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_ClusterCIDRSpec.Merge(m, src)
 }
+
 func (m *ClusterCIDRSpec) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *ClusterCIDRSpec) XXX_DiscardUnknown() {
 	xxx_messageInfo_ClusterCIDRSpec.DiscardUnknown(m)
 }
@@ -323,6 +341,7 @@ func encodeVarintGenerated(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+
 func (m *ClusterCIDR) Size() (n int) {
 	if m == nil {
 		return 0
@@ -374,20 +393,24 @@ func (m *ClusterCIDRSpec) Size() (n int) {
 func sovGenerated(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
+
 func sozGenerated(x uint64) (n int) {
 	return sovGenerated(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
+
 func (this *ClusterCIDR) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&ClusterCIDR{`,
+	s := strings.Join([]string{
+		`&ClusterCIDR{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "ClusterCIDRSpec", "ClusterCIDRSpec", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
 }
+
 func (this *ClusterCIDRList) String() string {
 	if this == nil {
 		return "nil"
@@ -397,18 +420,21 @@ func (this *ClusterCIDRList) String() string {
 		repeatedStringForItems += strings.Replace(strings.Replace(f.String(), "ClusterCIDR", "ClusterCIDR", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForItems += "}"
-	s := strings.Join([]string{`&ClusterCIDRList{`,
+	s := strings.Join([]string{
+		`&ClusterCIDRList{`,
 		`ListMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ListMeta), "ListMeta", "v1.ListMeta", 1), `&`, ``, 1) + `,`,
 		`Items:` + repeatedStringForItems + `,`,
 		`}`,
 	}, "")
 	return s
 }
+
 func (this *ClusterCIDRSpec) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&ClusterCIDRSpec{`,
+	s := strings.Join([]string{
+		`&ClusterCIDRSpec{`,
 		`NodeSelector:` + strings.Replace(fmt.Sprintf("%v", this.NodeSelector), "NodeSelector", "v11.NodeSelector", 1) + `,`,
 		`PerNodeHostBits:` + fmt.Sprintf("%v", this.PerNodeHostBits) + `,`,
 		`IPv4:` + fmt.Sprintf("%v", this.IPv4) + `,`,
@@ -417,6 +443,7 @@ func (this *ClusterCIDRSpec) String() string {
 	}, "")
 	return s
 }
+
 func valueToStringGenerated(v interface{}) string {
 	rv := reflect.ValueOf(v)
 	if rv.IsNil() {
@@ -425,6 +452,7 @@ func valueToStringGenerated(v interface{}) string {
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
 }
+
 func (m *ClusterCIDR) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -541,6 +569,7 @@ func (m *ClusterCIDR) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *ClusterCIDRList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -658,6 +687,7 @@ func (m *ClusterCIDRList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *ClusterCIDRSpec) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -827,6 +857,7 @@ func (m *ClusterCIDRSpec) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func skipGenerated(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

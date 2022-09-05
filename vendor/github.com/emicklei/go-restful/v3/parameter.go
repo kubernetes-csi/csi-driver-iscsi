@@ -89,10 +89,12 @@ func (p *Parameter) bePath() *Parameter {
 	p.data.Kind = PathParameterKind
 	return p
 }
+
 func (p *Parameter) beQuery() *Parameter {
 	p.data.Kind = QueryParameterKind
 	return p
 }
+
 func (p *Parameter) beBody() *Parameter {
 	p.data.Kind = BodyParameterKind
 	return p

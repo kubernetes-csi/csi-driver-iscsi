@@ -37,8 +37,11 @@ import (
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-var _ = fmt.Errorf
-var _ = math.Inf
+
+var (
+	_ = fmt.Errorf
+	_ = math.Inf
+)
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -51,9 +54,11 @@ func (*CertificateSigningRequest) ProtoMessage() {}
 func (*CertificateSigningRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_09d156762b8218ef, []int{0}
 }
+
 func (m *CertificateSigningRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *CertificateSigningRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -62,12 +67,15 @@ func (m *CertificateSigningRequest) XXX_Marshal(b []byte, deterministic bool) ([
 	}
 	return b[:n], nil
 }
+
 func (m *CertificateSigningRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_CertificateSigningRequest.Merge(m, src)
 }
+
 func (m *CertificateSigningRequest) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *CertificateSigningRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_CertificateSigningRequest.DiscardUnknown(m)
 }
@@ -79,9 +87,11 @@ func (*CertificateSigningRequestCondition) ProtoMessage() {}
 func (*CertificateSigningRequestCondition) Descriptor() ([]byte, []int) {
 	return fileDescriptor_09d156762b8218ef, []int{1}
 }
+
 func (m *CertificateSigningRequestCondition) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *CertificateSigningRequestCondition) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -90,12 +100,15 @@ func (m *CertificateSigningRequestCondition) XXX_Marshal(b []byte, deterministic
 	}
 	return b[:n], nil
 }
+
 func (m *CertificateSigningRequestCondition) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_CertificateSigningRequestCondition.Merge(m, src)
 }
+
 func (m *CertificateSigningRequestCondition) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *CertificateSigningRequestCondition) XXX_DiscardUnknown() {
 	xxx_messageInfo_CertificateSigningRequestCondition.DiscardUnknown(m)
 }
@@ -107,9 +120,11 @@ func (*CertificateSigningRequestList) ProtoMessage() {}
 func (*CertificateSigningRequestList) Descriptor() ([]byte, []int) {
 	return fileDescriptor_09d156762b8218ef, []int{2}
 }
+
 func (m *CertificateSigningRequestList) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *CertificateSigningRequestList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -118,12 +133,15 @@ func (m *CertificateSigningRequestList) XXX_Marshal(b []byte, deterministic bool
 	}
 	return b[:n], nil
 }
+
 func (m *CertificateSigningRequestList) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_CertificateSigningRequestList.Merge(m, src)
 }
+
 func (m *CertificateSigningRequestList) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *CertificateSigningRequestList) XXX_DiscardUnknown() {
 	xxx_messageInfo_CertificateSigningRequestList.DiscardUnknown(m)
 }
@@ -135,9 +153,11 @@ func (*CertificateSigningRequestSpec) ProtoMessage() {}
 func (*CertificateSigningRequestSpec) Descriptor() ([]byte, []int) {
 	return fileDescriptor_09d156762b8218ef, []int{3}
 }
+
 func (m *CertificateSigningRequestSpec) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *CertificateSigningRequestSpec) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -146,12 +166,15 @@ func (m *CertificateSigningRequestSpec) XXX_Marshal(b []byte, deterministic bool
 	}
 	return b[:n], nil
 }
+
 func (m *CertificateSigningRequestSpec) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_CertificateSigningRequestSpec.Merge(m, src)
 }
+
 func (m *CertificateSigningRequestSpec) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *CertificateSigningRequestSpec) XXX_DiscardUnknown() {
 	xxx_messageInfo_CertificateSigningRequestSpec.DiscardUnknown(m)
 }
@@ -163,9 +186,11 @@ func (*CertificateSigningRequestStatus) ProtoMessage() {}
 func (*CertificateSigningRequestStatus) Descriptor() ([]byte, []int) {
 	return fileDescriptor_09d156762b8218ef, []int{4}
 }
+
 func (m *CertificateSigningRequestStatus) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *CertificateSigningRequestStatus) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -174,12 +199,15 @@ func (m *CertificateSigningRequestStatus) XXX_Marshal(b []byte, deterministic bo
 	}
 	return b[:n], nil
 }
+
 func (m *CertificateSigningRequestStatus) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_CertificateSigningRequestStatus.Merge(m, src)
 }
+
 func (m *CertificateSigningRequestStatus) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *CertificateSigningRequestStatus) XXX_DiscardUnknown() {
 	xxx_messageInfo_CertificateSigningRequestStatus.DiscardUnknown(m)
 }
@@ -191,9 +219,11 @@ func (*ExtraValue) ProtoMessage() {}
 func (*ExtraValue) Descriptor() ([]byte, []int) {
 	return fileDescriptor_09d156762b8218ef, []int{5}
 }
+
 func (m *ExtraValue) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *ExtraValue) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
@@ -202,12 +232,15 @@ func (m *ExtraValue) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	}
 	return b[:n], nil
 }
+
 func (m *ExtraValue) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_ExtraValue.Merge(m, src)
 }
+
 func (m *ExtraValue) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *ExtraValue) XXX_DiscardUnknown() {
 	xxx_messageInfo_ExtraValue.DiscardUnknown(m)
 }
@@ -639,6 +672,7 @@ func encodeVarintGenerated(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+
 func (m *CertificateSigningRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -774,14 +808,17 @@ func (m ExtraValue) Size() (n int) {
 func sovGenerated(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
+
 func sozGenerated(x uint64) (n int) {
 	return sovGenerated(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
+
 func (this *CertificateSigningRequest) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&CertificateSigningRequest{`,
+	s := strings.Join([]string{
+		`&CertificateSigningRequest{`,
 		`ObjectMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ObjectMeta), "ObjectMeta", "v1.ObjectMeta", 1), `&`, ``, 1) + `,`,
 		`Spec:` + strings.Replace(strings.Replace(this.Spec.String(), "CertificateSigningRequestSpec", "CertificateSigningRequestSpec", 1), `&`, ``, 1) + `,`,
 		`Status:` + strings.Replace(strings.Replace(this.Status.String(), "CertificateSigningRequestStatus", "CertificateSigningRequestStatus", 1), `&`, ``, 1) + `,`,
@@ -789,11 +826,13 @@ func (this *CertificateSigningRequest) String() string {
 	}, "")
 	return s
 }
+
 func (this *CertificateSigningRequestCondition) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&CertificateSigningRequestCondition{`,
+	s := strings.Join([]string{
+		`&CertificateSigningRequestCondition{`,
 		`Type:` + fmt.Sprintf("%v", this.Type) + `,`,
 		`Reason:` + fmt.Sprintf("%v", this.Reason) + `,`,
 		`Message:` + fmt.Sprintf("%v", this.Message) + `,`,
@@ -804,6 +843,7 @@ func (this *CertificateSigningRequestCondition) String() string {
 	}, "")
 	return s
 }
+
 func (this *CertificateSigningRequestList) String() string {
 	if this == nil {
 		return "nil"
@@ -813,13 +853,15 @@ func (this *CertificateSigningRequestList) String() string {
 		repeatedStringForItems += strings.Replace(strings.Replace(f.String(), "CertificateSigningRequest", "CertificateSigningRequest", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForItems += "}"
-	s := strings.Join([]string{`&CertificateSigningRequestList{`,
+	s := strings.Join([]string{
+		`&CertificateSigningRequestList{`,
 		`ListMeta:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.ListMeta), "ListMeta", "v1.ListMeta", 1), `&`, ``, 1) + `,`,
 		`Items:` + repeatedStringForItems + `,`,
 		`}`,
 	}, "")
 	return s
 }
+
 func (this *CertificateSigningRequestSpec) String() string {
 	if this == nil {
 		return "nil"
@@ -834,7 +876,8 @@ func (this *CertificateSigningRequestSpec) String() string {
 		mapStringForExtra += fmt.Sprintf("%v: %v,", k, this.Extra[k])
 	}
 	mapStringForExtra += "}"
-	s := strings.Join([]string{`&CertificateSigningRequestSpec{`,
+	s := strings.Join([]string{
+		`&CertificateSigningRequestSpec{`,
 		`Request:` + valueToStringGenerated(this.Request) + `,`,
 		`Username:` + fmt.Sprintf("%v", this.Username) + `,`,
 		`UID:` + fmt.Sprintf("%v", this.UID) + `,`,
@@ -847,6 +890,7 @@ func (this *CertificateSigningRequestSpec) String() string {
 	}, "")
 	return s
 }
+
 func (this *CertificateSigningRequestStatus) String() string {
 	if this == nil {
 		return "nil"
@@ -856,13 +900,15 @@ func (this *CertificateSigningRequestStatus) String() string {
 		repeatedStringForConditions += strings.Replace(strings.Replace(f.String(), "CertificateSigningRequestCondition", "CertificateSigningRequestCondition", 1), `&`, ``, 1) + ","
 	}
 	repeatedStringForConditions += "}"
-	s := strings.Join([]string{`&CertificateSigningRequestStatus{`,
+	s := strings.Join([]string{
+		`&CertificateSigningRequestStatus{`,
 		`Conditions:` + repeatedStringForConditions + `,`,
 		`Certificate:` + valueToStringGenerated(this.Certificate) + `,`,
 		`}`,
 	}, "")
 	return s
 }
+
 func valueToStringGenerated(v interface{}) string {
 	rv := reflect.ValueOf(v)
 	if rv.IsNil() {
@@ -871,6 +917,7 @@ func valueToStringGenerated(v interface{}) string {
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
 }
+
 func (m *CertificateSigningRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1020,6 +1067,7 @@ func (m *CertificateSigningRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *CertificateSigningRequestCondition) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1264,6 +1312,7 @@ func (m *CertificateSigningRequestCondition) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *CertificateSigningRequestList) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1381,6 +1430,7 @@ func (m *CertificateSigningRequestList) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *CertificateSigningRequestSpec) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1775,6 +1825,7 @@ func (m *CertificateSigningRequestSpec) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *CertificateSigningRequestStatus) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1893,6 +1944,7 @@ func (m *CertificateSigningRequestStatus) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *ExtraValue) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1975,6 +2027,7 @@ func (m *ExtraValue) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func skipGenerated(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

@@ -37,8 +37,10 @@ type TimingHistogramVec struct {
 	*prometheus.MetricVec
 }
 
-var _ GaugeVecOps = &TimingHistogramVec{}
-var _ prometheus.Collector = &TimingHistogramVec{}
+var (
+	_ GaugeVecOps          = &TimingHistogramVec{}
+	_ prometheus.Collector = &TimingHistogramVec{}
+)
 
 func NewTimingHistogramVec(opts TimingHistogramOpts, labelNames ...string) *TimingHistogramVec {
 	return NewTestableTimingHistogramVec(time.Now, opts, labelNames...)
