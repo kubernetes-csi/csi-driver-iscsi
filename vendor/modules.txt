@@ -76,7 +76,7 @@ github.com/josharian/intern
 ## explicit; go 1.12
 github.com/json-iterator/go
 # github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20220106022228-366f3190694e => ./pkg/lib/iscsi
-## explicit; go 1.15
+## explicit; go 1.19
 github.com/kubernetes-csi/csi-lib-iscsi/iscsi
 # github.com/kubernetes-csi/csi-lib-utils v0.11.0
 ## explicit; go 1.16
@@ -89,7 +89,7 @@ github.com/mailru/easyjson/jwriter
 # github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369
 ## explicit; go 1.9
 github.com/matttproud/golang_protobuf_extensions/pbutil
-# github.com/moby/sys/mountinfo v0.6.0
+# github.com/moby/sys/mountinfo v0.6.2
 ## explicit; go 1.16
 github.com/moby/sys/mountinfo
 # github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
@@ -142,7 +142,7 @@ golang.org/x/net/trace
 ## explicit; go 1.11
 golang.org/x/oauth2
 golang.org/x/oauth2/internal
-# golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f
+# golang.org/x/sys v0.0.0-20220829200755-d48e67d00261
 ## explicit; go 1.17
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/plan9
@@ -602,7 +602,7 @@ k8s.io/component-helpers/node/util/sysctl
 k8s.io/component-helpers/scheduling/corev1
 k8s.io/component-helpers/scheduling/corev1/nodeaffinity
 k8s.io/component-helpers/storage/volume
-# k8s.io/klog/v2 v2.70.1
+# k8s.io/klog/v2 v2.80.0
 ## explicit; go 1.13
 k8s.io/klog/v2
 k8s.io/klog/v2/internal/buffer
@@ -646,7 +646,7 @@ k8s.io/kubernetes/pkg/volume/util/volumepathhandler
 # k8s.io/mount-utils v0.25.0 => k8s.io/mount-utils v0.25.0
 ## explicit; go 1.19
 k8s.io/mount-utils
-# k8s.io/utils v0.0.0-20220728103510-ee6ede2d64ed
+# k8s.io/utils v0.0.0-20220823124924-e9cbc92d1a73
 ## explicit; go 1.12
 k8s.io/utils/buffer
 k8s.io/utils/clock
