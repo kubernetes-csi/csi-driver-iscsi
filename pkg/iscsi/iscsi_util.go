@@ -23,7 +23,7 @@ import (
 	iscsiLib "github.com/kubernetes-csi/csi-lib-iscsi/iscsi"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"k8s.io/klog/v2"
+	klog "k8s.io/klog/v2"
 
 	"k8s.io/utils/mount"
 )

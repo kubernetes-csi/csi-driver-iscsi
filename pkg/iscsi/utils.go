@@ -24,7 +24,7 @@ import (
 	"github.com/kubernetes-csi/csi-lib-utils/protosanitizer"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"k8s.io/klog/v2"
+	klog "k8s.io/klog/v2"
 )
 
 func NewDefaultIdentityServer(d *driver) *IdentityServer {

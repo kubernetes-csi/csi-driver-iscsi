@@ -6,16 +6,16 @@ jobs:
   build:
     strategy:
       matrix:
-        go: [ '^1.16' ]
+        go: [ '^1.18' ]
         platform: [windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Install Go
-        uses: actions/setup-go@v3.1.0
+        uses: actions/setup-go@v3.3.0
         with:
           go-version: ${{ matrix.go }}
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Run Windows Unit Tests
         run: |
           go version
