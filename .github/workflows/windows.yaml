@@ -6,7 +6,7 @@ jobs:
   build:
     strategy:
       matrix:
-        go: [ '^1.19' ]
+        go: [ '^1.18' ]
         platform: [windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
