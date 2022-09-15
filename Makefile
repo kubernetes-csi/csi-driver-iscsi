@@ -22,15 +22,14 @@ GOBIN ?= $(GOPATH)/bin
 export GOPATH GOBIN
 
 REGISTRY ?= test
-IMAGE_VERSION ?= v0.1.0
 IMAGENAME ?= iscsi-csi
 # Output type of docker buildx build
 OUTPUT_TYPE ?= docker
 ARCH ?= amd64
 IMAGE_TAG = $(REGISTRY)/$(IMAGENAME):$(IMAGE_VERSION)
 
-.PHONY: container
-container:
+.PHONY: test-container
+test-container:
 	make
 	docker buildx build --pull --output=type=$(OUTPUT_TYPE) --platform="linux/$(ARCH)" \
 		-t $(IMAGE_TAG) --build-arg ARCH=$(ARCH) .
