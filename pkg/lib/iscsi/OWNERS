@@ -1,8 +1,16 @@
 # See the OWNERS docs: https://git.k8s.io/community/contributors/guide/owners.md
 
 approvers:
-- saad-ali
+- humblec
 - j-griffith
-reviews:
+- jsafrane
+- msau42
 - saad-ali
+- xing-yang
+reviewers:
+- humblec
 - j-griffith
+- jsafrane
+- msau42
+- saad-ali
+- xing-yang

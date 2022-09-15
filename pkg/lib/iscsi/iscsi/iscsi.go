@@ -291,7 +291,10 @@ func (c *Connector) Connect() (string, error) {
 	c.MountTargetDevice = mountTargetDevice
 	if err != nil {
 		debug.Printf("Connect failed: %v", err)
-		RemoveSCSIDevices(c.Devices...)
+		err := RemoveSCSIDevices(c.Devices...)
+		if err != nil {
+			return "", err
+		}
 		c.MountTargetDevice = nil
 		c.Devices = []Device{}
 		return "", err
@@ -390,7 +393,10 @@ func (c *Connector) discoverTarget(targetIqn string, iFace string, portal string
 func Disconnect(targetIqn string, targets []string) {
 	for _, target := range targets {
 		targetPortal := strings.Split(target, ":")[0]
-		Logout(targetIqn, targetPortal)
+		err := Logout(targetIqn, targetPortal)
+		if err != nil {
+			return
+		}
 	}
 
 	deleted := map[string]bool{}
@@ -398,7 +404,10 @@ func Disconnect(targetIqn string, targets []string) {
 		return
 	}
 	deleted[targetIqn] = true
-	DeleteDBEntry(targetIqn)
+	err := DeleteDBEntry(targetIqn)
+	if err != nil {
+		return
+	}
 }
 
 // Disconnect performs a disconnect operation from an appliance.
@@ -667,7 +676,9 @@ func GetConnectorFromFile(filePath string) (*Connector, error) {
 	for _, device := range c.Devices {
 		devicePaths = append(devicePaths, device.GetPath())
 	}
-
+	if c.MountTargetDevice == nil {
+		return nil, fmt.Errorf("mountTargetDevice in the connector is nil")
+	}
 	if devices, err := GetSCSIDevices([]string{c.MountTargetDevice.GetPath()}, false); err != nil {
 		return nil, err
 	} else {

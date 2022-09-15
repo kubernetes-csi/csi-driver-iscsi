@@ -95,9 +95,11 @@ node.conn[0].iscsi.OFMarker = No
 # END RECORD
 `
 
-const emptyTransportName = "iface.transport_name = \n"
-const emptyDbRecord = "\n\n\n"
-const testRootFS = "/tmp/iscsi-tests"
+const (
+	emptyTransportName = "iface.transport_name = \n"
+	emptyDbRecord      = "\n\n\n"
+	testRootFS         = "/tmp/iscsi-tests"
+)
 
 func makeFakeExecCommand(exitStatus int, stdout string) func(string, ...string) *exec.Cmd {
 	return func(command string, args ...string) *exec.Cmd {
@@ -105,9 +107,11 @@ func makeFakeExecCommand(exitStatus int, stdout string) func(string, ...string) 
 		cs = append(cs, args...)
 		cmd := exec.Command(os.Args[0], cs...)
 		es := strconv.Itoa(exitStatus)
-		cmd.Env = []string{"GO_WANT_HELPER_PROCESS=1",
+		cmd.Env = []string{
+			"GO_WANT_HELPER_PROCESS=1",
 			"STDOUT=" + stdout,
-			"EXIT_STATUS=" + es}
+			"EXIT_STATUS=" + es,
+		}
 		return cmd
 	}
 }
@@ -165,7 +169,7 @@ func preparePaths(devices []Device) error {
 		}
 
 		for _, filename := range []string{"delete", "state"} {
-			if err := ioutil.WriteFile(filepath.Join(devicePath, filename), []byte(""), 0600); err != nil {
+			if err := ioutil.WriteFile(filepath.Join(devicePath, filename), []byte(""), 0o600); err != nil {
 				return err
 			}
 		}
@@ -735,7 +739,7 @@ func TestConnectorPersistance(t *testing.T) {
 	assert.NotNil(err)
 	assert.IsType(&os.PathError{}, err)
 
-	ioutil.WriteFile("/tmp/connector.json", []byte("not a connector"), 0600)
+	ioutil.WriteFile("/tmp/connector.json", []byte("not a connector"), 0o600)
 	_, err = GetConnectorFromFile("/tmp/connector.json")
 	assert.NotNil(err)
 	assert.IsType(&json.SyntaxError{}, err)
