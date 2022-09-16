@@ -21,7 +21,7 @@ jobs:
           export REGISTRY=test
           export IMAGE_VERSION=latest
           export DOCKER_CLI_EXPERIMENTAL=enabled
-          make container
+          make test-container
       
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master

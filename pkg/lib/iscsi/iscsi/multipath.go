@@ -2,6 +2,7 @@ package iscsi
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -17,7 +18,7 @@ type path struct {
 	Device string `json:"dev"`
 }
 
-// ExecWithTimeout execute a command with a timeout and returns an error if timeout is excedeed
+// ExecWithTimeout execute a command with a timeout and returns an error if timeout is exceeded
 func ExecWithTimeout(command string, args []string, timeout time.Duration) ([]byte, error) {
 	debug.Printf("Executing command '%v' with args: '%v'.\n", command, args)
 
@@ -35,13 +36,14 @@ func ExecWithTimeout(command string, args []string, timeout time.Duration) ([]by
 	// We want to check the context error to see if the timeout was executed.
 	// The error returned by cmd.Output() will be OS specific based on what
 	// happens when a process is killed.
-	if ctx.Err() == context.DeadlineExceeded {
+	if errors.Is(ctx.Err(), context.DeadlineExceeded) {
 		debug.Printf("Command '%s' timeout reached.\n", command)
 		return nil, ctx.Err()
 	}
 
 	if err != nil {
-		if ee, ok := err.(*exec.ExitError); ok {
+		var ee *exec.ExitError
+		if ok := errors.Is(err, ee); ok {
 			debug.Printf("Non-zero exit code: %s\n", err)
 			err = fmt.Errorf("%s", ee.Stderr)
 		}
@@ -58,7 +60,6 @@ func FlushMultipathDevice(device *Device) error {
 
 	timeout := 5 * time.Second
 	_, err := execWithTimeout("multipath", []string{"-f", devicePath}, timeout)
-
 	if err != nil {
 		if _, e := osStat(devicePath); os.IsNotExist(e) {
 			debug.Printf("Multipath device %v has been removed.\n", devicePath)
@@ -71,7 +72,7 @@ func FlushMultipathDevice(device *Device) error {
 		}
 	}
 
-	debug.Printf("Finshed flushing multipath device %v.\n", devicePath)
+	debug.Printf("Finished flushing multipath device %v.\n", devicePath)
 	return nil
 }
 
