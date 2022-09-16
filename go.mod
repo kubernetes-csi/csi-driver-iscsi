@@ -9,7 +9,7 @@ require (
 	golang.org/x/net v0.0.0-20220909164309-bea034e7d591
 	google.golang.org/grpc v1.47.0
 	k8s.io/klog/v2 v2.80.0
-	k8s.io/kubernetes v1.25.0
+	k8s.io/kubernetes v1.25.1
 	k8s.io/mount-utils v0.25.0 // indirect
 	k8s.io/utils v0.0.0-20220823124924-e9cbc92d1a73
 )
