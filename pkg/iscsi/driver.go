@@ -37,14 +37,17 @@ const (
 	driverName = "iscsi.csi.k8s.io"
 )
 
-var version = "0.2.0"
-
 func NewDriver(nodeID, endpoint string) *driver {
-	klog.V(1).Infof("driver: %s version: %s nodeID: %s endpoint: %s", driverName, version, nodeID, endpoint)
+	serVersion, err := GetVersionYAML(driverName)
+	if err != nil {
+		// default to 'canary`
+		serVersion = "canary"
+	}
+	klog.V(1).Infof("driver: %s version: %s nodeID: %s endpoint: %s", driverName, serVersion, nodeID, endpoint)
 
 	d := &driver{
 		name:     driverName,
-		version:  version,
+		version:  serVersion,
 		nodeID:   nodeID,
 		endpoint: endpoint,
 	}
