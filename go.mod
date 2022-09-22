@@ -7,12 +7,13 @@ require (
 	github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20220106022228-366f3190694e
 	github.com/kubernetes-csi/csi-lib-utils v0.11.0
 	golang.org/x/net v0.0.0-20220909164309-bea034e7d591
-	google.golang.org/grpc v1.47.0
-	k8s.io/klog/v2 v2.80.0
+	google.golang.org/grpc v1.49.0
+	k8s.io/klog/v2 v2.80.1
 	k8s.io/kubernetes v1.25.0
 	k8s.io/mount-utils v0.25.0 // indirect
-	k8s.io/utils v0.0.0-20220823124924-e9cbc92d1a73
+	k8s.io/utils v0.0.0-20220922133306-665eaaec4324
 )
+
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -66,7 +67,6 @@ require (
 	k8s.io/kube-openapi v0.0.0-20220803162953-67bda5d908f1 // indirect
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
-	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
 replace k8s.io/api => k8s.io/api v0.25.0
