@@ -349,7 +349,7 @@ func (c *Connector) connectTarget(targetIqn string, target string, iFace string,
 		return devicePath, nil
 	}
 
-	if err := c.discoverTarget(targetIqn, iFace, portal); err != nil {
+	if err := c.discoverTargetStatically(targetIqn, iFace, portal); err != nil {
 		return "", err
 	}
 
@@ -366,6 +366,16 @@ func (c *Connector) connectTarget(targetIqn string, target string, iFace string,
 	}
 
 	return devicePath, nil
+}
+
+// Add a new function to make static discovery
+func (c *Connector) discoverTargetStatically(targetIqn string, iFace string, portal string) error {
+	err := CreateDBEntry(targetIqn, portal, iFace, c.DiscoverySecrets, c.SessionSecrets)
+	if err != nil {
+		debug.Printf("Error creating db entry: %s\n", err.Error())
+		return err
+	}
+	return nil
 }
 
 func (c *Connector) discoverTarget(targetIqn string, iFace string, portal string) error {
