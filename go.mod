@@ -6,7 +6,7 @@ require (
 	github.com/container-storage-interface/spec v1.7.0
 	github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20220906040654-ce2614163c72
 	github.com/kubernetes-csi/csi-lib-utils v0.11.0
-	golang.org/x/net v0.1.0
+	golang.org/x/net v0.2.0
 	google.golang.org/grpc v1.50.1
 	k8s.io/klog/v2 v2.80.1
 	k8s.io/kubernetes v1.25.3
@@ -46,8 +46,8 @@ require (
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/oauth2 v0.1.0 // indirect
-	golang.org/x/sys v0.1.0 // indirect
-	golang.org/x/term v0.1.0 // indirect
+	golang.org/x/sys v0.2.0 // indirect
+	golang.org/x/term v0.2.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/time v0.1.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
