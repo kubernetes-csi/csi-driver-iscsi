@@ -9,9 +9,9 @@ require (
 	golang.org/x/net v0.4.0
 	google.golang.org/grpc v1.51.0
 	k8s.io/klog/v2 v2.80.1
-	k8s.io/kubernetes v1.25.4
+	k8s.io/kubernetes v1.26.0
 	k8s.io/mount-utils v0.25.3 // indirect
-	k8s.io/utils v0.0.0-20221012122500-cfd413dd9e85
+	k8s.io/utils v0.0.0-20221107191617-1a15be271d1d
 )
 
 require (
@@ -40,7 +40,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/opencontainers/selinux v1.10.2 // indirect
-	github.com/prometheus/client_golang v1.13.0 // indirect
+	github.com/prometheus/client_golang v1.14.0 // indirect
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
