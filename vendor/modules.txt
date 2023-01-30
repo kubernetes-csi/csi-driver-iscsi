@@ -173,7 +173,7 @@ google.golang.org/appengine/urlfetch
 # google.golang.org/genproto v0.0.0-20221207170731-23e4bf6bdc37
 ## explicit; go 1.19
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.51.0
+# google.golang.org/grpc v1.52.3
 ## explicit; go 1.17
 google.golang.org/grpc
 google.golang.org/grpc/attributes
