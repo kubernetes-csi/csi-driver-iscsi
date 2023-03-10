@@ -3,7 +3,7 @@ module github.com/kubernetes-csi/csi-driver-iscsi
 go 1.19
 
 require (
-	github.com/container-storage-interface/spec v1.7.0
+	github.com/container-storage-interface/spec v1.8.0
 	github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20220906040654-ce2614163c72
 	github.com/kubernetes-csi/csi-lib-utils v0.13.0
 	golang.org/x/net v0.7.0
