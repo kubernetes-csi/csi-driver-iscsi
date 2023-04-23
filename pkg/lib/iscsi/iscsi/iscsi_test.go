@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"reflect"
 	"strconv"
-	"strings"
 	"testing"
 	"time"
 
@@ -415,20 +414,6 @@ func Test_DisconnectMultipathVolume(t *testing.T) {
 			}
 		})
 	}
-}
-
-func Test_EnableDebugLogging(t *testing.T) {
-	assert := assert.New(t)
-	data := []byte{}
-	writer := testWriter{data: &data}
-	EnableDebugLogging(writer)
-
-	assert.Equal("", string(data))
-	assert.Len(strings.Split(string(data), "\n"), 1)
-
-	debug.Print("testing debug logs")
-	assert.Contains(string(data), "testing debug logs")
-	assert.Len(strings.Split(string(data), "\n"), 2)
 }
 
 func Test_waitForPathToExist(t *testing.T) {

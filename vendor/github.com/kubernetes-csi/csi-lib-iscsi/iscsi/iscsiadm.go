@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	klog "k8s.io/klog/v2"
 )
 
 // Secrets provides optional iscsi security credentials (CHAP settings)
@@ -23,7 +25,7 @@ type Secrets struct {
 func iscsiCmd(args ...string) (string, error) {
 	stdout, err := execWithTimeout("iscsiadm", args, time.Second*3)
 
-	debug.Printf("Run iscsiadm command: %s", strings.Join(append([]string{"iscsiadm"}, args...), " "))
+	klog.V(2).Infof("Run iscsiadm command: %s", strings.Join(append([]string{"iscsiadm"}, args...), " "))
 	iscsiadmDebug(string(stdout), err)
 
 	return string(stdout), err
@@ -31,9 +33,9 @@ func iscsiCmd(args ...string) (string, error) {
 
 func iscsiadmDebug(output string, cmdError error) {
 	debugOutput := strings.Replace(output, "\n", "\\n", -1)
-	debug.Printf("Output of iscsiadm command: {output: %s}", debugOutput)
+	klog.V(2).Infof("Output of iscsiadm command: {output: %s}", debugOutput)
 	if cmdError != nil {
-		debug.Printf("Error message returned from iscsiadm command: %s", cmdError.Error())
+		klog.V(2).Infof("Error message returned from iscsiadm command: %s", cmdError.Error())
 	}
 }
 
@@ -41,7 +43,7 @@ func iscsiadmDebug(output string, cmdError error) {
 // along with the raw output in Response.StdOut we add the convenience of
 // returning a list of entries found
 func ListInterfaces() ([]string, error) {
-	debug.Println("Begin ListInterface...")
+	klog.V(2).Infof("Begin ListInterface...")
 	out, err := iscsiCmd("-m", "iface", "-o", "show")
 	return strings.Split(out, "\n"), err
 }
@@ -49,14 +51,14 @@ func ListInterfaces() ([]string, error) {
 // ShowInterface retrieves the details for the specified iscsi interface
 // caller should inspect r.Err and use r.StdOut for interface details
 func ShowInterface(iface string) (string, error) {
-	debug.Println("Begin ShowInterface...")
+	klog.V(2).Infof("Begin ShowInterface...")
 	out, err := iscsiCmd("-m", "iface", "-o", "show", "-I", iface)
 	return out, err
 }
 
 // CreateDBEntry sets up a node entry for the specified tgt in the nodes iscsi nodes db
 func CreateDBEntry(tgtIQN, portal, iFace string, discoverySecrets, sessionSecrets Secrets) error {
-	debug.Println("Begin CreateDBEntry...")
+	klog.V(2).Infof("Begin CreateDBEntry...")
 	baseArgs := []string{"-m", "node", "-T", tgtIQN, "-p", portal}
 	_, err := iscsiCmd(append(baseArgs, "-I", iFace, "-o", "new")...)
 	if err != nil {
@@ -64,7 +66,7 @@ func CreateDBEntry(tgtIQN, portal, iFace string, discoverySecrets, sessionSecret
 	}
 
 	if discoverySecrets.SecretsType == "chap" {
-		debug.Printf("Setting CHAP Discovery...")
+		klog.V(2).Infof("Setting CHAP Discovery...")
 		err := createCHAPEntries(baseArgs, discoverySecrets, true)
 		if err != nil {
 			return err
@@ -72,7 +74,7 @@ func CreateDBEntry(tgtIQN, portal, iFace string, discoverySecrets, sessionSecret
 	}
 
 	if sessionSecrets.SecretsType == "chap" {
-		debug.Printf("Setting CHAP Session...")
+		klog.V(2).Infof("Setting CHAP Session...")
 		err := createCHAPEntries(baseArgs, sessionSecrets, false)
 		if err != nil {
 			return err
@@ -84,7 +86,7 @@ func CreateDBEntry(tgtIQN, portal, iFace string, discoverySecrets, sessionSecret
 
 // Discoverydb discovers the iscsi target
 func Discoverydb(tp, iface string, discoverySecrets Secrets, chapDiscovery bool) error {
-	debug.Println("Begin Discoverydb...")
+	klog.V(2).Infof("Begin Discoverydb...")
 	baseArgs := []string{"-m", "discoverydb", "-t", "sendtargets", "-p", tp, "-I", iface}
 	out, err := iscsiCmd(append(baseArgs, []string{"-o", "new"}...)...)
 	if err != nil {
@@ -108,7 +110,7 @@ func Discoverydb(tp, iface string, discoverySecrets Secrets, chapDiscovery bool)
 
 func createCHAPEntries(baseArgs []string, secrets Secrets, discovery bool) error {
 	args := []string{}
-	debug.Printf("Begin createCHAPEntries (discovery=%t)...", discovery)
+	klog.V(2).Infof("Begin createCHAPEntries (discovery=%t)...", discovery)
 	if discovery {
 		args = append(baseArgs, []string{
 			"-o", "update",
@@ -149,14 +151,14 @@ func createCHAPEntries(baseArgs []string, secrets Secrets, discovery bool) error
 
 // GetSessions retrieves a list of current iscsi sessions on the node
 func GetSessions() (string, error) {
-	debug.Println("Begin GetSessions...")
+	klog.V(2).Infof("Begin GetSessions...")
 	out, err := iscsiCmd("-m", "session")
 	return out, err
 }
 
 // Login performs an iscsi login for the specified target
 func Login(tgtIQN, portal string) error {
-	debug.Println("Begin Login...")
+	klog.V(2).Infof("Begin Login...")
 	baseArgs := []string{"-m", "node", "-T", tgtIQN, "-p", portal}
 	if _, err := iscsiCmd(append(baseArgs, []string{"-l"}...)...); err != nil {
 		// delete the node record from database
@@ -168,7 +170,7 @@ func Login(tgtIQN, portal string) error {
 
 // Logout logs out the specified target
 func Logout(tgtIQN, portal string) error {
-	debug.Println("Begin Logout...")
+	klog.V(2).Infof("Begin Logout...")
 	args := []string{"-m", "node", "-T", tgtIQN, "-p", portal, "-u"}
 	iscsiCmd(args...)
 	return nil
@@ -176,7 +178,7 @@ func Logout(tgtIQN, portal string) error {
 
 // DeleteDBEntry deletes the iscsi db entry for the specified target
 func DeleteDBEntry(tgtIQN string) error {
-	debug.Println("Begin DeleteDBEntry...")
+	klog.V(2).Infof("Begin DeleteDBEntry...")
 	args := []string{"-m", "node", "-T", tgtIQN, "-o", "delete"}
 	iscsiCmd(args...)
 	return nil
@@ -184,7 +186,7 @@ func DeleteDBEntry(tgtIQN string) error {
 
 // DeleteIFace delete the iface
 func DeleteIFace(iface string) error {
-	debug.Println("Begin DeleteIFace...")
+	klog.V(2).Infof("Begin DeleteIFace...")
 	iscsiCmd([]string{"-m", "iface", "-I", iface, "-o", "delete"}...)
 	return nil
 }

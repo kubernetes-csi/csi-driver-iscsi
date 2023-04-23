@@ -4,9 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -15,12 +13,13 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	klog "k8s.io/klog/v2"
 )
 
 const defaultPort = "3260"
 
 var (
-	debug              *log.Logger
 	execCommand        = exec.Command
 	execCommandContext = exec.CommandContext
 	execWithTimeout    = ExecWithTimeout
@@ -74,17 +73,6 @@ type Connector struct {
 	CheckInterval     uint     `json:"check_interval"`
 	DoDiscovery       bool     `json:"do_discovery"`
 	DoCHAPDiscovery   bool     `json:"do_chap_discovery"`
-}
-
-func init() {
-	// by default, we don't log anything, EnableDebugLogging() can turn on some tracing
-	debug = log.New(ioutil.Discard, "", 0)
-}
-
-// EnableDebugLogging provides a mechanism to turn on debug logging for this package
-// output is written to the provided io.Writer
-func EnableDebugLogging(writer io.Writer) {
-	debug = log.New(writer, "DEBUG: ", log.Ldate|log.Ltime|log.Lshortfile)
 }
 
 // parseSession takes the raw stdout from the `iscsiadm -m session` command and encodes it into an iSCSI session type
@@ -165,7 +153,7 @@ func waitForPathToExist(devicePath *string, maxRetries, intervalSeconds uint, de
 
 	for i := uint(0); i <= maxRetries; i++ {
 		if i != 0 {
-			debug.Printf("Device path %q doesn't exists yet, retrying in %d seconds (%d/%d)", *devicePath, intervalSeconds, i, maxRetries)
+			klog.V(2).Infof("Device path %q doesn't exists yet, retrying in %d seconds (%d/%d)", *devicePath, intervalSeconds, i, maxRetries)
 			sleep(time.Second * time.Duration(intervalSeconds))
 		}
 
@@ -185,10 +173,10 @@ func pathExists(devicePath *string, deviceTransport string) error {
 		_, err := osStat(*devicePath)
 		if err != nil {
 			if !os.IsNotExist(err) {
-				debug.Printf("Error attempting to stat device: %s", err.Error())
+				klog.V(2).Infof("Error attempting to stat device: %s", err.Error())
 				return err
 			}
-			debug.Printf("Device not found for: %s", *devicePath)
+			klog.V(2).Infof("Device not found for: %s", *devicePath)
 			return err
 		}
 	} else {
@@ -270,7 +258,7 @@ func (c *Connector) Connect() (string, error) {
 		if err != nil {
 			lastErr = err
 		} else {
-			debug.Printf("Appending device path: %s", devicePath)
+			klog.V(2).Infof("Appending device path: %s", devicePath)
 			devicePaths = append(devicePaths, devicePath)
 		}
 	}
@@ -290,7 +278,7 @@ func (c *Connector) Connect() (string, error) {
 	mountTargetDevice, err := c.getMountTargetDevice()
 	c.MountTargetDevice = mountTargetDevice
 	if err != nil {
-		debug.Printf("Connect failed: %v", err)
+		klog.V(2).Infof("Connect failed: %v", err)
 		err := RemoveSCSIDevices(c.Devices...)
 		if err != nil {
 			return "", err
@@ -310,7 +298,7 @@ func (c *Connector) Connect() (string, error) {
 }
 
 func (c *Connector) connectTarget(targetIqn string, target string, iFace string, iscsiTransport string) (string, error) {
-	debug.Printf("Process targetIqn: %s, portal: %s\n", targetIqn, target)
+	klog.V(2).Infof("Process targetIqn: %s, portal: %s\n", targetIqn, target)
 	targetParts := strings.Split(target, ":")
 	targetPortal := targetParts[0]
 	targetPort := defaultPort
@@ -321,9 +309,9 @@ func (c *Connector) connectTarget(targetIqn string, target string, iFace string,
 	// Rescan sessions to discover newly mapped LUNs. Do not specify the interface when rescanning
 	// to avoid establishing additional sessions to the same target.
 	if _, err := iscsiCmd(append(baseArgs, []string{"-R"}...)...); err != nil {
-		debug.Printf("Failed to rescan session, err: %v", err)
+		klog.V(2).Infof("Failed to rescan session, err: %v", err)
 		if os.IsTimeout(err) {
-			debug.Printf("iscsiadm timeout, logging out")
+			klog.V(2).Infof("iscsiadm timeout, logging out")
 			cmd := execCommand("iscsiadm", append(baseArgs, []string{"-u"}...)...)
 			out, err := cmd.CombinedOutput()
 			if err != nil {
@@ -342,7 +330,7 @@ func (c *Connector) connectTarget(targetIqn string, target string, iFace string,
 
 	exists, _ := sessionExists(portal, targetIqn)
 	if exists {
-		debug.Printf("Session already exists, checking if device path %q exists", devicePath)
+		klog.V(2).Infof("Session already exists, checking if device path %q exists", devicePath)
 		if err := waitForPathToExist(&devicePath, c.RetryCount, c.CheckInterval, iscsiTransport); err != nil {
 			return "", err
 		}
@@ -356,11 +344,11 @@ func (c *Connector) connectTarget(targetIqn string, target string, iFace string,
 	// perform the login
 	err := Login(targetIqn, portal)
 	if err != nil {
-		debug.Printf("Failed to login: %v", err)
+		klog.V(2).Infof("Failed to login: %v", err)
 		return "", err
 	}
 
-	debug.Printf("Waiting for device path %q to exist", devicePath)
+	klog.V(2).Infof("Waiting for device path %q to exist", devicePath)
 	if err := waitForPathToExist(&devicePath, c.RetryCount, c.CheckInterval, iscsiTransport); err != nil {
 		return "", err
 	}
@@ -372,7 +360,7 @@ func (c *Connector) discoverTarget(targetIqn string, iFace string, portal string
 	if c.DoDiscovery {
 		// build discoverydb and discover iscsi target
 		if err := Discoverydb(portal, iFace, c.DiscoverySecrets, c.DoCHAPDiscovery); err != nil {
-			debug.Printf("Error in discovery of the target: %s\n", err.Error())
+			klog.V(2).Infof("Error in discovery of the target: %s\n", err.Error())
 			return err
 		}
 	}
@@ -381,7 +369,7 @@ func (c *Connector) discoverTarget(targetIqn string, iFace string, portal string
 		// Make sure we don't log the secrets
 		err := CreateDBEntry(targetIqn, portal, iFace, c.DiscoverySecrets, c.SessionSecrets)
 		if err != nil {
-			debug.Printf("Error creating db entry: %s\n", err.Error())
+			klog.V(2).Infof("Error creating db entry: %s\n", err.Error())
 			return err
 		}
 	}
@@ -433,7 +421,7 @@ func (c *Connector) DisconnectVolume() error {
 			return fmt.Errorf("multipath is inconsistent: %v", err)
 		}
 
-		debug.Printf("Removing multipath device in path %s.\n", c.MountTargetDevice.GetPath())
+		klog.V(2).Infof("Removing multipath device in path %s.\n", c.MountTargetDevice.GetPath())
 		err := FlushMultipathDevice(c.MountTargetDevice)
 		if err != nil {
 			return err
@@ -443,13 +431,13 @@ func (c *Connector) DisconnectVolume() error {
 		}
 	} else {
 		devicePath := c.MountTargetDevice.GetPath()
-		debug.Printf("Removing normal device in path %s.\n", devicePath)
+		klog.V(2).Infof("Removing normal device in path %s.\n", devicePath)
 		if err := RemoveSCSIDevices(*c.MountTargetDevice); err != nil {
 			return err
 		}
 	}
 
-	debug.Printf("Finished disconnecting volume.\n")
+	klog.V(2).Infof("Finished disconnecting volume.\n")
 	return nil
 }
 
@@ -458,10 +446,10 @@ func (c *Connector) getMountTargetDevice() (*Device, error) {
 	if len(c.Devices) > 1 {
 		multipathDevice, err := getMultipathDevice(c.Devices)
 		if err != nil {
-			debug.Printf("mount target is not a multipath device: %v", err)
+			klog.V(2).Infof("mount target is not a multipath device: %v", err)
 			return nil, err
 		}
-		debug.Printf("mount target is a multipath device")
+		klog.V(2).Infof("mount target is a multipath device")
 		return multipathDevice, nil
 	}
 
@@ -480,11 +468,11 @@ func (c *Connector) IsMultipathEnabled() bool {
 // GetSCSIDevices get SCSI devices from device paths
 // It will returns all SCSI devices if no paths are given
 func GetSCSIDevices(devicePaths []string, strict bool) ([]Device, error) {
-	debug.Printf("Getting info about SCSI devices %s.\n", devicePaths)
+	klog.V(2).Infof("Getting info about SCSI devices %s.\n", devicePaths)
 
 	deviceInfo, err := lsblk(devicePaths, strict)
 	if err != nil {
-		debug.Printf("An error occurred while looking info about SCSI devices: %v", err)
+		klog.V(2).Infof("An error occurred while looking info about SCSI devices: %v", err)
 		return nil, err
 	}
 
@@ -513,7 +501,7 @@ func GetISCSIDevices(devicePaths []string, strict bool) (devices []Device, err e
 func lsblk(devicePaths []string, strict bool) (deviceInfo, error) {
 	flags := []string{"-rn", "-o", "NAME,KNAME,PKNAME,HCTL,TYPE,TRAN,SIZE"}
 	command := execCommand("lsblk", append(flags, devicePaths...)...)
-	debug.Println(command.String())
+	klog.V(2).Infof(command.String())
 	out, err := command.Output()
 	if err != nil {
 		if ee, ok := err.(*exec.ExitError); ok {
@@ -521,7 +509,7 @@ func lsblk(devicePaths []string, strict bool) (deviceInfo, error) {
 			if strict || ee.ExitCode() != 64 { // ignore the error if some devices have been found when not strict
 				return nil, err
 			}
-			debug.Printf("Could find only some devices: %v", err)
+			klog.V(2).Infof("Could find only some devices: %v", err)
 		} else {
 			return nil, err
 		}
@@ -580,17 +568,17 @@ func lsblk(devicePaths []string, strict bool) (deviceInfo, error) {
 // writeInSCSIDeviceFile write into special devices files to change devices state
 func writeInSCSIDeviceFile(hctl string, file string, content string) error {
 	filename := filepath.Join("/sys/class/scsi_device", hctl, "device", file)
-	debug.Printf("Write %q in %q.\n", content, filename)
+	klog.V(2).Infof("Write %q in %q.\n", content, filename)
 
 	f, err := osOpenFile(filename, os.O_TRUNC|os.O_WRONLY, 0o200)
 	if err != nil {
-		debug.Printf("Error while opening file %v: %v\n", filename, err)
+		klog.V(2).Infof("Error while opening file %v: %v\n", filename, err)
 		return err
 	}
 
 	defer f.Close()
 	if _, err := f.WriteString(content); err != nil {
-		debug.Printf("Error while writing to file %v: %v", filename, err)
+		klog.V(2).Infof("Error while writing to file %v: %v", filename, err)
 		return err
 	}
 
@@ -599,22 +587,22 @@ func writeInSCSIDeviceFile(hctl string, file string, content string) error {
 
 // RemoveSCSIDevices removes SCSI device(s) from a Linux host.
 func RemoveSCSIDevices(devices ...Device) error {
-	debug.Printf("Removing SCSI devices %v.\n", devices)
+	klog.V(2).Infof("Removing SCSI devices %v.\n", devices)
 
 	var errs []error
 	for _, device := range devices {
-		debug.Printf("Flush SCSI device %v.\n", device.Name)
+		klog.V(2).Infof("Flush SCSI device %v.\n", device.Name)
 		if err := device.Exists(); err == nil {
 			out, err := execCommand("blockdev", "--flushbufs", device.GetPath()).CombinedOutput()
 			if err != nil {
-				debug.Printf("Command 'blockdev --flushbufs %s' did not succeed to flush the device: %v\n", device.GetPath(), err)
+				klog.V(2).Infof("Command 'blockdev --flushbufs %s' did not succeed to flush the device: %v\n", device.GetPath(), err)
 				return errors.New(string(out))
 			}
 		} else if !os.IsNotExist(err) {
 			return err
 		}
 
-		debug.Printf("Put SCSI device %q offline.\n", device.Name)
+		klog.V(2).Infof("Put SCSI device %q offline.\n", device.Name)
 		err := device.Shutdown()
 		if err != nil {
 			if !os.IsNotExist(err) { // Ignore device already removed
@@ -623,7 +611,7 @@ func RemoveSCSIDevices(devices ...Device) error {
 			continue
 		}
 
-		debug.Printf("Delete SCSI device %q.\n", device.Name)
+		klog.V(2).Infof("Delete SCSI device %q.\n", device.Name)
 		err = device.Delete()
 		if err != nil {
 			if !os.IsNotExist(err) { // Ignore device already removed
@@ -636,7 +624,7 @@ func RemoveSCSIDevices(devices ...Device) error {
 	if len(errs) > 0 {
 		return errs[0]
 	}
-	debug.Println("Finished removing SCSI devices.")
+	klog.V(2).Infof("Finished removing SCSI devices.")
 	return nil
 }
 
