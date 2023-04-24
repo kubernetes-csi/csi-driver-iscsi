@@ -107,10 +107,14 @@ func buildISCSIConnector(iscsiInfo *iscsiDisk) *iscsiLib.Connector {
 		return nil
 	}
 	c := iscsiLib.Connector{
-		VolumeName:    iscsiInfo.VolName,
-		TargetIqn:     iscsiInfo.Iqn,
-		TargetPortals: iscsiInfo.Portals,
-		Lun:           iscsiInfo.lun,
+		VolumeName:       iscsiInfo.VolName,
+		TargetIqn:        iscsiInfo.Iqn,
+		TargetPortals:    iscsiInfo.Portals,
+		Lun:              iscsiInfo.lun,
+		DoCHAPDiscovery:  iscsiInfo.chapDiscovery,
+		DiscoverySecrets: iscsiInfo.discoverySecret,
+		SessionSecrets:   iscsiInfo.sessionSecret,
+		Interface:        iscsiInfo.Iface,
 	}
 
 	if iscsiInfo.sessionSecret != (iscsiLib.Secrets{}) {
