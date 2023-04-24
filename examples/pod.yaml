@@ -4,13 +4,11 @@ kind: Pod
 metadata:
   name: nginx
 spec:
+  nodeSelector:
+    "kubernetes.io/os": linux
   containers:
-    - image: maersk/nginx
-      imagePullPolicy: Always
+    - image: nginx
       name: nginx
-      ports:
-        - containerPort: 80
-          protocol: TCP
       volumeMounts:
         - mountPath: /var/www
           name: iscsi-volume
