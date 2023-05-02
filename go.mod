@@ -4,11 +4,10 @@ go 1.19
 
 require (
 	github.com/container-storage-interface/spec v1.8.0
-	github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20220906040654-ce2614163c72
 	github.com/kubernetes-csi/csi-lib-utils v0.13.0
 	golang.org/x/net v0.7.0
 	google.golang.org/grpc v1.53.0
-	k8s.io/klog/v2 v2.90.0
+	k8s.io/klog/v2 v2.90.1
 	k8s.io/kubernetes v1.26.3
 	k8s.io/mount-utils v0.26.0 // indirect
 )
@@ -68,7 +67,10 @@ require (
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
-require k8s.io/utils v0.0.0-20221128185143-99ec85e7a448
+require (
+	github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20230429162816-0798dedca439
+	k8s.io/utils v0.0.0-20221128185143-99ec85e7a448
+)
 
 replace k8s.io/api => k8s.io/api v0.26.0
 
@@ -121,7 +123,5 @@ replace k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.26.0
 replace k8s.io/sample-cli-plugin => k8s.io/sample-cli-plugin v0.26.0
 
 replace k8s.io/sample-controller => k8s.io/sample-controller v0.26.0
-
-replace github.com/kubernetes-csi/csi-lib-iscsi => ./pkg/lib/iscsi
 
 replace k8s.io/pod-security-admission => k8s.io/pod-security-admission v0.26.0

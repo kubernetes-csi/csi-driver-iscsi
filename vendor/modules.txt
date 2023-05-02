@@ -75,7 +75,7 @@ github.com/josharian/intern
 # github.com/json-iterator/go v1.1.12
 ## explicit; go 1.12
 github.com/json-iterator/go
-# github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20220906040654-ce2614163c72 => ./pkg/lib/iscsi
+# github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20230429162816-0798dedca439
 ## explicit; go 1.19
 github.com/kubernetes-csi/csi-lib-iscsi/iscsi
 # github.com/kubernetes-csi/csi-lib-utils v0.13.0
@@ -623,7 +623,7 @@ k8s.io/component-helpers/node/util/sysctl
 k8s.io/component-helpers/scheduling/corev1
 k8s.io/component-helpers/scheduling/corev1/nodeaffinity
 k8s.io/component-helpers/storage/volume
-# k8s.io/klog/v2 v2.90.0
+# k8s.io/klog/v2 v2.90.1
 ## explicit; go 1.13
 k8s.io/klog/v2
 k8s.io/klog/v2/internal/buffer
@@ -725,5 +725,4 @@ sigs.k8s.io/yaml
 # k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.26.0
 # k8s.io/sample-cli-plugin => k8s.io/sample-cli-plugin v0.26.0
 # k8s.io/sample-controller => k8s.io/sample-controller v0.26.0
-# github.com/kubernetes-csi/csi-lib-iscsi => ./pkg/lib/iscsi
 # k8s.io/pod-security-admission => k8s.io/pod-security-admission v0.26.0
