@@ -16,12 +16,12 @@ spec:
         app: csi-iscsi-node
     spec:
       hostNetwork: true  # original iscsi connection would be broken without hostNetwork setting
-      dnsPolicy: Default
+      dnsPolicy: ClusterFirstWithHostNet  # available values: Default, ClusterFirstWithHostNet, ClusterFirst
       nodeSelector:
         kubernetes.io/os: linux
       containers:
         - name: liveness-probe
-          image: registry.k8s.io/sig-storage/livenessprobe:v2.1.0
+          image: registry.k8s.io/sig-storage/livenessprobe:v2.10.0
           args:
             - --csi-address=/csi/csi.sock
             - --probe-timeout=3s
@@ -42,7 +42,7 @@ spec:
           # created by privileged CSI driver container.
           securityContext:
             privileged: true
-          image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.1.0
+          image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.8.0
           args:
             - --v=2
             - --csi-address=/csi/csi.sock
