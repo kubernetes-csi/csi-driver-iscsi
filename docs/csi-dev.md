@@ -80,7 +80,7 @@ export REGISTRY=<dockerhub-alias>
 export IMAGE_VERSION=latest
 ```
 
-- Build continer image and push image to dockerhub
+- Build container image and push image to dockerhub
 
 ```console
 # build docker image
