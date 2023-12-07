@@ -30,11 +30,10 @@ var (
 )
 
 func init() {
-	_ = flag.Set("logtostderr", "true")
+	klog.InitFlags(nil)
 }
 
 func main() {
-	klog.InitFlags(nil)
 	flag.Parse()
 	handle()
 	os.Exit(0)
