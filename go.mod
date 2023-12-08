@@ -7,7 +7,7 @@ require (
 	github.com/kubernetes-csi/csi-lib-utils v0.14.0
 	golang.org/x/net v0.19.0
 	google.golang.org/grpc v1.59.0
-	k8s.io/klog/v2 v2.100.1
+	k8s.io/klog/v2 v2.110.1
 	k8s.io/kubernetes v1.26.11
 	k8s.io/mount-utils v0.26.11 // indirect
 )
@@ -18,7 +18,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.10.1 // indirect
-	github.com/go-logr/logr v1.2.3 // indirect
+	github.com/go-logr/logr v1.3.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect
 	github.com/go-openapi/jsonreference v0.20.1 // indirect
 	github.com/go-openapi/swag v0.22.3 // indirect
