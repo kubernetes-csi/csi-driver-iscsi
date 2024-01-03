@@ -118,7 +118,7 @@ func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error
 	klog.Info("detaching ISCSI device")
 	err = connector.DisconnectVolume()
 	if err != nil {
-		klog.Errorf("iscsi detach disk: failed to get iscsi config from path %s Error: %v", targetPath, err)
+		klog.Errorf("iscsi detach disk: failed to disconnect volume Error: %v", err)
 		return err
 	}
 
