@@ -7,7 +7,7 @@ require (
 	github.com/kubernetes-csi/csi-lib-utils v0.14.1
 	golang.org/x/net v0.20.0
 	google.golang.org/grpc v1.60.1
-	k8s.io/klog/v2 v2.120.0
+	k8s.io/klog/v2 v2.120.1
 	k8s.io/kubernetes v1.26.11
 	k8s.io/mount-utils v0.26.11 // indirect
 )
