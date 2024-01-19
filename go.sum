@@ -297,8 +297,8 @@ k8s.io/component-base v0.26.11/go.mod h1:jYNisnoM6iWFRUg51pxaQabzL5fBYTr5CMpsLjU
 k8s.io/component-helpers v0.26.11 h1:XD2/2lik/5n1WFepDvgHzIGL0tix/EU3GaxGJHdsgkA=
 k8s.io/component-helpers v0.26.11/go.mod h1:lw3bchkI0NHMPmb+CE73GznPW0Mvqd/Y9UVMEqBkysE=
 k8s.io/csi-translation-lib v0.26.11 h1:mYjelMXM5x4RtPPc4ULoy2RknlFCV2nwpXbThkY4K0c=
-k8s.io/klog/v2 v2.120.0 h1:z+q5mfovBj1fKFxiRzsa2DsJLPIVMk/KFL81LMOfK+8=
-k8s.io/klog/v2 v2.120.0/go.mod h1:3Jpz1GvMt720eyJH1ckRHK1EDfpxISzJ7I9OYgaDtPE=
+k8s.io/klog/v2 v2.120.1 h1:QXU6cPEOIslTGvZaXvFWiP9VKyeet3sawzTOvdXb4Vw=
+k8s.io/klog/v2 v2.120.1/go.mod h1:3Jpz1GvMt720eyJH1ckRHK1EDfpxISzJ7I9OYgaDtPE=
 k8s.io/kube-openapi v0.0.0-20230308215209-15aac26d736a h1:gmovKNur38vgoWfGtP5QOGNOA7ki4n6qNYoFAgMlNvg=
 k8s.io/kube-openapi v0.0.0-20230308215209-15aac26d736a/go.mod h1:y5VtZWM9sHHc2ZodIH/6SHzXj+TPU5USoA8lcIeKEKY=
 k8s.io/kubernetes v1.26.11 h1:g3r1IAUqsaHnOG2jdpoagJ5W9UCXkR2ljQ/7BmCzPNg=
