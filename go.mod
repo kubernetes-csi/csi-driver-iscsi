@@ -68,7 +68,7 @@ require (
 )
 
 require (
-	github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20230429162816-0798dedca439
+	github.com/kubernetes-csi/csi-lib-iscsi v0.0.0-20240130114156-dd26709d0dcc
 	k8s.io/utils v0.0.0-20230209194617-a36077c30491
 )
 
