@@ -23,7 +23,7 @@ import (
 	"strings"
 
 	"github.com/container-storage-interface/spec/lib/go/csi"
-	iscsiLib "github.com/kubernetes-csi/csi-lib-iscsi/iscsi"
+	iscsiLib "github.com/kubernetes-csi/csi-driver-iscsi/pkg/iscsilib"
 	"k8s.io/kubernetes/pkg/volume/util"
 	"k8s.io/utils/exec"
 	"k8s.io/utils/mount"
