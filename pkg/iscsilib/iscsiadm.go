@@ -41,7 +41,7 @@ type Secrets struct {
 func iscsiCmd(args ...string) (string, error) {
 	stdout, err := execWithTimeout("iscsiadm", args, time.Second*3)
 
-	klog.V(2).Infof("Run iscsiadm command: %s", strings.Join(append([]string{"iscsiadm"}, args...), " "))  // nolint
+	klog.V(2).Infof("Run iscsiadm command: %s", strings.Join(append([]string{"iscsiadm"}, args...), " ")) // nolint
 	iscsiadmDebug(string(stdout), err)
 
 	return string(stdout), err
