@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"os"
 
-	iscsiLib "github.com/kubernetes-csi/csi-lib-iscsi/iscsi"
+	iscsiLib "github.com/kubernetes-csi/csi-driver-iscsi/pkg/iscsilib"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	klog "k8s.io/klog/v2"
