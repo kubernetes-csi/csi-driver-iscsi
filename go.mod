@@ -6,7 +6,7 @@ require (
 	github.com/container-storage-interface/spec v1.8.0
 	github.com/kubernetes-csi/csi-lib-utils v0.14.1
 	golang.org/x/net v0.24.0
-	google.golang.org/grpc v1.63.0
+	google.golang.org/grpc v1.63.2
 	k8s.io/klog/v2 v2.120.1
 	k8s.io/kubernetes v1.27.13
 	k8s.io/mount-utils v0.27.13 // indirect
