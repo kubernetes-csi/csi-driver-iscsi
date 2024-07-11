@@ -1,12 +1,14 @@
 module github.com/kubernetes-csi/csi-driver-iscsi
 
-go 1.19
+go 1.21
+
+toolchain go1.22.5
 
 require (
 	github.com/container-storage-interface/spec v1.8.0
 	github.com/kubernetes-csi/csi-lib-utils v0.14.1
 	golang.org/x/net v0.27.0
-	google.golang.org/grpc v1.64.0
+	google.golang.org/grpc v1.65.0
 	k8s.io/klog/v2 v2.130.0
 	k8s.io/kubernetes v1.27.13
 	k8s.io/mount-utils v0.27.13 // indirect
@@ -15,7 +17,7 @@ require (
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
-	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.10.1 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
@@ -43,14 +45,13 @@ require (
 	github.com/prometheus/common v0.38.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/oauth2 v0.18.0 // indirect
+	golang.org/x/oauth2 v0.20.0 // indirect
 	golang.org/x/sys v0.22.0 // indirect
 	golang.org/x/term v0.22.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
-	google.golang.org/appengine v1.6.8 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240318140521-94a12d6c2237 // indirect
-	google.golang.org/protobuf v1.33.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240709173604-40e1e62336c5 // indirect
+	google.golang.org/protobuf v1.34.2 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
