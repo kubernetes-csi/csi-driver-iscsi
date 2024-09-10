@@ -1,8 +1,6 @@
 module github.com/kubernetes-csi/csi-driver-iscsi
 
-go 1.21
-
-toolchain go1.22.5
+go 1.23.1
 
 require (
 	github.com/container-storage-interface/spec v1.8.0
