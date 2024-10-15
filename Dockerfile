@@ -18,7 +18,9 @@ RUN apt update && apt upgrade -y && apt-mark unhold libcap2
 RUN clean-install util-linux e2fsprogs mount ca-certificates udev xfsprogs btrfs-progs open-iscsi
 
 CMD service iscsid start
-ARG binary="./bin/iscsiplugin"
+
+ARG ARCH
+ARG binary=./bin/${ARCH}/iscsiplugin
 COPY $binary /iscsiplugin
 
 ENTRYPOINT ["/iscsiplugin"]

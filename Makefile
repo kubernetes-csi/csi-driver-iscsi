@@ -45,4 +45,4 @@ mod-check:
 .PHONY: clean
 clean:
 	go clean -mod=vendor -r -x
-	rm -f bin/iscsiplugin
+	-rm -rf bin
