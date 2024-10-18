@@ -517,7 +517,7 @@ func GetISCSIDevices(devicePaths []string, strict bool) (devices []Device, err e
 func lsblk(devicePaths []string, strict bool) (deviceInfo, error) {
 	flags := []string{"-rn", "-o", "NAME,KNAME,PKNAME,HCTL,TYPE,TRAN,SIZE"}
 	command := execCommand("lsblk", append(flags, devicePaths...)...)
-	klog.V(2).Infof(command.String())
+	klog.V(2).Info(command.String())
 	out, err := command.Output()
 	if err != nil {
 		if ee, ok := err.(*exec.ExitError); ok {
