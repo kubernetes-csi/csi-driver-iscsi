@@ -20,7 +20,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -666,7 +665,7 @@ func (c *Connector) Persist(filePath string) error {
 
 // GetConnectorFromFile attempts to create a Connector using the specified json file (ie /var/lib/pfile/myConnector.json)
 func GetConnectorFromFile(filePath string) (*Connector, error) {
-	f, err := ioutil.ReadFile(filePath)
+	f, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
 	}
