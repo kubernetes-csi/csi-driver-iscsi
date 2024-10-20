@@ -94,7 +94,7 @@ $(CMDS:%=build-%): build-%: check-go-version-go
 		if ! [ $${#os_arch_seen_pre} = $${#os_arch_seen} ]; then \
 			continue; \
 		fi; \
-		if ! (set -x; cd ./$(CMDS_DIR)/$* && CGO_ENABLED=0 GOOS="$$os" GOARCH="$$arch" go build $(GOFLAGS_VENDOR) -a -ldflags '$(FULL_LDFLAGS)' -o "$(abspath ./bin)/$*$$suffix" .); then \
+		if ! (set -x; cd ./$(CMDS_DIR)/$* && CGO_ENABLED=0 GOOS="$$os" GOARCH="$$arch" go build $(GOFLAGS_VENDOR) -a -ldflags '$(FULL_LDFLAGS)' -o "$(abspath ./bin)/$$arch/$*" .); then \
 			echo "Building $* for GOOS=$$os GOARCH=$$arch failed, see error(s) above."; \
 			exit 1; \
 		fi; \
@@ -166,7 +166,6 @@ $(CMDS:%=push-multiarch-%): push-multiarch-%: check-pull-base-ref build-%
 				--tag $(IMAGE_NAME):$$escaped_buildx_platform-$$os-$$escaped_base_image$$tag \
 				--platform=$$os/$$buildx_platform \
 				--file $$(eval echo \$${dockerfile_$$os}) \
-				--build-arg binary=./bin/$*$$suffix \
 				--build-arg ARCH=$$arch \
 				--build-arg BASE_IMAGE=$$base_image \
 				--build-arg ADDON_IMAGE=$$addon_image \

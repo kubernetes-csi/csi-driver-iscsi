@@ -32,7 +32,7 @@ IMAGE_TAG = $(REGISTRY)/$(IMAGENAME):$(IMAGE_VERSION)
 test-container:
 	make
 	docker buildx build --pull --output=type=$(OUTPUT_TYPE) --platform="linux/$(ARCH)" \
-		-t $(IMAGE_TAG) --build-arg ARCH=$(ARCH) .
+		-t $(IMAGE_TAG)  .
 
 .PHONY: sanity-test
 sanity-test:
@@ -45,4 +45,4 @@ mod-check:
 .PHONY: clean
 clean:
 	go clean -mod=vendor -r -x
-	rm -f bin/iscsiplugin
+	-rm -rf bin/
