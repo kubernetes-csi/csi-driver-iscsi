@@ -25,6 +25,7 @@ import (
 
 type nodeServer struct {
 	Driver *driver
+	csi.UnimplementedNodeServer
 }
 
 func (ns *nodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublishVolumeRequest) (*csi.NodePublishVolumeResponse, error) {
