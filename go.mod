@@ -5,7 +5,7 @@ go 1.23.1
 require (
 	github.com/container-storage-interface/spec v1.11.0
 	github.com/kubernetes-csi/csi-lib-utils v0.14.1
-	golang.org/x/net v0.32.0
+	golang.org/x/net v0.33.0
 	google.golang.org/grpc v1.69.0
 	k8s.io/klog/v2 v2.130.1
 	k8s.io/kubernetes v1.28.12
