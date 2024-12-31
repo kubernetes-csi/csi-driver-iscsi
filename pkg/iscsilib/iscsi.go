@@ -20,7 +20,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -517,7 +516,7 @@ func GetISCSIDevices(devicePaths []string, strict bool) (devices []Device, err e
 func lsblk(devicePaths []string, strict bool) (deviceInfo, error) {
 	flags := []string{"-rn", "-o", "NAME,KNAME,PKNAME,HCTL,TYPE,TRAN,SIZE"}
 	command := execCommand("lsblk", append(flags, devicePaths...)...)
-	klog.V(2).Infof(command.String())
+	klog.V(2).Info(command.String())
 	out, err := command.Output()
 	if err != nil {
 		if ee, ok := err.(*exec.ExitError); ok {
@@ -666,7 +665,7 @@ func (c *Connector) Persist(filePath string) error {
 
 // GetConnectorFromFile attempts to create a Connector using the specified json file (ie /var/lib/pfile/myConnector.json)
 func GetConnectorFromFile(filePath string) (*Connector, error) {
-	f, err := ioutil.ReadFile(filePath)
+	f, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
 	}
