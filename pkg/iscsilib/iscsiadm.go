@@ -48,7 +48,7 @@ func iscsiCmd(args ...string) (string, error) {
 }
 
 func iscsiadmDebug(output string, cmdError error) {
-	debugOutput := strings.Replace(output, "\n", "\\n", -1)
+	debugOutput := strings.ReplaceAll(output, "\n", "\\n")
 	klog.V(2).Infof("Output of iscsiadm command: {output: %s}", debugOutput)
 	if cmdError != nil {
 		klog.V(2).Infof("Error message returned from iscsiadm command: %s", cmdError.Error())

@@ -591,7 +591,7 @@ func writeInSCSIDeviceFile(hctl string, file string, content string) error {
 		return err
 	}
 
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 	if _, err := f.WriteString(content); err != nil {
 		klog.V(2).Infof("Error while writing to file %v: %v", filename, err)
 		return err
@@ -655,7 +655,7 @@ func (c *Connector) Persist(filePath string) error {
 	if err != nil {
 		return fmt.Errorf("error creating iSCSI persistence file %s: %s", filePath, err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 	encoder := json.NewEncoder(f)
 	if err = encoder.Encode(c); err != nil {
 		return fmt.Errorf("error encoding connector: %v", err)
