@@ -20,5 +20,6 @@ spec:
       iqn: "iqn.2015-06.com.example.test:target1"
       lun: "0"
       iscsiInterface: "default"
+      discovery: "true"
       discoveryCHAPAuth: "true"
       sessionCHAPAuth: "false"
