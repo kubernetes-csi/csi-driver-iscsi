@@ -27,12 +27,18 @@ IMAGENAME ?= iscsi-csi
 OUTPUT_TYPE ?= docker
 ARCH ?= amd64
 IMAGE_TAG = $(REGISTRY)/$(IMAGENAME):$(IMAGE_VERSION)
+PLATFORM ?= linux/amd64,linux/arm64
 
 .PHONY: test-container
 test-container:
 	make
 	docker buildx build --pull --output=type=$(OUTPUT_TYPE) --platform="linux/$(ARCH)" \
 		-t $(IMAGE_TAG) --build-arg ARCH=$(ARCH) .
+
+.PHONY: multiarch
+multiarch:
+	docker buildx build --pull --output=type=$(OUTPUT_TYPE) --platform="$(PLATFORM)" \
+		-t $(IMAGE_TAG) -f Dockerfile.multiarch .
 
 .PHONY: sanity-test
 sanity-test:
