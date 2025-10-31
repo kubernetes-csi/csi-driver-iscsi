@@ -19,6 +19,7 @@ RUN clean-install util-linux e2fsprogs mount ca-certificates udev xfsprogs btrfs
 
 CMD service iscsid start
 ARG ARCH
-COPY ./bin/${ARCH}/iscsiplugin /iscsiplugin
+ARG binary=./bin/${ARCH}/iscsiplugin
+COPY ${binary} /iscsiplugin
 
 ENTRYPOINT ["/iscsiplugin"]
