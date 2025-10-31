@@ -27,6 +27,15 @@ IMAGENAME ?= iscsi-csi
 OUTPUT_TYPE ?= docker
 ARCH ?= amd64
 IMAGE_TAG = $(REGISTRY)/$(IMAGENAME):$(IMAGE_VERSION)
+EXT_LDFLAGS = -s -w -extldflags "-static"
+
+.EXPORT_ALL_VARIABLES:
+
+all: iscsi
+
+.PHONY: iscsi
+iscsi:
+	CGO_ENABLED=0 GOOS=linux GOARCH=$(ARCH) go build -a -ldflags "${EXT_LDFLAGS}" -mod vendor -o bin/${ARCH}/iscsiplugin ./cmd/iscsiplugin
 
 .PHONY: test-container
 test-container:
