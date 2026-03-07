@@ -1,5 +1,6 @@
 /*
- * Copyright 2024 gRPC authors.
+ *
+ * Copyright 2025 gRPC authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +16,13 @@
  *
  */
 
-// Package internal contains code internal to the pickfirst package.
+// Package internal contains code internal to the encoding package.
 package internal
 
-import (
-	rand "math/rand/v2"
-	"time"
-)
-
-var (
-	// RandShuffle pseudo-randomizes the order of addresses.
-	RandShuffle = rand.Shuffle
-	// RandFloat64 returns, as a float64, a pseudo-random number in [0.0,1.0).
-	RandFloat64 = rand.Float64
-	// TimeAfterFunc allows mocking the timer for testing connection delay
-	// related functionality.
-	TimeAfterFunc = func(d time.Duration, f func()) func() {
-		timer := time.AfterFunc(d, f)
-		return func() { timer.Stop() }
-	}
-)
+// RegisterCompressorForTesting registers a compressor in the global compressor
+// registry. It returns a cleanup function that should be called at the end
+// of the test to unregister the compressor.
+//
+// This prevents compressors registered in one test from appearing in the
+// encoding headers of subsequent tests.
+var RegisterCompressorForTesting any // func RegisterCompressor(c Compressor) func()
