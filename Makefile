@@ -55,3 +55,16 @@ mod-check:
 clean:
 	go clean -mod=vendor -r -x
 	rm -f bin/iscsiplugin
+
+.PHONY: install-iscsi-server
+install-iscsi-server:
+	kubectl apply -f deploy/example/iscsi-server.yaml
+	kubectl rollout status deployment/iscsi-server --timeout=120s
+
+.PHONY: uninstall-iscsi-server
+uninstall-iscsi-server:
+	kubectl delete -f deploy/example/iscsi-server.yaml --ignore-not-found
+
+.PHONY: e2e-test
+e2e-test:
+	bash test/e2e/run-test.sh
