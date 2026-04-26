@@ -1,10 +1,9 @@
-FROM centos:7.4.1708
+FROM registry.k8s.io/build-image/go-runner:v2.3.1-go1.22.0-bookworm.0
 
-# Copy iscsiplugin.sh
-COPY iscsiplugin.sh /iscsiplugin.sh
-# Copy iscsiplugin from build _output directory
 COPY bin/iscsiplugin /iscsiplugin
 
-RUN yum -y install iscsi-initiator-utils e2fsprogs xfsprogs && yum clean all
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    open-iscsi e2fsprogs xfsprogs && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-ENTRYPOINT ["/iscsiplugin.sh"]
+ENTRYPOINT ["/iscsiplugin"]

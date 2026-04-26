@@ -23,7 +23,7 @@ import (
 
 	iscsi_lib "github.com/kubernetes-csi/csi-lib-iscsi/iscsi"
 	"k8s.io/klog/v2"
-	"k8s.io/utils/mount"
+	"k8s.io/mount-utils"
 )
 
 type ISCSIUtil struct{}

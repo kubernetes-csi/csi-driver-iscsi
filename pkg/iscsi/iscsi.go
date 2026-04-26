@@ -24,9 +24,8 @@ import (
 
 	"github.com/container-storage-interface/spec/lib/go/csi"
 	iscsi_lib "github.com/kubernetes-csi/csi-lib-iscsi/iscsi"
-	"k8s.io/kubernetes/pkg/volume/util"
+	"k8s.io/mount-utils"
 	"k8s.io/utils/exec"
-	"k8s.io/utils/mount"
 )
 
 func getISCSIInfo(req *csi.NodePublishVolumeRequest) (*iscsiDisk, error) {
@@ -129,7 +128,6 @@ func getISCSIDiskMounter(iscsiInfo *iscsiDisk, req *csi.NodePublishVolumeRequest
 		mounter:      &mount.SafeFormatAndMount{Interface: mount.New(""), Exec: exec.New()},
 		exec:         exec.New(),
 		targetPath:   req.GetTargetPath(),
-		deviceUtil:   util.NewDeviceHandler(util.NewIOHandler()),
 		connector:    buildISCSIConnector(iscsiInfo),
 	}
 }
@@ -230,7 +228,6 @@ type iscsiDiskMounter struct {
 	mountOptions []string
 	mounter      *mount.SafeFormatAndMount
 	exec         exec.Interface
-	deviceUtil   util.DeviceUtil
 	targetPath   string
 	connector    *iscsi_lib.Connector
 }
