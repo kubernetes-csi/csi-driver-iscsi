@@ -1,0 +1,56 @@
+# Copyright 2026 The Kubernetes Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iscsi-server
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3260
+      targetPort: 3260
+      protocol: TCP
+  selector:
+    app: iscsi-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iscsi-server
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iscsi-server
+  template:
+    metadata:
+      labels:
+        app: iscsi-server
+    spec:
+      containers:
+        - name: tgtd
+          image: andyzhangx/tgtd:latest
+          securityContext:
+            privileged: true
+          ports:
+            - containerPort: 3260
+          env:
+            - name: DISK_SIZE
+              value: "1024"
+            - name: IQN
+              value: "iqn.2026-01.com.test:storage"
