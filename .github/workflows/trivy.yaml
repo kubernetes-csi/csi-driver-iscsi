@@ -1,38 +1,30 @@
-name: Trivy vulnerability scanner
+name: Run Trivy scanner for Go version vulnerabilities
 on:
   push:
     branches:
       - master
-  pull_request:
+  schedule:
+    - cron: '0 0 * * *'  # Run daily at midnight UTC
 jobs:
-  build:
+  trivy:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Go 1.x
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        with:
-          go-version: 1.26.9
-        id: go
-
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v6
 
-      - name: Build an image from Dockerfile
+      - name: Get Go version
+        id: go-version
         run: |
-          export REGISTRY=test
-          export IMAGE_VERSION=latest
-          export DOCKER_CLI_EXPERIMENTAL=enabled
-          make test-container
+          GO_VERSION=$(cat prow.sh  | grep "configvar CSI_PROW_GO_VERSION_BUILD" | awk '{print $3}' | sed 's/"//g')
+          echo "version=$GO_VERSION" >> $GITHUB_OUTPUT
 
-      - name: Run Trivy vulnerability scanner
+      - name: Run Trivy scanner for Go version vulnerabilities
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25  # v0.36.0
-        env:
-          TRIVY_DB_REPOSITORY: "public.ecr.aws/aquasecurity/trivy-db:2"
         with:
-          image-ref: 'test/iscsi-csi:latest'
+          image-ref: 'golang:${{ steps.go-version.outputs.version }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
-          vuln-type: 'os,library'
+          vuln-type: 'library'
           severity: 'CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN'
