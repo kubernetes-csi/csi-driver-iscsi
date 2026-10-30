@@ -31,3 +31,6 @@ jobs:
       - name: Verification test
         run: |
           ./hack/verify-all.sh
+
+      - name: E2E unit tests
+        run: make e2e-unit
