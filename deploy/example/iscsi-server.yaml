@@ -1,0 +1,73 @@
+# Copyright 2026 The Kubernetes Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iscsi-server
+  labels:
+    iscsi.csi.k8s.io/example: "true"
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3260
+      targetPort: 3260
+      protocol: TCP
+  selector:
+    app: iscsi-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iscsi-server
+  labels:
+    iscsi.csi.k8s.io/example: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iscsi-server
+  template:
+    metadata:
+      labels:
+        app: iscsi-server
+    spec:
+      containers:
+        - name: tgtd
+          image: iscsi-e2e-target:local
+          imagePullPolicy: Never
+          securityContext:
+            privileged: true
+          readinessProbe:
+            exec:
+              command: ["/tgtd-fixture", "ready"]
+            initialDelaySeconds: 1
+            periodSeconds: 2
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: target-data
+              mountPath: /var/lib/iscsi
+          ports:
+            - containerPort: 3260
+          env:
+            - name: DISK_SIZE
+              value: "1024"
+            - name: LUN_COUNT
+              value: "1"
+            - name: IQN
+              value: "iqn.2026-01.com.test:storage"
+      volumes:
+        - name: target-data
+          emptyDir: {}
