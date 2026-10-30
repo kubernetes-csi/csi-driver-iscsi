@@ -20,30 +20,18 @@ set -o pipefail
 
 echo "Verifying boilerplate"
 
-if [[ -z "$(command -v python)" ]]; then
-  echo "Cannot find python. Make link to python3..."
-  update-alternatives --install /usr/bin/python python /usr/bin/python3 1
-fi
-
-REPO_ROOT=$(dirname "${BASH_SOURCE}")/..
+REPO_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 
 boilerDir="${REPO_ROOT}/hack/boilerplate"
 boiler="${boilerDir}/boilerplate.py"
 
-files_need_boilerplate=($(${boiler} --rootdir=${REPO_ROOT} --verbose))
-
-# Run boilerplate.py unit tests
-unitTestOut="$(mktemp)"
-trap cleanup EXIT
-cleanup() {
-	rm "${unitTestOut}"
-}
+violations=$(python3 "$boiler" --rootdir="$REPO_ROOT" --boilerplate-dir="$boilerDir" --verbose)
 
 # Run boilerplate check
-if [[ ${#files_need_boilerplate[@]} -gt 0 ]]; then
-  for file in "${files_need_boilerplate[@]}"; do
+if [[ -n "$violations" ]]; then
+  while IFS= read -r file; do
     echo "Boilerplate header is wrong for: ${file}"
-  done
+  done <<< "$violations"
 
   exit 1
 fi
