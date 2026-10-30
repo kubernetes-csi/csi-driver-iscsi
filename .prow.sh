@@ -23,6 +23,9 @@ CSI_PROW_E2E_REPO=none
 # Only these tests make sense for unit test
 : ${CSI_PROW_TESTS:="unit"}
 
+# Keep Prow's sanity suite aligned with test/sanity/run-test.sh.
+CSI_PROW_SANITY_VERSION=v5.6.0
+
 # What matters for csi-sanity is the version of the hostpath driver
 # that we test against, not the version of Kubernetes that it runs on.
 # We pick the latest stable Kubernetes here because the corresponding
