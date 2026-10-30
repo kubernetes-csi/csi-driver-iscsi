@@ -29,6 +29,9 @@ ARCH ?= amd64
 IMAGE_TAG = $(REGISTRY)/$(IMAGENAME):$(IMAGE_VERSION)
 EXT_LDFLAGS = -s -w -extldflags "-static"
 
+# Run all scenarios by default. Set to baseline or a comma-separated list of
+# republish, driver-restart, target-restart, and shared-target to run fewer.
+E2E_SCENARIOS ?= all
 E2E_KIND_CLUSTER ?= kind
 
 .EXPORT_ALL_VARIABLES:
@@ -76,3 +79,29 @@ e2e-teardown:
 	fi
 	docker rm -f "$(E2E_KIND_CLUSTER)-iscsid" 2>/dev/null || true
 	kind delete cluster --name "$(E2E_KIND_CLUSTER)"
+
+# Standalone example fixture commands require an explicitly selected namespace.
+ISCSI_SERVER_NAMESPACE ?=
+.PHONY: install-iscsi-server
+install-iscsi-server:
+	@test -n "$(ISCSI_SERVER_NAMESPACE)" || (echo 'Set ISCSI_SERVER_NAMESPACE to a dedicated existing namespace' >&2; exit 2)
+	kubectl create -f deploy/example/iscsi-server.yaml -n "$(ISCSI_SERVER_NAMESPACE)"
+	kubectl rollout status deployment/iscsi-server -n "$(ISCSI_SERVER_NAMESPACE)" --timeout=120s
+
+.PHONY: uninstall-iscsi-server
+uninstall-iscsi-server:
+	@test -n "$(ISCSI_SERVER_NAMESPACE)" || (echo 'Set ISCSI_SERVER_NAMESPACE to a dedicated existing namespace' >&2; exit 2)
+	kubectl delete deployment,service -n "$(ISCSI_SERVER_NAMESPACE)" -l iscsi.csi.k8s.io/example=true --ignore-not-found
+
+.PHONY: e2e-test
+GINKGO_FLAGS ?= -ginkgo.v
+e2e-test: e2e-unit e2e-fixture-test
+	go test -mod=vendor -tags=e2e -timeout=0 -v ./test/e2e $(GINKGO_FLAGS)
+
+.PHONY: e2e-unit e2e-fixture-test
+e2e-unit:
+	go test -mod=vendor -count=1 -v ./test/e2e/...
+
+e2e-fixture-test:
+	go build -mod=vendor -o bin/e2e-fixture-test ./test/e2e/cmd/fixture-integration
+	./bin/e2e-fixture-test
