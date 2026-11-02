@@ -17,9 +17,13 @@ all: build
 
 include release-tools/build.make
 
+GINKGO_FLAGS ?= -ginkgo.v
+GO111MODULE = on
+ifndef GOPATH
 GOPATH ?= $(shell go env GOPATH)
+endif
 GOBIN ?= $(GOPATH)/bin
-export GOPATH GOBIN
+export GOPATH GOBIN GO111MODULE
 
 REGISTRY ?= test
 IMAGENAME ?= iscsi-csi
@@ -34,6 +38,9 @@ EXT_LDFLAGS = -s -w -extldflags "-static"
 E2E_SCENARIOS ?= all
 E2E_KIND_CLUSTER ?= kind
 
+# Standalone example fixture commands require an explicitly selected namespace.
+ISCSI_SERVER_NAMESPACE ?=
+
 .EXPORT_ALL_VARIABLES:
 
 all: iscsi
@@ -42,6 +49,11 @@ all: iscsi
 iscsi:
 	CGO_ENABLED=0 GOOS=linux GOARCH=$(ARCH) go build -a -ldflags "${EXT_LDFLAGS}" -mod vendor -o bin/${ARCH}/iscsiplugin ./cmd/iscsiplugin
 
+.PHONY: update
+update:
+	hack/update-dependencies.sh
+	hack/verify-update.sh
+
 .PHONY: test-container
 test-container:
 	make
@@ -49,9 +61,18 @@ test-container:
 		-t $(IMAGE_TAG) --build-arg ARCH=$(ARCH) .
 
 .PHONY: sanity-test
-sanity-test:
-	make
+sanity-test: iscsi
 	./test/sanity/run-test.sh
+
+.PHONY: unit-test
+unit-test:
+	mkdir -p bin
+	go test -mod=vendor -v -race -coverprofile=bin/profile.cov ./pkg/...
+
+.PHONY: verify
+verify: unit-test
+	./hack/verify-all.sh
+
 .PHONY: mod-check
 mod-check:
 	go mod verify && [ "$(shell sha512sum go.mod)" = "`sha512sum go.mod`" ] || ( echo "ERROR: go.mod was modified by 'go mod verify'" && false )
@@ -64,6 +85,20 @@ clean:
 .PHONY: deploy-kind
 deploy-kind:
 	test/utils/deploy-kind.sh
+
+.PHONY: e2e-unit e2e-fixture-test
+# Check the code that sets up and runs the e2e tests without a cluster.
+e2e-unit:
+	go test -mod=vendor -count=1 -v ./test/e2e/...
+
+# Check the test's iSCSI server on its own, without Kubernetes or the driver.
+e2e-fixture-test:
+	go build -mod=vendor -o bin/e2e-fixture-test ./test/e2e/cmd/fixture-integration
+	./bin/e2e-fixture-test
+
+.PHONY: e2e-test
+e2e-test: e2e-unit e2e-fixture-test
+	go test -mod=vendor -tags=e2e -timeout=0 -v ./test/e2e $(GINKGO_FLAGS)
 
 .PHONY: e2e-teardown
 e2e-teardown:
@@ -80,8 +115,6 @@ e2e-teardown:
 	docker rm -f "$(E2E_KIND_CLUSTER)-iscsid" 2>/dev/null || true
 	kind delete cluster --name "$(E2E_KIND_CLUSTER)"
 
-# Standalone example fixture commands require an explicitly selected namespace.
-ISCSI_SERVER_NAMESPACE ?=
 .PHONY: install-iscsi-server
 install-iscsi-server:
 	@test -n "$(ISCSI_SERVER_NAMESPACE)" || (echo 'Set ISCSI_SERVER_NAMESPACE to a dedicated existing namespace' >&2; exit 2)
@@ -92,16 +125,3 @@ install-iscsi-server:
 uninstall-iscsi-server:
 	@test -n "$(ISCSI_SERVER_NAMESPACE)" || (echo 'Set ISCSI_SERVER_NAMESPACE to a dedicated existing namespace' >&2; exit 2)
 	kubectl delete deployment,service -n "$(ISCSI_SERVER_NAMESPACE)" -l iscsi.csi.k8s.io/example=true --ignore-not-found
-
-.PHONY: e2e-test
-GINKGO_FLAGS ?= -ginkgo.v
-e2e-test: e2e-unit e2e-fixture-test
-	go test -mod=vendor -tags=e2e -timeout=0 -v ./test/e2e $(GINKGO_FLAGS)
-
-.PHONY: e2e-unit e2e-fixture-test
-e2e-unit:
-	go test -mod=vendor -count=1 -v ./test/e2e/...
-
-e2e-fixture-test:
-	go build -mod=vendor -o bin/e2e-fixture-test ./test/e2e/cmd/fixture-integration
-	./bin/e2e-fixture-test

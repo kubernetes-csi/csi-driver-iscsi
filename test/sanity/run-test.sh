@@ -54,18 +54,15 @@ if [[ "$#" -gt 0 ]] && [[ -n "$1" ]]; then
   nodeid="$1"
 fi
 
-ARCH=$(uname -p)
-if [[ "${ARCH}" == "x86_64" || ${ARCH} == "unknown" ]]; then
-  ARCH="amd64"
-fi
+ARCH=${ARCH:-amd64}
 
 if [ -z "$GITHUB_ACTIONS" ]
 then
   # if not running on github actions, do not use sudo
-  bin/iscsiplugin --endpoint "$endpoint" --nodeid "$nodeid" -v=5 &
+  "bin/${ARCH}/iscsiplugin" --endpoint "$endpoint" --nodeid "$nodeid" -v=5 &
 else
   # if running on github actions, use sudo
-  sudo bin/iscsiplugin --endpoint "$endpoint" --nodeid "$nodeid" -v=5 &
+  sudo "bin/${ARCH}/iscsiplugin" --endpoint "$endpoint" --nodeid "$nodeid" -v=5 &
 fi
 
 echo 'Begin to run sanity test...'

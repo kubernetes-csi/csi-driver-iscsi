@@ -10,14 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Set up Go 1.x
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        with:
-          go-version: ^1.18
-        id: go
-
       - name: Check out code into the Go module directory
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+        id: go
+
+      - name: Test and Verify
+        run: make verify
 
       - name: Sanity test
         env:
@@ -28,6 +31,12 @@ jobs:
           echo "is running in github actions: $GITHUB_ACTIONS"
           make sanity-test
 
-      - name: Verification test
-        run: |
-          ./hack/verify-all.sh
+      - name: Install goveralls
+        if: ${{ env.ACT != 'true' }}
+        run: go install github.com/mattn/goveralls@latest
+
+      - name: Send coverage
+        if: ${{ env.ACT != 'true' }}
+        env:
+          COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: goveralls -coverprofile=bin/profile.cov -service=github
