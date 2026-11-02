@@ -19,6 +19,7 @@ package iscsi
 import (
 	"encoding/json"
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -49,19 +50,20 @@ func getISCSIInfo(req *csi.NodePublishVolumeRequest) (*iscsiDisk, error) {
 		return nil, err
 	}
 
-	bkportal := []string{}
+	bkportal := []string{portalMounter(tp)}
 
 	portalList := req.GetVolumeContext()["portals"]
 	if len(portalList) > 0 {
-		portal := portalMounter(tp)
-		bkportal = append(bkportal, portal)
 		portals := []string{}
 		if err := json.Unmarshal([]byte(portalList), &portals); err != nil {
 			return nil, err
 		}
 
 		for _, portal := range portals {
-			bkportal = append(bkportal, portalMounter(portal))
+			// Skip duplicates so the same portal is not logged into twice.
+			if portal = portalMounter(portal); !slices.Contains(bkportal, portal) {
+				bkportal = append(bkportal, portal)
+			}
 		}
 	}
 
