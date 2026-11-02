@@ -29,6 +29,8 @@ ARCH ?= amd64
 IMAGE_TAG = $(REGISTRY)/$(IMAGENAME):$(IMAGE_VERSION)
 EXT_LDFLAGS = -s -w -extldflags "-static"
 
+E2E_KIND_CLUSTER ?= kind
+
 .EXPORT_ALL_VARIABLES:
 
 all: iscsi
@@ -55,3 +57,22 @@ mod-check:
 clean:
 	go clean -mod=vendor -r -x
 	rm -f bin/iscsiplugin
+
+.PHONY: deploy-kind
+deploy-kind:
+	test/utils/deploy-kind.sh
+
+.PHONY: e2e-teardown
+e2e-teardown:
+	@if docker inspect "$(E2E_KIND_CLUSTER)-control-plane" >/dev/null 2>&1; then \
+		sessions=$$(docker exec "$(E2E_KIND_CLUSTER)-control-plane" ls -A /sys/class/iscsi_session) || exit 1; \
+		if [ -n "$$sessions" ]; then \
+			echo 'Active iSCSI sessions remain; refusing to delete the cluster.' >&2; exit 1; \
+		fi; \
+		mounts=$$(docker exec "$(E2E_KIND_CLUSTER)-control-plane" awk '/\/volumes\/kubernetes.io~csi\/iscsi-pv-/ {print}' /proc/1/mountinfo) || exit 1; \
+		if [ -n "$$mounts" ]; then \
+			echo 'Test volume mounts remain; refusing to delete the cluster.' >&2; exit 1; \
+		fi; \
+	fi
+	docker rm -f "$(E2E_KIND_CLUSTER)-iscsid" 2>/dev/null || true
+	kind delete cluster --name "$(E2E_KIND_CLUSTER)"

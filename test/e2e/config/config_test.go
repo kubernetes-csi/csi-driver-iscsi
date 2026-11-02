@@ -68,6 +68,7 @@ var _ = Describe("Environment validation", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Expect(cfg.Scenarios).To(Equal([]string{"republish", "driver-restart", "target-restart", "shared-target"}))
 		Expect(cfg.Harness.LUNCount).To(Equal(2))
+		Expect(cfg.Harness.TargetHostNetwork).To(BeTrue())
 		Expect(cfg.Harness.Namespace).To(Equal("iscsi-e2e-unit"))
 		Expect(cfg.DriverTag).To(Equal("iscsi-driver:e2e-unit"))
 		Expect(cfg.Harness.Token).To(HaveLen(24))
@@ -102,6 +103,7 @@ var _ = Describe("Environment validation", func() {
 		cfg, err := FromEnvironment(lookup(values), "/checkout")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(cfg.Harness.CommandTimeout).To(Equal(12 * time.Second))
+		Expect(cfg.Harness.TargetHostNetwork).To(BeFalse())
 	})
 })
 

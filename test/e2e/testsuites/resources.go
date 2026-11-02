@@ -214,7 +214,7 @@ func (h *Harness) createTarget(ctx context.Context) error {
 	podLabels["app"] = name
 	set := &apps.Deployment{ObjectMeta: metav1.ObjectMeta{Name: name, Namespace: h.Config.Namespace, Labels: h.labels()}, Spec: apps.DeploymentSpec{Replicas: &one,
 		Selector: &metav1.LabelSelector{MatchLabels: map[string]string{"app": name}}, Template: v1.PodTemplateSpec{ObjectMeta: metav1.ObjectMeta{Labels: podLabels}, Spec: v1.PodSpec{
-			NodeSelector: map[string]string{"kubernetes.io/os": "linux"}, Containers: []v1.Container{{Name: "tgtd", Image: h.Config.TargetImage, ImagePullPolicy: h.Config.TargetPullPolicy, SecurityContext: &v1.SecurityContext{Privileged: &privileged},
+			HostNetwork: h.Config.TargetHostNetwork, NodeSelector: map[string]string{"kubernetes.io/os": "linux"}, Containers: []v1.Container{{Name: "tgtd", Image: h.Config.TargetImage, ImagePullPolicy: h.Config.TargetPullPolicy, SecurityContext: &v1.SecurityContext{Privileged: &privileged},
 				ReadinessProbe: &v1.Probe{ProbeHandler: v1.ProbeHandler{Exec: &v1.ExecAction{Command: []string{"/tgtd-fixture", "ready"}}}, InitialDelaySeconds: 1, PeriodSeconds: 2, TimeoutSeconds: 5},
 				Env:            []v1.EnvVar{{Name: "DISK_SIZE", Value: "1024"}, {Name: "LUN_COUNT", Value: strconv.Itoa(h.Config.LUNCount)}, {Name: "IQN", Value: h.Config.IQN}},
 				Ports:          []v1.ContainerPort{{ContainerPort: 3260}}, VolumeMounts: []v1.VolumeMount{{Name: "target-data", MountPath: "/var/lib/iscsi"}},

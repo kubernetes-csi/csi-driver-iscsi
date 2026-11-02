@@ -45,6 +45,7 @@ type Config struct {
 	DriverPullPolicy, TargetPullPolicy, ToolsPullPolicy                               v1.PullPolicy
 	CommandTimeout, RequestTimeout, ScenarioTimeout, TeardownTimeout, SharedIOTimeout time.Duration
 	RetainOnFailure                                                                   bool
+	TargetHostNetwork                                                                 bool
 	LUNCount                                                                          int
 }
 

@@ -143,6 +143,7 @@ func FromEnvironment(lookup func(string) (string, bool), repoRoot string) (Runti
 	}
 	result.DriverTag, result.TargetTag, result.ToolsTag = get("E2E_DRIVER_IMAGE"), get("E2E_TARGET_IMAGE"), get("E2E_TOOLS_IMAGE")
 	if result.Images.Delivery == "kind" {
+		result.Harness.TargetHostNetwork = true
 		if result.DriverTag == "" {
 			result.DriverTag = "iscsi-driver:e2e-" + id
 		}
