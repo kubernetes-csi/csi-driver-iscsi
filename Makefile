@@ -27,6 +27,7 @@ export GOPATH GOBIN GO111MODULE
 
 REGISTRY ?= test
 IMAGENAME ?= iscsi-csi
+IMAGE_VERSION ?= latest
 # Output type of docker buildx build
 OUTPUT_TYPE ?= docker
 ARCH ?= amd64
@@ -57,8 +58,13 @@ update:
 .PHONY: test-container
 test-container:
 	make
-	docker buildx build --pull --output=type=$(OUTPUT_TYPE) --platform="linux/$(ARCH)" \
-		-t $(IMAGE_TAG) --build-arg ARCH=$(ARCH) .
+	docker buildx build \
+		--pull \
+		--output=type=$(OUTPUT_TYPE) \
+		--platform="linux/$(ARCH)" \
+		--tag=$(IMAGE_TAG) \
+		--build-arg=ARCH=$(ARCH) \
+		.
 
 .PHONY: sanity-test
 sanity-test: iscsi
