@@ -1,0 +1,41 @@
+name: Ubuntu E2E tests
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+        id: go
+
+      - name: Install kind and prepare the host
+        run: |
+          go install sigs.k8s.io/kind@v0.33.0
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+          if [ ! -d /sys/class/iscsi_transport/tcp ]; then
+            if ! command -v modprobe >/dev/null; then
+              echo "Load iscsi_tcp on the host before running this workflow." >&2
+              exit 1
+            fi
+            sudo modprobe iscsi_tcp
+          fi
+
+      - name: e2e tests
+        run: |
+          make deploy-kind
+          make
+          make e2e-test
+
+      - name: Tear down kind
+        if: ${{ !cancelled() }}
+        run: make e2e-teardown

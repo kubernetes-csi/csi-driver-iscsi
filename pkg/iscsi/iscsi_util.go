@@ -17,8 +17,13 @@ limitations under the License.
 package iscsi
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
+	"slices"
+	"strings"
+	"sync"
 
 	iscsiLib "github.com/kubernetes-csi/csi-driver-iscsi/pkg/iscsilib"
 	"google.golang.org/grpc/codes"
@@ -30,7 +35,11 @@ import (
 
 type ISCSIUtil struct{}
 
+var iscsiOperations sync.Mutex
+
 func (util *ISCSIUtil) AttachDisk(b iscsiDiskMounter) (string, error) {
+	iscsiOperations.Lock()
+	defer iscsiOperations.Unlock()
 	if b.connector == nil {
 		return "", fmt.Errorf("connector is nil")
 	}
@@ -84,7 +93,9 @@ func (util *ISCSIUtil) AttachDisk(b iscsiDiskMounter) (string, error) {
 }
 
 func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error {
-	_, cnt, err := mount.GetDeviceNameFromMount(c.mounter, targetPath)
+	iscsiOperations.Lock()
+	defer iscsiOperations.Unlock()
+	device, _, err := mount.GetDeviceNameFromMount(c.mounter, targetPath)
 	if err != nil {
 		klog.Errorf("iscsi detach disk: failed to get device from mnt: %s\nError: %v", targetPath, err)
 		return err
@@ -105,13 +116,23 @@ func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error
 		}
 		return status.Error(codes.Internal, err.Error())
 	}
+	portals, shared, err := unsharedPortals(iscsiInfoPath, connector)
+	if err != nil {
+		return err
+	}
 	if err = c.mounter.Unmount(targetPath); err != nil {
 		klog.Errorf("iscsi detach disk: failed to unmount: %s\nError: %v", targetPath, err)
 		return err
 	}
-	cnt--
-	if cnt != 0 {
-		klog.Errorf("the device is in use : %d", cnt)
+	if device == "" {
+		return nil
+	}
+	inUse, err := deviceMounted(c.mounter, device)
+	if err != nil {
+		return err
+	}
+	if inUse {
+		klog.Infof("the device is still in use: %s", device)
 		return nil
 	}
 
@@ -122,7 +143,15 @@ func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error
 		return err
 	}
 
-	iscsiLib.Disconnect(connector.TargetIqn, connector.TargetPortals)
+	if shared {
+		for _, portal := range portals {
+			if err := iscsiLib.Logout(connector.TargetIqn, strings.Split(portal, ":")[0]); err != nil {
+				return err
+			}
+		}
+	} else {
+		iscsiLib.Disconnect(connector.TargetIqn, portals)
+	}
 	if err := os.RemoveAll(targetPath); err != nil {
 		klog.Errorf("iscsi: failed to remove mount path Error: %v", err)
 	}
@@ -134,6 +163,46 @@ func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error
 	klog.Info("successfully detached ISCSI device")
 
 	return nil
+}
+
+func unsharedPortals(infoPath string, connector *iscsiLib.Connector) ([]string, bool, error) {
+	entries, err := os.ReadDir(filepath.Dir(infoPath))
+	if err != nil {
+		return nil, false, err
+	}
+	portals := slices.Clone(connector.TargetPortals)
+	shared := false
+	for _, entry := range entries {
+		if entry.Name() == filepath.Base(infoPath) || !strings.HasPrefix(entry.Name(), "iscsi-") || !strings.HasSuffix(entry.Name(), ".json") {
+			continue
+		}
+		data, err := os.ReadFile(filepath.Join(filepath.Dir(infoPath), entry.Name()))
+		if err != nil {
+			return nil, false, err
+		}
+		var other iscsiLib.Connector
+		if err := json.Unmarshal(data, &other); err != nil || other.TargetIqn == "" || len(other.TargetPortals) == 0 {
+			return nil, false, fmt.Errorf("invalid iSCSI connection record %s", entry.Name())
+		}
+		if other.TargetIqn == connector.TargetIqn {
+			shared = true
+			portals = slices.DeleteFunc(portals, func(portal string) bool { return slices.Contains(other.TargetPortals, portal) })
+		}
+	}
+	return portals, shared, nil
+}
+
+func deviceMounted(mounter mount.Interface, device string) (bool, error) {
+	mounts, err := mounter.List()
+	if err != nil {
+		return false, err
+	}
+	for _, m := range mounts {
+		if m.Device == device {
+			return true, nil
+		}
+	}
+	return false, nil
 }
 
 func getIscsiInfoPath(volumeID string) string {
