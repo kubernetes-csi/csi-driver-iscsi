@@ -112,6 +112,7 @@ func buildISCSIConnector(iscsiInfo *iscsiDisk) *iscsiLib.Connector {
 		Lun:              iscsiInfo.lun,
 		DoDiscovery:      iscsiInfo.discovery,
 		DoCHAPDiscovery:  iscsiInfo.chapDiscovery,
+		DoCHAPSession:    iscsiInfo.chapSession,
 		DiscoverySecrets: iscsiInfo.discoverySecret,
 		SessionSecrets:   iscsiInfo.sessionSecret,
 		Interface:        iscsiInfo.Iface,
