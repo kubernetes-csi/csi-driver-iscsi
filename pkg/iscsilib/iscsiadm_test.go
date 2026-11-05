@@ -29,11 +29,14 @@ func TestDiscoverTargetCHAP(t *testing.T) {
 		name            string
 		chapDiscovery   bool
 		chapSession     bool
+		noSecrets       bool
+		wantNewNode     bool
 		wantSessionAuth bool
 	}{
-		{name: "discovery CHAP only", chapDiscovery: true},
-		{name: "session CHAP only", chapSession: true, wantSessionAuth: true},
-		{name: "discovery and session CHAP", chapDiscovery: true, chapSession: true, wantSessionAuth: true},
+		{name: "discovery CHAP only", chapDiscovery: true, wantNewNode: true},
+		{name: "session CHAP only", chapSession: true, wantNewNode: true, wantSessionAuth: true},
+		{name: "discovery and session CHAP", chapDiscovery: true, chapSession: true, wantNewNode: true, wantSessionAuth: true},
+		{name: "session CHAP without secrets", chapSession: true, noSecrets: true},
 	}
 
 	defer func(orig func(string, []string, time.Duration) ([]byte, error)) { execWithTimeout = orig }(execWithTimeout)
@@ -47,25 +50,33 @@ func TestDiscoverTargetCHAP(t *testing.T) {
 			}
 
 			c := Connector{
-				DoDiscovery:      true,
-				DoCHAPDiscovery:  test.chapDiscovery,
-				DoCHAPSession:    test.chapSession,
-				DiscoverySecrets: chap,
-				SessionSecrets:   chap,
+				DoDiscovery:     true,
+				DoCHAPDiscovery: test.chapDiscovery,
+				DoCHAPSession:   test.chapSession,
+			}
+			if !test.noSecrets {
+				c.DiscoverySecrets = chap
+				c.SessionSecrets = chap
 			}
 			if err := c.discoverTarget("iqn.2016-09.com.example:target", "default", "10.0.0.1:3260"); err != nil {
 				t.Fatalf("discoverTarget() error = %v", err)
 			}
 
-			sessionAuth := false
+			newNode, sessionAuth := false, false
 			for _, args := range calls {
 				cmd := strings.Join(args, " ")
 				if slices.Contains(args, "node") && strings.Contains(cmd, "discovery.sendtargets.auth.") {
 					t.Errorf("discovery CHAP set on node record: iscsiadm %s", cmd)
 				}
+				if slices.Contains(args, "node") && strings.Contains(cmd, "-o new") {
+					newNode = true
+				}
 				if slices.Contains(args, "node") && strings.Contains(cmd, "node.session.auth.username") {
 					sessionAuth = true
 				}
+			}
+			if newNode != test.wantNewNode {
+				t.Errorf("node record created = %v, want %v", newNode, test.wantNewNode)
 			}
 			if sessionAuth != test.wantSessionAuth {
 				t.Errorf("session CHAP set on node record = %v, want %v", sessionAuth, test.wantSessionAuth)

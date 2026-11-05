@@ -381,11 +381,12 @@ func (c *Connector) discoverTarget(targetIqn string, iFace string, portal string
 		}
 	}
 
-	if c.DoCHAPDiscovery || c.DoCHAPSession {
-		var sessionSecrets Secrets
-		if c.DoCHAPSession {
-			sessionSecrets = c.SessionSecrets
-		}
+	var sessionSecrets Secrets
+	if c.DoCHAPSession {
+		sessionSecrets = c.SessionSecrets
+	}
+	// Without session secrets, keep an existing node record: "-o new" would reset its settings to defaults.
+	if c.DoCHAPDiscovery || sessionSecrets.SecretsType == "chap" {
 		// Make sure we don't log the secrets
 		err := CreateDBEntry(targetIqn, portal, iFace, sessionSecrets)
 		if err != nil {
