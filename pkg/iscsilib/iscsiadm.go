@@ -73,20 +73,14 @@ func ShowInterface(iface string) (string, error) {
 }
 
 // CreateDBEntry sets up a node entry for the specified tgt in the nodes iscsi nodes db
-func CreateDBEntry(tgtIQN, portal, iFace string, discoverySecrets, sessionSecrets Secrets) error {
+// Discovery CHAP is not set here: node records have no discovery.sendtargets.auth.* settings,
+// so it is applied to the discoverydb record in Discoverydb instead.
+func CreateDBEntry(tgtIQN, portal, iFace string, sessionSecrets Secrets) error {
 	klog.V(2).Infof("Begin CreateDBEntry...")
 	baseArgs := []string{"-m", "node", "-T", tgtIQN, "-p", portal}
 	_, err := iscsiCmd(append(baseArgs, "-I", iFace, "-o", "new")...)
 	if err != nil {
 		return err
-	}
-
-	if discoverySecrets.SecretsType == "chap" {
-		klog.V(2).Infof("Setting CHAP Discovery...")
-		err := createCHAPEntries(baseArgs, discoverySecrets, true)
-		if err != nil {
-			return err
-		}
 	}
 
 	if sessionSecrets.SecretsType == "chap" {
