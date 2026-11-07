@@ -50,7 +50,6 @@ type iscsiSession struct {
 	ID       int32
 	Portal   string
 	IQN      string
-	Name     string
 }
 
 type deviceInfo []Device
@@ -112,7 +111,6 @@ func parseSessions(lines string) []iscsiSession {
 			ID:       int32(id64),
 			Portal:   portal,
 			IQN:      e[3],
-			Name:     strings.Split(e[3], ":")[1],
 		}
 		sessions = append(sessions, s)
 	}
@@ -392,25 +390,14 @@ func (c *Connector) discoverTarget(targetIqn string, iFace string, portal string
 	return nil
 }
 
-// Disconnect is for backward-compatibility with c.Disconnect()
+// Disconnect is for backward-compatibility with c.Disconnect().
 func Disconnect(targetIqn string, targets []string) {
 	for _, target := range targets {
-		targetPortal := strings.Split(target, ":")[0]
-		err := Logout(targetIqn, targetPortal)
-		if err != nil {
+		if err := Logout(targetIqn, target); err != nil {
 			return
 		}
 	}
-
-	deleted := map[string]bool{}
-	if _, ok := deleted[targetIqn]; ok {
-		return
-	}
-	deleted[targetIqn] = true
-	err := DeleteDBEntry(targetIqn)
-	if err != nil {
-		return
-	}
+	_ = DeleteDBEntry(targetIqn)
 }
 
 // Disconnect performs a disconnect operation from an appliance.
