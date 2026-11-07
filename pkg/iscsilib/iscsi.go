@@ -88,6 +88,7 @@ type Connector struct {
 	DoDiscovery       bool     `json:"do_discovery"`
 	DoCHAPDiscovery   bool     `json:"do_chap_discovery"`
 	DevicesDetached   bool     `json:"devices_detached,omitempty"`
+	DeviceWWID        string   `json:"device_wwid,omitempty"`
 }
 
 // parseSession takes the raw stdout from the `iscsiadm -m session` command and encodes it into an iSCSI session type
@@ -750,12 +751,19 @@ func (d *Device) GetPath() string {
 // WWID returns the WWID of a device
 func (d *Device) WWID() (string, error) {
 	timeout := 1 * time.Second
-	out, err := execWithTimeout("scsi_id", []string{"-g", "-u", d.GetPath()}, timeout)
+	scsiID, err := exec.LookPath("scsi_id")
+	if err != nil {
+		scsiID = "/lib/udev/scsi_id"
+	}
+	out, err := execWithTimeout(scsiID, []string{"-g", "-u", d.GetPath()}, timeout)
 	if err != nil {
 		return "", err
 	}
-
-	return string(out[:len(out)-1]), nil
+	wwid := strings.TrimSpace(string(out))
+	if wwid == "" || strings.ContainsAny(wwid, " \t\r\n") {
+		return "", fmt.Errorf("invalid WWID for device %s", d.GetPath())
+	}
+	return wwid, nil
 }
 
 // HCTL returns the HCTL of a device
