@@ -197,8 +197,10 @@ func deviceMounted(mounter mount.Interface, device string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
+	resolved, _ := filepath.EvalSymlinks(device)
 	for _, m := range mounts {
-		if m.Device == device {
+		mounted, _ := filepath.EvalSymlinks(m.Device)
+		if m.Device == device || (resolved != "" && mounted == resolved) {
 			return true, nil
 		}
 	}
