@@ -92,12 +92,13 @@ clean:
 deploy-kind:
 	test/utils/deploy-kind.sh
 
-.PHONY: e2e-unit e2e-fixture-test
 # Check the code that sets up and runs the e2e tests without a cluster.
+.PHONY: e2e-unit
 e2e-unit:
 	go test -mod=vendor -count=1 -v ./test/e2e/...
 
 # Check the test's iSCSI server on its own, without Kubernetes or the driver.
+.PHONY: e2e-fixture-test
 e2e-fixture-test:
 	go build -mod=vendor -o bin/e2e-fixture-test ./test/e2e/cmd/fixture-integration
 	./bin/e2e-fixture-test
