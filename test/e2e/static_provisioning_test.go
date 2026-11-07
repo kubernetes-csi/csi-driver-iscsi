@@ -21,6 +21,8 @@ package e2e
 import (
 	"context"
 	"fmt"
+	"io"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -59,7 +61,7 @@ var _ = ginkgo.Describe("Statically provisioned iSCSI volumes", ginkgo.Ordered, 
 	ginkgo.ReportAfterEach(func(report ginkgo.SpecReport) {
 		hadFailure = hadFailure || report.Failed()
 		if report.Failed() && harness != nil {
-			collectDiagnostics(harness.Config.Namespace, currentContext, settings.Kubeconfig)
+			collectDiagnostics(os.Stdout, harness.Config.Namespace, currentContext, settings.Kubeconfig)
 		}
 	})
 	ginkgo.BeforeAll(func(ctx ginkgo.SpecContext) {
@@ -135,9 +137,18 @@ var _ = ginkgo.Describe("Statically provisioned iSCSI volumes", ginkgo.Ordered, 
 	}
 })
 
-func collectDiagnostics(namespace, currentContext, kubeconfig string) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+func collectDiagnostics(w io.Writer, namespace, currentContext, kubeconfig string) {
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
+	if strings.HasPrefix(currentContext, "kind-") {
+		commandCtx, cancelCommand := context.WithTimeout(ctx, 5*time.Second)
+		out, err := exec.CommandContext(commandCtx, "docker", "logs", "--tail", "200", strings.TrimPrefix(currentContext, "kind-")+"-iscsid").CombinedOutput()
+		cancelCommand()
+		fmt.Fprintf(w, "\nDiagnostics: iscsid logs\n%s", out)
+		if err != nil {
+			fmt.Fprintf(w, "Diagnostics failed: %v\n", err)
+		}
+	}
 	base := []string{"--context", currentContext, "--request-timeout=5s"}
 	if kubeconfig != "" {
 		base = append(base, "--kubeconfig", kubeconfig)
@@ -147,28 +158,43 @@ func collectDiagnostics(namespace, currentContext, kubeconfig string) {
 		{"-n", namespace, "describe", "pods"},
 		{"-n", namespace, "get", "events", "--sort-by=.lastTimestamp"},
 		{"-n", testsuites.DriverNamespace, "logs", "-l", "app=" + testsuites.DriverDaemonSet, "-c", "iscsi", "--tail=200", "--prefix=true"},
+		{"-n", testsuites.DriverNamespace, "exec", "daemonset/" + testsuites.DriverDaemonSet, "-c", "iscsi", "--", "sh", "-c", `for p in /proc/[0-9]*; do cat "$p/stat" 2>/dev/null; printf 'wchan '; cat "$p/wchan" 2>/dev/null; printf '\n'; done`},
 	} {
 		command := append(append([]string{}, base...), args...)
-		out, err := exec.CommandContext(ctx, "kubectl", command...).CombinedOutput()
-		fmt.Printf("\nDiagnostics: kubectl %s\n%s", strings.Join(args, " "), out)
+		commandCtx, cancelCommand := context.WithTimeout(ctx, 5*time.Second)
+		out, err := exec.CommandContext(commandCtx, "kubectl", command...).CombinedOutput()
+		cancelCommand()
+		fmt.Fprintf(w, "\nDiagnostics: kubectl %s\n%s", strings.Join(args, " "), out)
 		if err != nil {
-			fmt.Printf("Diagnostics failed: %v\n", err)
+			fmt.Fprintf(w, "Diagnostics failed: %v\n", err)
 		}
 	}
 	if !strings.HasPrefix(currentContext, "kind-") {
-		fmt.Println("Kubelet logs are only collected automatically for kind clusters")
+		fmt.Fprintln(w, "Kubelet logs are only collected automatically for kind clusters")
 		return
 	}
-	nodes, err := exec.CommandContext(ctx, "kind", "get", "nodes", "--name", strings.TrimPrefix(currentContext, "kind-")).CombinedOutput()
+	cluster := strings.TrimPrefix(currentContext, "kind-")
+	commandCtx, cancelCommand := context.WithTimeout(ctx, 5*time.Second)
+	nodes, err := exec.CommandContext(commandCtx, "kind", "get", "nodes", "--name", cluster).CombinedOutput()
+	cancelCommand()
 	if err != nil {
-		fmt.Printf("Cannot list kind nodes: %v\n%s", err, nodes)
+		fmt.Fprintf(w, "Cannot list kind nodes: %v\n%s", err, nodes)
 		return
 	}
 	for _, node := range strings.Fields(string(nodes)) {
-		out, err := exec.CommandContext(ctx, "docker", "exec", node, "journalctl", "-u", "kubelet", "-n", "200", "--no-pager").CombinedOutput()
-		fmt.Printf("\nDiagnostics: kubelet on %s\n%s", node, out)
-		if err != nil {
-			fmt.Printf("Diagnostics failed: %v\n", err)
+		for _, args := range [][]string{
+			{"journalctl", "-u", "kubelet", "-n", "200", "--no-pager"},
+			{"ps", "-eo", "pid,ppid,stat,wchan:24,comm"},
+			{"ls", "-l", "/sys/class/iscsi_session"},
+		} {
+			command := append([]string{"exec", node}, args...)
+			commandCtx, cancelCommand := context.WithTimeout(ctx, 5*time.Second)
+			out, err := exec.CommandContext(commandCtx, "docker", command...).CombinedOutput()
+			cancelCommand()
+			fmt.Fprintf(w, "\nDiagnostics: %s on %s\n%s", strings.Join(args, " "), node, out)
+			if err != nil {
+				fmt.Fprintf(w, "Diagnostics failed: %v\n", err)
+			}
 		}
 	}
 }
