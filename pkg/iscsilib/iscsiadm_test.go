@@ -131,3 +131,30 @@ func TestLogoutRejectsInvalidSessionListing(t *testing.T) {
 		})
 	}
 }
+
+func TestDeviceWWID(t *testing.T) {
+	skipWindows(t)
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "scsi_id"), []byte("#!/bin/sh\nprintf '%s' \"$SCSI_TEST_OUTPUT\"\n"), 0755); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	device := Device{Name: "test", Type: "disk"}
+	for _, tc := range []struct {
+		name, output, want string
+		wantError          bool
+	}{
+		{name: "with newline", output: "naa.123\n", want: "naa.123"},
+		{name: "without newline", output: "naa.123", want: "naa.123"},
+		{name: "empty", wantError: true},
+		{name: "multiple identifiers", output: "naa.1\nnaa.2\n", wantError: true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Setenv("SCSI_TEST_OUTPUT", tc.output)
+			got, err := device.WWID()
+			if got != tc.want || (err != nil) != tc.wantError {
+				t.Fatalf("WWID() = %q, %v; want %q, error %v", got, err, tc.want, tc.wantError)
+			}
+		})
+	}
+}
