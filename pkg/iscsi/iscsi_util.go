@@ -95,20 +95,17 @@ func (util *ISCSIUtil) AttachDisk(b iscsiDiskMounter) (string, error) {
 func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error {
 	iscsiOperations.Lock()
 	defer iscsiOperations.Unlock()
+	return detachDisk(c, targetPath, getIscsiInfoPath(c.VolName))
+}
+
+func detachDisk(c iscsiDiskUnmounter, targetPath, iscsiInfoPath string) error {
 	device, _, err := mount.GetDeviceNameFromMount(c.mounter, targetPath)
 	if err != nil {
 		klog.Errorf("iscsi detach disk: failed to get device from mnt: %s\nError: %v", targetPath, err)
 		return err
 	}
-	if pathExists, pathErr := mount.PathExists(targetPath); pathErr != nil {
-		return fmt.Errorf("error checking if path exists: %v", pathErr)
-	} else if !pathExists {
-		klog.Warningf("warning: Unmount skipped because path does not exist: %v", targetPath)
-		return nil
-	}
-	iscsiInfoPath := getIscsiInfoPath(c.VolName)
 	klog.Infof("loading ISCSI connection info from %s", iscsiInfoPath)
-	connector, err := iscsiLib.GetConnectorFromFile(iscsiInfoPath)
+	data, err := os.ReadFile(iscsiInfoPath)
 	if err != nil {
 		if os.IsNotExist(err) {
 			klog.Warningf("assuming that ISCSI connection is already closed")
@@ -116,41 +113,58 @@ func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error
 		}
 		return status.Error(codes.Internal, err.Error())
 	}
+	connector := &iscsiLib.Connector{}
+	if err := json.Unmarshal(data, connector); err != nil {
+		return fmt.Errorf("invalid iSCSI connection record %s: %w", iscsiInfoPath, err)
+	}
+	if connector.TargetIqn == "" || len(connector.TargetPortals) == 0 {
+		return fmt.Errorf("invalid iSCSI connection record %s", iscsiInfoPath)
+	}
 	portals, shared, err := unsharedPortals(iscsiInfoPath, connector)
 	if err != nil {
 		return err
 	}
-	if err = c.mounter.Unmount(targetPath); err != nil {
-		klog.Errorf("iscsi detach disk: failed to unmount: %s\nError: %v", targetPath, err)
-		return err
-	}
-	if device == "" {
-		return nil
-	}
-	inUse, err := deviceMounted(c.mounter, device)
-	if err != nil {
-		return err
-	}
-	if inUse {
-		klog.Infof("the device is still in use: %s", device)
-		return nil
-	}
-
-	klog.Info("detaching ISCSI device")
-	err = connector.DisconnectVolume()
-	if err != nil {
-		klog.Errorf("iscsi detach disk: failed to disconnect volume Error: %v", err)
-		return err
-	}
-
-	if shared {
-		for _, portal := range portals {
-			if err := iscsiLib.Logout(connector.TargetIqn, strings.Split(portal, ":")[0]); err != nil {
-				return err
-			}
+	if !connector.DevicesDetached {
+		if device == "" {
+			// shortcut: an unmounted device needs manual recovery until its identity can be verified.
+			return fmt.Errorf("cannot safely resume iSCSI device removal for %s: device is no longer mounted", c.VolName)
 		}
-	} else {
-		iscsiLib.Disconnect(connector.TargetIqn, portals)
+		connector, err = iscsiLib.GetConnectorFromFile(iscsiInfoPath)
+		if err != nil {
+			return err
+		}
+		if err = c.mounter.Unmount(targetPath); err != nil {
+			return fmt.Errorf("failed to unmount %s: %w", targetPath, err)
+		}
+		inUse, err := deviceMounted(c.mounter, device)
+		if err != nil {
+			return err
+		}
+		if inUse {
+			klog.Infof("the device is still in use: %s", device)
+			return nil
+		}
+		klog.Info("detaching ISCSI device")
+		if err = connector.DisconnectVolume(); err != nil {
+			return fmt.Errorf("failed to disconnect iSCSI volume: %w", err)
+		}
+		connector.DevicesDetached = true
+		if err = persistDetachedConnector(iscsiInfoPath, connector); err != nil {
+			return err
+		}
+	} else if device != "" {
+		return fmt.Errorf("cannot log out: device %s is mounted at %s", device, targetPath)
+	}
+
+	for _, portal := range portals {
+		if err := iscsiLib.Logout(connector.TargetIqn, portal); err != nil {
+			return err
+		}
+	}
+	if !shared {
+		if err := iscsiLib.DeleteDBEntry(connector.TargetIqn); err != nil {
+			return err
+		}
 	}
 	if err := os.RemoveAll(targetPath); err != nil {
 		klog.Errorf("iscsi: failed to remove mount path Error: %v", err)
@@ -163,6 +177,22 @@ func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error
 	klog.Info("successfully detached ISCSI device")
 
 	return nil
+}
+
+func persistDetachedConnector(path string, connector *iscsiLib.Connector) error {
+	f, err := os.CreateTemp(filepath.Dir(path), ".iscsi-detached-*")
+	if err != nil {
+		return err
+	}
+	defer os.Remove(f.Name())
+	if err := json.NewEncoder(f).Encode(connector); err != nil {
+		f.Close()
+		return err
+	}
+	if err := f.Close(); err != nil {
+		return err
+	}
+	return os.Rename(f.Name(), path)
 }
 
 func unsharedPortals(infoPath string, connector *iscsiLib.Connector) ([]string, bool, error) {

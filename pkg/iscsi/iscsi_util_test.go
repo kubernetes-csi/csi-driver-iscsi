@@ -17,10 +17,12 @@ limitations under the License.
 package iscsi
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"reflect"
 	"runtime"
+	"strings"
 	"testing"
 
 	iscsiLib "github.com/kubernetes-csi/csi-driver-iscsi/pkg/iscsilib"
@@ -83,5 +85,147 @@ func TestDeviceMountedWithSymlinkAliases(t *testing.T) {
 	mounter := mount.NewFakeMounter([]mount.MountPoint{{Device: second, Path: "/other"}})
 	if inUse, err := deviceMounted(mounter, first); err != nil || !inUse {
 		t.Fatalf("deviceMounted with aliases = %v, %v", inUse, err)
+	}
+}
+
+func TestDetachDiskRetriesLogout(t *testing.T) {
+	skipWindows(t)
+	dir := t.TempDir()
+	infoPath := filepath.Join(dir, "iscsi-volume.json")
+	connector := &iscsiLib.Connector{TargetIqn: "iqn.test:target", TargetPortals: []string{"127.0.0.1:3260"}, DevicesDetached: true}
+	if err := persistDetachedConnector(infoPath, connector); err != nil {
+		t.Fatal(err)
+	}
+	fail := filepath.Join(dir, "fail")
+	if err := os.WriteFile(fail, nil, 0600); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	t.Setenv("ISCSI_TEST_FAIL", fail)
+	script := `#!/bin/sh
+if [ "$2" = session ]; then
+  if [ -e "$ISCSI_TEST_FAIL" ]; then echo 'tcp: [1] 127.0.0.1:3260,1 iqn.test:target'; exit 0; fi
+  exit 21
+fi
+if [ "$7" = -u ]; then
+  if [ -e "$ISCSI_TEST_FAIL" ]; then exit 1; fi
+  exit 21
+fi
+exit 0
+`
+	if err := os.WriteFile(filepath.Join(dir, "iscsiadm"), []byte(script), 0755); err != nil {
+		t.Fatal(err)
+	}
+	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
+	target := filepath.Join(dir, "missing-mount")
+	if err := detachDisk(c, target, infoPath); err == nil {
+		t.Fatal("logout failure was ignored")
+	}
+	if _, err := os.Stat(infoPath); err != nil {
+		t.Fatalf("connection record was lost: %v", err)
+	}
+	if err := os.Remove(fail); err != nil {
+		t.Fatal(err)
+	}
+	if err := detachDisk(c, target, infoPath); err != nil {
+		t.Fatalf("retry after logout completed: %v", err)
+	}
+	if _, err := os.Stat(infoPath); !os.IsNotExist(err) {
+		t.Fatalf("connection record remains after cleanup: %v", err)
+	}
+}
+
+func TestDetachDiskRejectsAmbiguousPartialCleanup(t *testing.T) {
+	dir := t.TempDir()
+	infoPath := filepath.Join(dir, "iscsi-volume.json")
+	connector := iscsiLib.Connector{TargetIqn: "iqn.test:target", TargetPortals: []string{"127.0.0.1:3260"}}
+	data, err := json.Marshal(connector)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(infoPath, data, 0600); err != nil {
+		t.Fatal(err)
+	}
+	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
+	if err := detachDisk(c, filepath.Join(dir, "missing"), infoPath); err == nil || !strings.Contains(err.Error(), "cannot safely resume") {
+		t.Fatalf("expected a safe cleanup error, got %v", err)
+	}
+	if _, err := os.Stat(infoPath); err != nil {
+		t.Fatalf("connection record was lost: %v", err)
+	}
+}
+
+func TestDetachDiskPreservesSharedPortal(t *testing.T) {
+	skipWindows(t)
+	dir := t.TempDir()
+	infoPath := filepath.Join(dir, "iscsi-volume.json")
+	connector := &iscsiLib.Connector{TargetIqn: "iqn.test:target", TargetPortals: []string{"one:3260", "two:3260"}, DevicesDetached: true}
+	if err := persistDetachedConnector(infoPath, connector); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "iscsi-other.json"), []byte(`{"target_iqn":"iqn.test:target","target_portal":["two:3260"]}`), 0600); err != nil {
+		t.Fatal(err)
+	}
+	log := filepath.Join(dir, "commands")
+	t.Setenv("ISCSI_TEST_LOG", log)
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	if err := os.WriteFile(filepath.Join(dir, "iscsiadm"), []byte("#!/bin/sh\nprintf '%s\\n' \"$*\" >> \"$ISCSI_TEST_LOG\"\n"), 0755); err != nil {
+		t.Fatal(err)
+	}
+	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
+	if err := detachDisk(c, filepath.Join(dir, "missing"), infoPath); err != nil {
+		t.Fatal(err)
+	}
+	commands, err := os.ReadFile(log)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := string(commands); !strings.Contains(got, "-p one:3260 -u") || strings.Contains(got, "two:3260") || strings.Contains(got, "-o delete") {
+		t.Fatalf("unexpected commands: %s", got)
+	}
+}
+
+func TestDetachDiskResumesPortalLogouts(t *testing.T) {
+	skipWindows(t)
+	dir := t.TempDir()
+	infoPath := filepath.Join(dir, "iscsi-volume.json")
+	connector := &iscsiLib.Connector{TargetIqn: "iqn.test:target", TargetPortals: []string{"127.0.0.1:3260", "127.0.0.2:3260"}, DevicesDetached: true}
+	if err := persistDetachedConnector(infoPath, connector); err != nil {
+		t.Fatal(err)
+	}
+	log, fail := filepath.Join(dir, "commands"), filepath.Join(dir, "fail")
+	if err := os.WriteFile(fail, nil, 0600); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("ISCSI_TEST_LOG", log)
+	t.Setenv("ISCSI_TEST_FAIL", fail)
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	script := `#!/bin/sh
+printf '%s\n' "$*" >> "$ISCSI_TEST_LOG"
+if [ "$2" = session ]; then echo 'tcp: [1] 127.0.0.2:3260,1 iqn.test:target'; exit 0; fi
+if [ "$6" = 127.0.0.1:3260 ] && [ ! -e "$ISCSI_TEST_FAIL" ]; then exit 21; fi
+if [ "$6" = 127.0.0.2:3260 ] && [ -e "$ISCSI_TEST_FAIL" ]; then exit 1; fi
+exit 0
+`
+	if err := os.WriteFile(filepath.Join(dir, "iscsiadm"), []byte(script), 0755); err != nil {
+		t.Fatal(err)
+	}
+	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
+	target := filepath.Join(dir, "missing")
+	if err := detachDisk(c, target, infoPath); err == nil {
+		t.Fatal("failed portal logout was ignored")
+	}
+	if err := os.Remove(fail); err != nil {
+		t.Fatal(err)
+	}
+	if err := detachDisk(c, target, infoPath); err != nil {
+		t.Fatalf("retry failed: %v", err)
+	}
+	commands, err := os.ReadFile(log)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := string(commands); strings.Count(got, "-p 127.0.0.1:3260 -u") != 2 || strings.Count(got, "-p 127.0.0.2:3260 -u") != 2 {
+		t.Fatalf("unexpected logout attempts: %s", got)
 	}
 }

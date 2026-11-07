@@ -87,6 +87,7 @@ type Connector struct {
 	CheckInterval     uint     `json:"check_interval"`
 	DoDiscovery       bool     `json:"do_discovery"`
 	DoCHAPDiscovery   bool     `json:"do_chap_discovery"`
+	DevicesDetached   bool     `json:"devices_detached,omitempty"`
 }
 
 // parseSession takes the raw stdout from the `iscsiadm -m session` command and encodes it into an iSCSI session type
