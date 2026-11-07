@@ -91,3 +91,43 @@ func TestDisconnectPreservesPortalPorts(t *testing.T) {
 		}
 	}
 }
+
+func TestLogoutNoMatchingObjectsWithRemainingSession(t *testing.T) {
+	skipWindows(t)
+	dir := t.TempDir()
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	script := `#!/bin/sh
+if [ "$2" = session ]; then
+  echo 'tcp: [1] 127.0.0.1:3260,1 iqn.test'
+  exit 0
+fi
+exit 21
+`
+	if err := os.WriteFile(filepath.Join(dir, "iscsiadm"), []byte(script), 0755); err != nil {
+		t.Fatal(err)
+	}
+	if err := Logout("iqn.test", "storage.example:3260"); err == nil {
+		t.Fatal("logout accepted a remaining session for the target")
+	}
+	if err := Logout("iqn.test", "127.0.0.2:3260"); err != nil {
+		t.Fatalf("another portal's session prevented logout: %v", err)
+	}
+}
+
+func TestLogoutRejectsInvalidSessionListing(t *testing.T) {
+	skipWindows(t)
+	for _, output := range []string{"", "malformed"} {
+		t.Run(output, func(t *testing.T) {
+			dir := t.TempDir()
+			t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+			t.Setenv("ISCSI_TEST_SESSIONS", output)
+			script := "#!/bin/sh\nif [ \"$2\" = session ]; then printf '%s' \"$ISCSI_TEST_SESSIONS\"; exit 0; fi\nexit 21\n"
+			if err := os.WriteFile(filepath.Join(dir, "iscsiadm"), []byte(script), 0755); err != nil {
+				t.Fatal(err)
+			}
+			if err := Logout("iqn.test", "127.0.0.1:3260"); err == nil {
+				t.Fatal("logout accepted an invalid session listing")
+			}
+		})
+	}
+}
