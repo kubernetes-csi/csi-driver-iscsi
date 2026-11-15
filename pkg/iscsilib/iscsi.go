@@ -87,6 +87,7 @@ type Connector struct {
 	CheckInterval     uint     `json:"check_interval"`
 	DoDiscovery       bool     `json:"do_discovery"`
 	DoCHAPDiscovery   bool     `json:"do_chap_discovery"`
+	DevicesDetaching  bool     `json:"devices_detaching,omitempty"`
 	DevicesDetached   bool     `json:"devices_detached,omitempty"`
 	DeviceWWID        string   `json:"device_wwid,omitempty"`
 }

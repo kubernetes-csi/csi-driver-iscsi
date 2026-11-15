@@ -17,6 +17,7 @@ limitations under the License.
 package recovery
 
 import (
+	"context"
 	"errors"
 	"os"
 	"path/filepath"
@@ -30,8 +31,23 @@ import (
 	"k8s.io/utils/mount"
 )
 
+func TestWaitForRemoval(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "device")
+	if err := waitForRemoval(context.Background(), []string{path}); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, nil, 0600); err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	if err := waitForRemoval(ctx, []string{path}); !errors.Is(err, context.Canceled) {
+		t.Fatalf("existing device was accepted: %v", err)
+	}
+}
+
 func TestUnmountRejectsPathsOutsideFixture(t *testing.T) {
-	for _, path := range []string{"/", "/mnt/a", filepath.Join(os.TempDir(), "unrelated", "a"), filepath.Join(os.TempDir(), "iscsi-btrfs-recovery-test", "other")} {
+	for _, path := range []string{"/", "/mnt/a", filepath.Join(os.TempDir(), "unrelated", "a"), filepath.Join(os.TempDir(), "iscsi-recovery-test", "other")} {
 		if err := Unmount(path); err == nil || !strings.Contains(err.Error(), "outside the recovery fixture") {
 			t.Fatalf("Unmount(%q) = %v; expected path rejection before syscall", path, err)
 		}

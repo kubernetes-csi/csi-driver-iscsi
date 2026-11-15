@@ -273,10 +273,10 @@ func created(actions []clienttesting.Action) bool {
 	return false
 }
 
-var _ = Describe("Btrfs recovery scenario", func() {
-	It("runs the helper inside the owned driver and preserves its failure evidence", func() {
+var _ = Describe("Recovery scenarios", func() {
+	DescribeTable("runs the helper inside the owned driver and preserves its failure evidence", func(scenario string) {
 		f := newFixture()
-		f.h.Config.BtrfsRecovery = true
+		f.h.Config.Recovery = true
 		f.h.Config.ScenarioTimeout = 75 * time.Second
 		f.baseline()
 		set, err := f.client.AppsV1().DaemonSets(DriverNamespace).Get(context.Background(), DriverDaemonSet, metav1.GetOptions{})
@@ -288,17 +288,17 @@ var _ = Describe("Btrfs recovery scenario", func() {
 			Expect(ns).To(Equal(DriverNamespace))
 			Expect(pod).To(Equal(DriverDaemonSet + "-worker"))
 			Expect(container).To(Equal("iscsi"))
-			Expect(args).To(ContainElements("/e2e-bin/e2e-tools", "btrfs-recovery", "--volume=iscsi-pv-b-test"))
+			Expect(args).To(ContainElements("/e2e-bin/e2e-tools", scenario, "--volume=iscsi-pv-b-test"))
 			timeout, err := time.ParseDuration(strings.TrimPrefix(args[len(args)-1], "--timeout="))
 			Expect(err).NotTo(HaveOccurred())
 			Expect(timeout).To(BeNumerically(">", 0))
 			Expect(timeout).To(BeNumerically("<=", 15*time.Second))
 			return "", "backing device disappeared while B remained mounted", probeError(1)
 		})
-		err = f.h.RunScenario(context.Background(), "btrfs-recovery")
+		err = f.h.RunScenario(context.Background(), scenario)
 		Expect(err).To(MatchError(ContainSubstring("backing device disappeared while B remained mounted")))
 		Expect(called).To(BeTrue())
-	})
+	}, Entry("Btrfs", "btrfs-recovery"), Entry("removal", "removal-recovery"))
 	It("rejects a scenario without the installed helper", func() {
 		f := newFixture()
 		Expect(f.h.RunScenario(context.Background(), "btrfs-recovery")).To(MatchError(ContainSubstring("requires its helper")))

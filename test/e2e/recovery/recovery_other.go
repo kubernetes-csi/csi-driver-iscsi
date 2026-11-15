@@ -24,8 +24,8 @@ import (
 	"io"
 )
 
-func Run(context.Context, string, string, string, string, io.Writer) error {
-	return errors.New("Btrfs recovery requires Linux")
+func Run(context.Context, string, string, string, string, string, io.Writer) error {
+	return errors.New("iSCSI recovery requires Linux")
 }
 
-func Unmount(string) error { return errors.New("Btrfs recovery requires Linux") }
+func Unmount(string) error { return errors.New("iSCSI recovery requires Linux") }

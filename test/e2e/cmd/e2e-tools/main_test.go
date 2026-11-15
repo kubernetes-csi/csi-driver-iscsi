@@ -133,6 +133,8 @@ var _ = Describe("Go tools command interface", func() {
 		for _, args := range [][]string{
 			{"install"},
 			{"btrfs-recovery"},
+			{"removal-recovery"},
+			{"removal-recovery", "--address=127.0.0.1:3260", "--iqn=iqn.test", "--volume=test", "--timeout=0s"},
 			{"btrfs-recovery", "--address=127.0.0.1:3260", "--iqn=iqn.test", "--volume=test", "--timeout=0s"},
 		} {
 			code, _, _ := execute(args...)

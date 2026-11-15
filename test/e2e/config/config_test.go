@@ -56,13 +56,13 @@ var _ = Describe("Scenario requests", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Expect(selected).To(Equal([]string{"republish", "driver-restart", "target-restart", "shared-target"}))
 	})
-	It("requires an isolated selection for the fresh Btrfs LUN", func() {
-		selected, err := Select("btrfs-recovery")
+	DescribeTable("requires an isolated selection for a fresh recovery LUN", func(scenario string) {
+		selected, err := Select(scenario)
 		Expect(err).NotTo(HaveOccurred())
-		Expect(selected).To(Equal([]string{"btrfs-recovery"}))
-		_, err = Select("shared-target,btrfs-recovery")
+		Expect(selected).To(Equal([]string{scenario}))
+		_, err = Select("shared-target," + scenario)
 		Expect(err).To(MatchError(ContainSubstring("must run alone")))
-	})
+	}, Entry("Btrfs", "btrfs-recovery"), Entry("removal", "removal-recovery"))
 })
 
 var _ = Describe("Environment validation", func() {
@@ -90,12 +90,12 @@ var _ = Describe("Environment validation", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Expect(cfg.Harness.LUNCount).To(Equal(2))
 	})
-	It("installs the recovery helper only for the Btrfs scenario", func() {
+	DescribeTable("installs the helper for recovery scenarios", func(scenario string) {
 		values := base()
-		values["E2E_SCENARIOS"] = "btrfs-recovery"
+		values["E2E_SCENARIOS"] = scenario
 		cfg, err := FromEnvironment(lookup(values), "/checkout")
 		Expect(err).NotTo(HaveOccurred())
-		Expect(cfg.Harness.BtrfsRecovery).To(BeTrue())
+		Expect(cfg.Harness.Recovery).To(BeTrue())
 		Expect(cfg.Harness.LUNCount).To(Equal(2))
 		values["E2E_SCENARIO_TIMEOUT"] = "60"
 		_, err = FromEnvironment(lookup(values), "/checkout")
@@ -104,8 +104,8 @@ var _ = Describe("Environment validation", func() {
 		values["E2E_SCENARIOS"] = "all"
 		cfg, err = FromEnvironment(lookup(values), "/checkout")
 		Expect(err).NotTo(HaveOccurred())
-		Expect(cfg.Harness.BtrfsRecovery).To(BeFalse())
-	})
+		Expect(cfg.Harness.Recovery).To(BeFalse())
+	}, Entry("Btrfs", "btrfs-recovery"), Entry("removal", "removal-recovery"))
 	DescribeTable("rejects invalid identities and budgets", func(key, value string) {
 		values := base()
 		values[key] = value

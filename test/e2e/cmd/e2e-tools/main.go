@@ -78,13 +78,13 @@ func run(args []string, stdout, stderr io.Writer) int {
 		if err == nil {
 			err = install(binary, *path)
 		}
-	case "btrfs-recovery":
+	case "btrfs-recovery", "removal-recovery":
 		if *address == "" || *iqn == "" || *volume == "" || *budget <= 0 {
 			return 2
 		}
 		operation, cancel := context.WithTimeout(ctx, *budget)
 		defer cancel()
-		err = recovery.Run(operation, *socket, *address, *iqn, *volume, stdout)
+		err = recovery.Run(operation, mode, *socket, *address, *iqn, *volume, stdout)
 	case "recovery-unmount":
 		err = recovery.Unmount(*directory)
 	case "prerequisites":

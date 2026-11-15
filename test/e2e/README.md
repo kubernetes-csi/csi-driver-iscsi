@@ -35,3 +35,7 @@ make e2e-test
 - This scenario runs separately from `all` and uses a fresh second LUN.
 - It unmounts one target, keeps a bind mount active, and calls CSI teardown directly from the driver container.
 - It reports failure if teardown removes the backing device. The output includes both device numbers and the saved device identity.
+
+- Run `make e2e-test E2E_SCENARIOS=removal-recovery` to test a failed state write after device removal.
+- This separate scenario bind-mounts the saved record during device removal, so the final rename fails.
+- It removes the fault and requires three CSI unpublish retries to succeed. The shared baseline volume must retain its data.

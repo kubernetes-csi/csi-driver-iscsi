@@ -140,27 +140,9 @@ func detachDisk(c iscsiDiskUnmounter, targetPath, iscsiInfoPath string) error {
 		return err
 	}
 	if !connector.DevicesDetached {
-		unmounted := device == ""
-		if unmounted && (connector.DeviceWWID == "" || connector.MountTargetDevice == nil || connector.MountTargetDevice.Type != "disk" || len(connector.Devices) != 1) {
-			return fmt.Errorf("cannot safely resume iSCSI device removal for %s: missing single-path device identity", c.VolName)
-		}
 		var inUse bool
-		if unmounted {
-			path, err := recoveryTargetPath(connector, "/dev/disk/by-path")
-			if err != nil {
-				return fmt.Errorf("cannot safely resume iSCSI device removal for %s: %w", c.VolName, err)
-			}
-			devices, err := iscsiLib.GetISCSIDevices([]string{path}, true)
-			if err != nil {
-				return fmt.Errorf("inspect iSCSI recovery device: %w", err)
-			}
-			if len(devices) != 1 {
-				return fmt.Errorf("cannot safely resume iSCSI device removal for %s: target path is ambiguous", c.VolName)
-			}
-			connector.MountTargetDevice = &devices[0]
-			connector.Devices = devices
-			device = connector.MountTargetDevice.GetPath()
-			inUse, err = verifyRecoveryDevice(connector, device, path)
+		if device == "" {
+			inUse, err = recoverDevice(connector, "/dev/disk/by-path", "/sys/class/scsi_device")
 			if err != nil {
 				return fmt.Errorf("cannot safely resume iSCSI device removal for %s: %w", c.VolName, err)
 			}
@@ -178,14 +160,22 @@ func detachDisk(c iscsiDiskUnmounter, targetPath, iscsiInfoPath string) error {
 			}
 		}
 		if inUse {
-			klog.Infof("the device is still in use: %s", device)
+			klog.Infof("the device is still in use: %s", connector.MountTargetDevice.GetPath())
 			return nil
 		}
-		klog.Info("detaching ISCSI device")
-		if err = connector.DisconnectVolume(); err != nil {
-			return fmt.Errorf("failed to disconnect iSCSI volume: %w", err)
+		if !connector.DevicesDetached {
+			// Save intent before deletion so a retry can recognize an already removed device.
+			connector.DevicesDetaching = true
+			if err = persistDetachedConnector(iscsiInfoPath, connector); err != nil {
+				return err
+			}
+			klog.Info("detaching ISCSI device")
+			if err = connector.DisconnectVolume(); err != nil {
+				return fmt.Errorf("failed to disconnect iSCSI volume: %w", err)
+			}
+			connector.DevicesDetached = true
 		}
-		connector.DevicesDetached = true
+		connector.DevicesDetaching = false
 		if err = persistDetachedConnector(iscsiInfoPath, connector); err != nil {
 			return err
 		}
@@ -232,6 +222,48 @@ func persistDetachedConnector(path string, connector *iscsiLib.Connector) error 
 	return os.Rename(f.Name(), path)
 }
 
+func recoverDevice(connector *iscsiLib.Connector, byPathDir, scsiDir string) (bool, error) {
+	device := connector.MountTargetDevice
+	if device == nil || device.Type != "disk" || device.Transport != "iscsi" || len(device.Children) != 0 || len(connector.Devices) != 1 || connector.DeviceWWID == "" || connector.Lun < 0 {
+		return false, fmt.Errorf("missing single-path iSCSI device identity")
+	}
+	path, err := recoveryTargetPath(connector, byPathDir)
+	if err != nil {
+		return false, err
+	}
+	if path == "" {
+		if !connector.DevicesDetaching {
+			return false, fmt.Errorf("iSCSI target path not found before device removal started")
+		}
+		hctl, err := device.HCTL()
+		if err != nil || hctl.HBA < 0 || hctl.Channel < 0 || hctl.Target < 0 || hctl.LUN != int(connector.Lun) || connector.Devices[0].Hctl != device.Hctl {
+			return false, fmt.Errorf("missing single-path iSCSI device address")
+		}
+		entries, err := os.ReadDir(scsiDir)
+		if err != nil {
+			return false, fmt.Errorf("inspect SCSI devices: %w", err)
+		}
+		name := fmt.Sprintf("%d:%d:%d:%d", hctl.HBA, hctl.Channel, hctl.Target, hctl.LUN)
+		for _, entry := range entries {
+			if entry.Name() == name {
+				return false, fmt.Errorf("iSCSI device still exists without its target path")
+			}
+		}
+		connector.DevicesDetached = true
+		return false, nil
+	}
+	devices, err := iscsiLib.GetISCSIDevices([]string{path}, true)
+	if err != nil {
+		return false, fmt.Errorf("inspect iSCSI recovery device: %w", err)
+	}
+	if len(devices) != 1 {
+		return false, fmt.Errorf("target path is ambiguous")
+	}
+	connector.MountTargetDevice = &devices[0]
+	connector.Devices = devices
+	return verifyRecoveryDevice(connector, connector.MountTargetDevice.GetPath(), path)
+}
+
 func verifyRecoveryDevice(connector *iscsiLib.Connector, devicePath, targetPath string) (bool, error) {
 	device := connector.MountTargetDevice
 	if device == nil || device.Type != "disk" || device.Transport != "iscsi" || len(device.Children) != 0 || len(connector.Devices) != 1 || connector.DeviceWWID == "" || connector.Lun < 0 {
@@ -267,7 +299,7 @@ func verifyRecoveryWWID(connector *iscsiLib.Connector) error {
 
 func recoveryTargetPath(connector *iscsiLib.Connector, byPathDir string) (string, error) {
 	entries, err := os.ReadDir(byPathDir)
-	if err != nil {
+	if err != nil && !os.IsNotExist(err) {
 		return "", fmt.Errorf("inspect iSCSI paths: %w", err)
 	}
 	var path string
@@ -286,6 +318,9 @@ func recoveryTargetPath(connector *iscsiLib.Connector, byPathDir string) (string
 			}
 			candidate := filepath.Join(byPathDir, entry.Name())
 			linked, err := os.Stat(candidate)
+			if os.IsNotExist(err) {
+				continue
+			}
 			if err != nil {
 				return "", fmt.Errorf("inspect iSCSI target path %s: %w", entry.Name(), err)
 			}
@@ -294,9 +329,6 @@ func recoveryTargetPath(connector *iscsiLib.Connector, byPathDir string) (string
 			}
 			path, info = candidate, linked
 		}
-	}
-	if path == "" {
-		return "", fmt.Errorf("iSCSI target path not found")
 	}
 	return path, nil
 }

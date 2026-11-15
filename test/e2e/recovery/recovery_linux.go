@@ -41,7 +41,13 @@ import (
 )
 
 // Run uses LUN 2 of a disposable target. The baseline owns LUN 1 and its shared session.
-func Run(ctx context.Context, socket, portal, iqn, volume string, output io.Writer) (result error) {
+func Run(ctx context.Context, scenario, socket, portal, iqn, volume string, output io.Writer) (result error) {
+	fsType := "btrfs"
+	if scenario == "removal-recovery" {
+		fsType = "ext4"
+	} else if scenario != "btrfs-recovery" {
+		return errors.New("unknown recovery scenario")
+	}
 	if !regexp.MustCompile(`^iscsi-pv-b-[a-z0-9-]+$`).MatchString(volume) || !strings.HasPrefix(iqn, "iqn.2026-01.com.test:storage-") || strings.ContainsAny(iqn, "/ \t\n") {
 		return errors.New("recovery test requires an owned fixture IQN and recovery volume name")
 	}
@@ -68,7 +74,7 @@ func Run(ctx context.Context, socket, portal, iqn, volume string, output io.Writ
 		defer cancel()
 		return operation(operationCtx, "recovery-unmount", path)
 	}
-	directory, err := os.MkdirTemp("", "iscsi-btrfs-recovery-")
+	directory, err := os.MkdirTemp("", "iscsi-recovery-")
 	if err != nil {
 		return err
 	}
@@ -111,7 +117,7 @@ func Run(ctx context.Context, socket, portal, iqn, volume string, output io.Writ
 		VolumeId: volume, TargetPath: a,
 		VolumeContext: map[string]string{"targetPortal": portal, "iqn": iqn, "lun": "2", "portals": "[]", "discovery": "true"},
 		VolumeCapability: &csi.VolumeCapability{
-			AccessType: &csi.VolumeCapability_Mount{Mount: &csi.VolumeCapability_MountVolume{FsType: "btrfs"}},
+			AccessType: &csi.VolumeCapability_Mount{Mount: &csi.VolumeCapability_MountVolume{FsType: fsType}},
 			AccessMode: &csi.VolumeCapability_AccessMode{Mode: csi.VolumeCapability_AccessMode_SINGLE_NODE_WRITER},
 		},
 	})
@@ -161,6 +167,9 @@ func Run(ctx context.Context, socket, portal, iqn, volume string, output io.Writ
 	mountedDevice, err := os.Stat(source)
 	if err != nil || !os.SameFile(info, mountedDevice) {
 		return fmt.Errorf("published mount does not use the recorded block device: %s", source)
+	}
+	if scenario == "removal-recovery" {
+		return removalRecovery(ctx, node, request, &connector, record, byPath, sysfs, directory, output)
 	}
 	if err = syscall.Mount(a, b, "", syscall.MS_BIND, ""); err != nil {
 		return err
@@ -222,7 +231,7 @@ func Run(ctx context.Context, socket, portal, iqn, volume string, output io.Writ
 // Unmount runs in a disposable child because a failed device can block unmount.
 func Unmount(path string) error {
 	dir := filepath.Dir(path)
-	if filepath.Dir(dir) != os.TempDir() || !strings.HasPrefix(filepath.Base(dir), "iscsi-btrfs-recovery-") || (filepath.Base(path) != "a" && filepath.Base(path) != "b") {
+	if filepath.Dir(dir) != os.TempDir() || !strings.HasPrefix(filepath.Base(dir), "iscsi-recovery-") || (filepath.Base(path) != "a" && filepath.Base(path) != "b") {
 		return errors.New("refusing to unmount a path outside the recovery fixture")
 	}
 	return syscall.Unmount(path, 0)
