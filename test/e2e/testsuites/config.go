@@ -46,6 +46,7 @@ type Config struct {
 	CommandTimeout, RequestTimeout, ScenarioTimeout, TeardownTimeout, SharedIOTimeout time.Duration
 	RetainOnFailure                                                                   bool
 	TargetHostNetwork                                                                 bool
+	BtrfsRecovery                                                                     bool
 	LUNCount                                                                          int
 }
 
@@ -102,6 +103,9 @@ func (c Config) Validate() error {
 	}
 	if c.LUNCount != 1 && c.LUNCount != 2 {
 		return fmt.Errorf("LUNCount must be 1 or 2")
+	}
+	if c.BtrfsRecovery && c.ScenarioTimeout <= time.Minute {
+		return fmt.Errorf("Btrfs recovery requires E2E_SCENARIO_TIMEOUT greater than 60 seconds")
 	}
 	return nil
 }

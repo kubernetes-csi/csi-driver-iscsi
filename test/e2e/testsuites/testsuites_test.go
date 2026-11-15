@@ -273,6 +273,39 @@ func created(actions []clienttesting.Action) bool {
 	return false
 }
 
+var _ = Describe("Btrfs recovery scenario", func() {
+	It("runs the helper inside the owned driver and preserves its failure evidence", func() {
+		f := newFixture()
+		f.h.Config.BtrfsRecovery = true
+		f.h.Config.ScenarioTimeout = 75 * time.Second
+		f.baseline()
+		set, err := f.client.AppsV1().DaemonSets(DriverNamespace).Get(context.Background(), DriverDaemonSet, metav1.GetOptions{})
+		Expect(err).NotTo(HaveOccurred())
+		Expect(set.Spec.Template.Spec.InitContainers).To(ContainElement(HaveField("Name", "e2e-install")))
+		called := false
+		f.h.Executor = executorFunc(func(_ context.Context, ns, pod, container string, args []string) (string, string, error) {
+			called = true
+			Expect(ns).To(Equal(DriverNamespace))
+			Expect(pod).To(Equal(DriverDaemonSet + "-worker"))
+			Expect(container).To(Equal("iscsi"))
+			Expect(args).To(ContainElements("/e2e-bin/e2e-tools", "btrfs-recovery", "--volume=iscsi-pv-b-test"))
+			timeout, err := time.ParseDuration(strings.TrimPrefix(args[len(args)-1], "--timeout="))
+			Expect(err).NotTo(HaveOccurred())
+			Expect(timeout).To(BeNumerically(">", 0))
+			Expect(timeout).To(BeNumerically("<=", 15*time.Second))
+			return "", "backing device disappeared while B remained mounted", probeError(1)
+		})
+		err = f.h.RunScenario(context.Background(), "btrfs-recovery")
+		Expect(err).To(MatchError(ContainSubstring("backing device disappeared while B remained mounted")))
+		Expect(called).To(BeTrue())
+	})
+	It("rejects a scenario without the installed helper", func() {
+		f := newFixture()
+		Expect(f.h.RunScenario(context.Background(), "btrfs-recovery")).To(MatchError(ContainSubstring("requires its helper")))
+		Expect(f.calls).To(BeEmpty())
+	})
+})
+
 var _ = Describe("Typed Kubernetes lifecycle", func() {
 	It("uses typed resources and Go commands through every supported scenario", func() {
 		f := newFixture()

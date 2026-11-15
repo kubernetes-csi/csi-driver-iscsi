@@ -51,10 +51,17 @@ var _ = Describe("Scenario requests", func() {
 		Expect(input.Code).To(Equal(2))
 		Expect(input.Message).NotTo(ContainSubstring("No scenarios ran"))
 	}, Entry("empty", ""), Entry("trailing comma", "baseline,"), Entry("unknown", "made-up"), Entry("gate then unknown", "stats,made-up"), Entry("unknown then gate", "made-up,stats"), Entry("all mixed", "all,stats"), Entry("newline", "baseline\nstats"), Entry("CRLF", "baseline\r\nstats"), Entry("tab", "baseline\tmade-up"), Entry("space", "baseline stats"))
-	It("includes every optional scenario in all", func() {
+	It("keeps the Btrfs reproduction outside the default scenarios", func() {
 		selected, err := Select("all")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(selected).To(Equal([]string{"republish", "driver-restart", "target-restart", "shared-target"}))
+	})
+	It("requires an isolated selection for the fresh Btrfs LUN", func() {
+		selected, err := Select("btrfs-recovery")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(selected).To(Equal([]string{"btrfs-recovery"}))
+		_, err = Select("shared-target,btrfs-recovery")
+		Expect(err).To(MatchError(ContainSubstring("must run alone")))
 	})
 })
 
@@ -76,12 +83,28 @@ var _ = Describe("Environment validation", func() {
 		_, err = FromEnvironment(lookup(values), "/checkout")
 		Expect(err).To(HaveOccurred())
 	})
-	It("uses two pre-existing LUNs only for a shared target request", func() {
+	It("uses two pre-existing LUNs for a shared target request", func() {
 		values := base()
 		values["E2E_SCENARIOS"] = "shared-target"
 		cfg, err := FromEnvironment(lookup(values), "/checkout")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(cfg.Harness.LUNCount).To(Equal(2))
+	})
+	It("installs the recovery helper only for the Btrfs scenario", func() {
+		values := base()
+		values["E2E_SCENARIOS"] = "btrfs-recovery"
+		cfg, err := FromEnvironment(lookup(values), "/checkout")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(cfg.Harness.BtrfsRecovery).To(BeTrue())
+		Expect(cfg.Harness.LUNCount).To(Equal(2))
+		values["E2E_SCENARIO_TIMEOUT"] = "60"
+		_, err = FromEnvironment(lookup(values), "/checkout")
+		Expect(err).To(MatchError(ContainSubstring("greater than 60 seconds")))
+		delete(values, "E2E_SCENARIO_TIMEOUT")
+		values["E2E_SCENARIOS"] = "all"
+		cfg, err = FromEnvironment(lookup(values), "/checkout")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(cfg.Harness.BtrfsRecovery).To(BeFalse())
 	})
 	DescribeTable("rejects invalid identities and budgets", func(key, value string) {
 		values := base()

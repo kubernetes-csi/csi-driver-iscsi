@@ -119,7 +119,7 @@ var _ = ginkgo.Describe("Statically provisioned iSCSI volumes", ginkgo.Ordered, 
 		completed["baseline"] = true
 		fmt.Println("\nScenario baseline data check passed; overall teardown pending")
 	}, ginkgo.SpecTimeout(10*time.Minute))
-	for _, scenario := range []string{"republish", "driver-restart", "target-restart", "shared-target"} {
+	for _, scenario := range []string{"republish", "driver-restart", "target-restart", "shared-target", "btrfs-recovery"} {
 		ginkgo.It("preserves data across "+scenario, func(ctx ginkgo.SpecContext) {
 			selected := false
 			for _, name := range settings.Scenarios {

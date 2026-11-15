@@ -64,6 +64,8 @@ func (h *Harness) RunScenario(ctx context.Context, name string) error {
 		err = h.restartTarget(ctx)
 	case "shared-target":
 		err = h.sharedTarget(ctx)
+	case "btrfs-recovery":
+		err = h.btrfsRecovery(ctx)
 	default:
 		return fmt.Errorf("unknown executable scenario %q", name)
 	}
@@ -71,6 +73,53 @@ func (h *Harness) RunScenario(ctx context.Context, name string) error {
 		return err
 	}
 	return h.verifyPayload(ctx)
+}
+
+func (h *Harness) btrfsRecovery(ctx context.Context) error {
+	if !h.Config.BtrfsRecovery || h.Config.LUNCount != 2 {
+		return fmt.Errorf("Btrfs recovery requires its helper and a fresh second LUN")
+	}
+	if err := h.verifyDriver(ctx); err != nil {
+		return err
+	}
+	baseline, err := h.Client.CoreV1().Pods(h.Config.Namespace).Get(ctx, h.name("iscsi-pod"), metav1.GetOptions{})
+	if err != nil {
+		return err
+	}
+	if !h.owned(baseline.Labels) || !readyPod(baseline) || baseline.Spec.NodeName == "" {
+		return fmt.Errorf("cannot identify baseline node for Btrfs recovery")
+	}
+	pods, err := h.Client.CoreV1().Pods(DriverNamespace).List(ctx, metav1.ListOptions{LabelSelector: "app=" + DriverDaemonSet})
+	if err != nil {
+		return err
+	}
+	var drivers []v1.Pod
+	for _, pod := range pods.Items {
+		if pod.Spec.NodeName == baseline.Spec.NodeName && h.owned(pod.Labels) && readyPod(&pod) {
+			drivers = append(drivers, pod)
+		}
+	}
+	if len(drivers) != 1 {
+		return fmt.Errorf("Btrfs recovery requires exactly one owned driver on the baseline node")
+	}
+	// Leave time for the helper's independent cleanup before exec loses its stream.
+	deadline, ok := ctx.Deadline()
+	if !ok {
+		return fmt.Errorf("Btrfs recovery requires a scenario deadline")
+	}
+	timeout := time.Until(deadline) - time.Minute
+	if timeout <= 0 {
+		return fmt.Errorf("Btrfs recovery requires more than 60 seconds remaining for execution and cleanup")
+	}
+	stdout, stderr, err := h.Executor.Exec(ctx, DriverNamespace, drivers[0].Name, "iscsi", []string{
+		"/e2e-bin/e2e-tools", "btrfs-recovery", "--socket=/csi/csi.sock", "--address=" + h.portal,
+		"--iqn=" + h.Config.IQN, "--volume=" + h.name("iscsi-pv-b"), "--timeout=" + timeout.String(),
+	})
+	fmt.Print(stdout)
+	if err != nil {
+		return fmt.Errorf("Btrfs recovery: %w\n%s", err, stderr)
+	}
+	return nil
 }
 
 func (h *Harness) republish(ctx context.Context) error {

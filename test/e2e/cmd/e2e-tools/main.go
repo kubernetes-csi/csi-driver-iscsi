@@ -32,6 +32,7 @@ import (
 	"time"
 
 	"github.com/kubernetes-csi/csi-driver-iscsi/test/e2e/probe"
+	"github.com/kubernetes-csi/csi-driver-iscsi/test/e2e/recovery"
 	"github.com/kubernetes-csi/csi-driver-iscsi/test/e2e/workload"
 )
 
@@ -60,6 +61,7 @@ func run(args []string, stdout, stderr io.Writer) int {
 	progress := flags.String("progress", "/tmp/io-progress", "progress file outside the mounted volume")
 	budget := flags.Duration("timeout", 10*time.Second, "operation deadline")
 	address := flags.String("address", "", "target host:port")
+	socket := flags.String("socket", "/csi/csi.sock", "CSI driver socket")
 	if err := flags.Parse(args[1:]); err != nil || flags.NArg() != 0 {
 		return 2
 	}
@@ -67,6 +69,24 @@ func run(args []string, stdout, stderr io.Writer) int {
 	defer cancel()
 	var err error
 	switch mode {
+	case "install":
+		if *path == "" {
+			return 2
+		}
+		var binary string
+		binary, err = os.Executable()
+		if err == nil {
+			err = install(binary, *path)
+		}
+	case "btrfs-recovery":
+		if *address == "" || *iqn == "" || *volume == "" || *budget <= 0 {
+			return 2
+		}
+		operation, cancel := context.WithTimeout(ctx, *budget)
+		defer cancel()
+		err = recovery.Run(operation, *socket, *address, *iqn, *volume, stdout)
+	case "recovery-unmount":
+		err = recovery.Unmount(*directory)
 	case "prerequisites":
 		err = probe.Prerequisites(*root)
 		if err == nil {
@@ -145,4 +165,19 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return 1
 	}
 	return 0
+}
+
+func install(source, target string) (result error) {
+	input, err := os.Open(source)
+	if err != nil {
+		return err
+	}
+	defer input.Close()
+	output, err := os.OpenFile(target, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0755)
+	if err != nil {
+		return err
+	}
+	defer func() { result = errors.Join(result, output.Close()) }()
+	_, err = io.Copy(output, input)
+	return err
 }

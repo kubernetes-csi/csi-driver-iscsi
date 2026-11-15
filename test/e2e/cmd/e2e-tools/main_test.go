@@ -116,4 +116,27 @@ var _ = Describe("Go tools command interface", func() {
 		_, err := peer.Write([]byte("closed"))
 		Expect(err).To(HaveOccurred())
 	})
+	It("installs the helper without overwriting an existing executable", func() {
+		dir := GinkgoT().TempDir()
+		source, target := filepath.Join(dir, "source"), filepath.Join(dir, "target")
+		Expect(os.WriteFile(source, []byte("helper"), 0600)).To(Succeed())
+		Expect(install(source, target)).To(Succeed())
+		data, err := os.ReadFile(target)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(string(data)).To(Equal("helper"))
+		info, err := os.Stat(target)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(info.Mode().Perm() & 0111).NotTo(BeZero())
+		Expect(install(source, target)).NotTo(Succeed())
+	})
+	It("requires recovery identity and a positive deadline", func() {
+		for _, args := range [][]string{
+			{"install"},
+			{"btrfs-recovery"},
+			{"btrfs-recovery", "--address=127.0.0.1:3260", "--iqn=iqn.test", "--volume=test", "--timeout=0s"},
+		} {
+			code, _, _ := execute(args...)
+			Expect(code).To(Equal(2))
+		}
+	})
 })

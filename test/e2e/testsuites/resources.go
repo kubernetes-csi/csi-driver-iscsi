@@ -345,11 +345,22 @@ func (h *Harness) createDriver(ctx context.Context) error {
 					if c.Name == "iscsi" {
 						c.Image = h.Config.DriverImage
 						c.ImagePullPolicy = h.Config.DriverPullPolicy
+						if h.Config.BtrfsRecovery {
+							c.VolumeMounts = append(c.VolumeMounts, v1.VolumeMount{Name: "e2e-bin", MountPath: "/e2e-bin", ReadOnly: true})
+						}
 						found++
 					}
 				}
 				if found != 1 {
 					return fmt.Errorf("local driver manifest must contain one iscsi container")
+				}
+				if h.Config.BtrfsRecovery {
+					value.Spec.Template.Spec.Volumes = append(value.Spec.Template.Spec.Volumes, v1.Volume{Name: "e2e-bin", VolumeSource: v1.VolumeSource{EmptyDir: &v1.EmptyDirVolumeSource{}}})
+					value.Spec.Template.Spec.InitContainers = append(value.Spec.Template.Spec.InitContainers, v1.Container{
+						Name: "e2e-install", Image: h.Config.ToolsImage, ImagePullPolicy: h.Config.ToolsPullPolicy,
+						Command:      []string{"/e2e-tools", "install", "--path=/e2e-bin/e2e-tools"},
+						VolumeMounts: []v1.VolumeMount{{Name: "e2e-bin", MountPath: "/e2e-bin"}},
+					})
 				}
 				_, err = h.Client.AppsV1().DaemonSets(DriverNamespace).Create(ctx, value, metav1.CreateOptions{})
 			default:

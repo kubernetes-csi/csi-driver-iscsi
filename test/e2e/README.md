@@ -30,3 +30,8 @@ make e2e-test
 - Cleanup retains resources if node teardown cannot be verified. Don't remove
   retained resources while a volume may still be mounted. Set
   `E2E_RETAIN_ON_FAILURE=1` to retain resources after other failures.
+
+- Run `make e2e-test E2E_SCENARIOS=btrfs-recovery` on a disposable cluster with Btrfs kernel support.
+- This scenario runs separately from `all` and uses a fresh second LUN.
+- It unmounts one target, keeps a bind mount active, and calls CSI teardown directly from the driver container.
+- It reports failure if teardown removes the backing device. The output includes both device numbers and the saved device identity.
