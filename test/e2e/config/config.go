@@ -44,7 +44,7 @@ func Select(value string) ([]string, error) {
 		return nil, &Error{2, "E2E_SCENARIOS must not be empty"}
 	}
 	if value == "all" {
-		return []string{"republish", "driver-restart", "target-restart", "shared-target"}, nil
+		return []string{"republish", "driver-restart", "target-restart", "shared-target", "btrfs-recovery", "removal-recovery"}, nil
 	}
 	known := map[string]string{"baseline": "", "republish": "", "driver-restart": "", "target-restart": "", "shared-target": "", "btrfs-recovery": "", "removal-recovery": "",
 		"chap-secret-ref": "nodePublishSecretRef support is incomplete", "stats": "NodeGetVolumeStats is not implemented",

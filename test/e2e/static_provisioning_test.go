@@ -54,88 +54,84 @@ var _ = ginkgo.AfterSuite(func() {
 	}
 })
 
-var _ = ginkgo.Describe("Statically provisioned iSCSI volumes", ginkgo.Ordered, ginkgo.Serial, func() {
-	var harness *testsuites.Harness
-	var hadFailure bool
-	var currentContext string
-	ginkgo.ReportAfterEach(func(report ginkgo.SpecReport) {
-		hadFailure = hadFailure || report.Failed()
-		if report.Failed() && harness != nil {
-			collectDiagnostics(os.Stdout, harness.Config.Namespace, currentContext, settings.Kubeconfig)
+func registerScenarios() {
+	ginkgo.Describe("Statically provisioned iSCSI volumes", ginkgo.Ordered, ginkgo.Serial, func() {
+		var harness *testsuites.Harness
+		var hadFailure bool
+		var currentContext string
+		ginkgo.ReportAfterEach(func(report ginkgo.SpecReport) {
+			hadFailure = hadFailure || report.Failed()
+			if report.Failed() && harness != nil {
+				collectDiagnostics(os.Stdout, harness.Config.Namespace, currentContext, settings.Kubeconfig)
+			}
+		})
+		ginkgo.BeforeAll(func(ctx ginkgo.SpecContext) {
+			rules := clientcmd.NewDefaultClientConfigLoadingRules()
+			if settings.Kubeconfig != "" {
+				rules.ExplicitPath = settings.Kubeconfig
+			}
+			loader := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(rules, &clientcmd.ConfigOverrides{})
+			raw, err := loader.RawConfig()
+			gomega.Expect(err).NotTo(gomega.HaveOccurred())
+			currentContext = raw.CurrentContext
+			restConfig, err := loader.ClientConfig()
+			gomega.Expect(err).NotTo(gomega.HaveOccurred())
+			restConfig.Timeout = settings.Harness.RequestTimeout
+			client, err := kubernetes.NewForConfig(restConfig)
+			gomega.Expect(err).NotTo(gomega.HaveOccurred())
+			// Read-only preflight happens before any build, image delivery or create.
+			preflight, cancel := context.WithTimeout(ctx, settings.Harness.CommandTimeout)
+			err = testsuites.Preflight(preflight, client, settings.Harness)
+			cancel()
+			gomega.Expect(err).NotTo(gomega.HaveOccurred())
+			options := settings.Images
+			options.CurrentContext = raw.CurrentContext
+			manager := &images.Manager{Options: options, Runner: images.ProcessRunner{}}
+			selected, err := manager.Prepare(ctx, settings.DriverTag, settings.TargetTag, settings.ToolsTag)
+			gomega.Expect(err).NotTo(gomega.HaveOccurred())
+			cfg := settings.Harness
+			cfg.DriverImage, cfg.TargetImage, cfg.ToolsImage = selected.Driver.Image, selected.Target.Image, selected.Tools.Image
+			cfg.DriverPullPolicy, cfg.TargetPullPolicy, cfg.ToolsPullPolicy = selected.Driver.Policy, selected.Target.Policy, selected.Tools.Policy
+			harness = testsuites.New(client, testsuites.NewPodExecutor(restConfig, client), cfg)
+			harness.VerifyDriver = func(ctx context.Context, pods []corev1.Pod) error {
+				return manager.Verify(ctx, pods, "iscsi", selected.Driver)
+			}
+			harness.VerifyTarget = func(ctx context.Context, pod *corev1.Pod) error {
+				return manager.Verify(ctx, []corev1.Pod{*pod}, "tgtd", selected.Target)
+			}
+			harness.VerifyTools = func(ctx context.Context, pods []corev1.Pod) error {
+				return manager.Verify(ctx, pods, "prerequisites", selected.Tools)
+			}
+			cleanupSuite = func() error {
+				if cfg.RetainOnFailure && (hadFailure || ginkgo.CurrentSpecReport().Failed()) {
+					fmt.Println("Retaining failed invocation", cfg.Token, "namespace", cfg.Namespace)
+					return fmt.Errorf("retained failed invocation; node teardown was not verified")
+				}
+				cleanup, cancel := context.WithTimeout(context.Background(), cfg.TeardownTimeout)
+				defer cancel()
+				return harness.Cleanup(cleanup)
+			}
+			gomega.Expect(harness.Prepare(ctx)).To(gomega.Succeed())
+			fmt.Printf("\nDriver image: %s; local ID: %s\n", selected.Driver.Image, selected.Driver.LocalID)
+			fmt.Printf("Target image: %s; local ID: %s\n", selected.Target.Image, selected.Target.LocalID)
+		}, ginkgo.NodeTimeout(15*time.Minute))
+		ginkgo.It("mounts a pre-existing LUN and preserves seeded data", func(ctx ginkgo.SpecContext) {
+			gomega.Expect(harness.Baseline(ctx)).To(gomega.Succeed())
+			completed["baseline"] = true
+			fmt.Println("\nScenario baseline data check passed; overall teardown pending")
+		}, ginkgo.SpecTimeout(10*time.Minute))
+		for _, scenario := range settings.Scenarios {
+			if scenario == "baseline" {
+				continue
+			}
+			ginkgo.It("preserves data across "+scenario, func(ctx ginkgo.SpecContext) {
+				gomega.Expect(harness.RunScenario(ctx, scenario)).To(gomega.Succeed())
+				completed[scenario] = true
+				fmt.Printf("\nScenario %s data check passed; overall teardown pending\n", scenario)
+			}, ginkgo.SpecTimeout(10*time.Minute))
 		}
 	})
-	ginkgo.BeforeAll(func(ctx ginkgo.SpecContext) {
-		rules := clientcmd.NewDefaultClientConfigLoadingRules()
-		if settings.Kubeconfig != "" {
-			rules.ExplicitPath = settings.Kubeconfig
-		}
-		loader := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(rules, &clientcmd.ConfigOverrides{})
-		raw, err := loader.RawConfig()
-		gomega.Expect(err).NotTo(gomega.HaveOccurred())
-		currentContext = raw.CurrentContext
-		restConfig, err := loader.ClientConfig()
-		gomega.Expect(err).NotTo(gomega.HaveOccurred())
-		restConfig.Timeout = settings.Harness.RequestTimeout
-		client, err := kubernetes.NewForConfig(restConfig)
-		gomega.Expect(err).NotTo(gomega.HaveOccurred())
-		// Read-only preflight happens before any build, image delivery or create.
-		preflight, cancel := context.WithTimeout(ctx, settings.Harness.CommandTimeout)
-		err = testsuites.Preflight(preflight, client, settings.Harness)
-		cancel()
-		gomega.Expect(err).NotTo(gomega.HaveOccurred())
-		options := settings.Images
-		options.CurrentContext = raw.CurrentContext
-		manager := &images.Manager{Options: options, Runner: images.ProcessRunner{}}
-		selected, err := manager.Prepare(ctx, settings.DriverTag, settings.TargetTag, settings.ToolsTag)
-		gomega.Expect(err).NotTo(gomega.HaveOccurred())
-		cfg := settings.Harness
-		cfg.DriverImage, cfg.TargetImage, cfg.ToolsImage = selected.Driver.Image, selected.Target.Image, selected.Tools.Image
-		cfg.DriverPullPolicy, cfg.TargetPullPolicy, cfg.ToolsPullPolicy = selected.Driver.Policy, selected.Target.Policy, selected.Tools.Policy
-		harness = testsuites.New(client, testsuites.NewPodExecutor(restConfig, client), cfg)
-		harness.VerifyDriver = func(ctx context.Context, pods []corev1.Pod) error {
-			return manager.Verify(ctx, pods, "iscsi", selected.Driver)
-		}
-		harness.VerifyTarget = func(ctx context.Context, pod *corev1.Pod) error {
-			return manager.Verify(ctx, []corev1.Pod{*pod}, "tgtd", selected.Target)
-		}
-		harness.VerifyTools = func(ctx context.Context, pods []corev1.Pod) error {
-			return manager.Verify(ctx, pods, "prerequisites", selected.Tools)
-		}
-		cleanupSuite = func() error {
-			if cfg.RetainOnFailure && (hadFailure || ginkgo.CurrentSpecReport().Failed()) {
-				fmt.Println("Retaining failed invocation", cfg.Token, "namespace", cfg.Namespace)
-				return fmt.Errorf("retained failed invocation; node teardown was not verified")
-			}
-			cleanup, cancel := context.WithTimeout(context.Background(), cfg.TeardownTimeout)
-			defer cancel()
-			return harness.Cleanup(cleanup)
-		}
-		gomega.Expect(harness.Prepare(ctx)).To(gomega.Succeed())
-		fmt.Printf("\nDriver image: %s; local ID: %s\n", selected.Driver.Image, selected.Driver.LocalID)
-		fmt.Printf("Target image: %s; local ID: %s\n", selected.Target.Image, selected.Target.LocalID)
-	}, ginkgo.NodeTimeout(15*time.Minute))
-	ginkgo.It("mounts a pre-existing LUN and preserves seeded data", func(ctx ginkgo.SpecContext) {
-		gomega.Expect(harness.Baseline(ctx)).To(gomega.Succeed())
-		completed["baseline"] = true
-		fmt.Println("\nScenario baseline data check passed; overall teardown pending")
-	}, ginkgo.SpecTimeout(10*time.Minute))
-	for _, scenario := range []string{"republish", "driver-restart", "target-restart", "shared-target", "btrfs-recovery", "removal-recovery"} {
-		ginkgo.It("preserves data across "+scenario, func(ctx ginkgo.SpecContext) {
-			selected := false
-			for _, name := range settings.Scenarios {
-				if name == scenario {
-					selected = true
-				}
-			}
-			if !selected {
-				ginkgo.Skip("scenario not requested")
-			}
-			gomega.Expect(harness.RunScenario(ctx, scenario)).To(gomega.Succeed())
-			completed[scenario] = true
-			fmt.Printf("\nScenario %s data check passed; overall teardown pending\n", scenario)
-		}, ginkgo.SpecTimeout(10*time.Minute))
-	}
-})
+}
 
 func collectDiagnostics(w io.Writer, namespace, currentContext, kubeconfig string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)

@@ -51,10 +51,10 @@ var _ = Describe("Scenario requests", func() {
 		Expect(input.Code).To(Equal(2))
 		Expect(input.Message).NotTo(ContainSubstring("No scenarios ran"))
 	}, Entry("empty", ""), Entry("trailing comma", "baseline,"), Entry("unknown", "made-up"), Entry("gate then unknown", "stats,made-up"), Entry("unknown then gate", "made-up,stats"), Entry("all mixed", "all,stats"), Entry("newline", "baseline\nstats"), Entry("CRLF", "baseline\r\nstats"), Entry("tab", "baseline\tmade-up"), Entry("space", "baseline stats"))
-	It("keeps the Btrfs reproduction outside the default scenarios", func() {
+	It("includes every implemented scenario in all", func() {
 		selected, err := Select("all")
 		Expect(err).NotTo(HaveOccurred())
-		Expect(selected).To(Equal([]string{"republish", "driver-restart", "target-restart", "shared-target"}))
+		Expect(selected).To(Equal([]string{"republish", "driver-restart", "target-restart", "shared-target", "btrfs-recovery", "removal-recovery"}))
 	})
 	DescribeTable("requires an isolated selection for a fresh recovery LUN", func(scenario string) {
 		selected, err := Select(scenario)
@@ -73,7 +73,7 @@ var _ = Describe("Environment validation", func() {
 		values := base()
 		cfg, err := FromEnvironment(lookup(values), "/checkout")
 		Expect(err).NotTo(HaveOccurred())
-		Expect(cfg.Scenarios).To(Equal([]string{"republish", "driver-restart", "target-restart", "shared-target"}))
+		Expect(cfg.Scenarios).To(Equal([]string{"republish", "driver-restart", "target-restart", "shared-target", "btrfs-recovery", "removal-recovery"}))
 		Expect(cfg.Harness.LUNCount).To(Equal(2))
 		Expect(cfg.Harness.TargetHostNetwork).To(BeTrue())
 		Expect(cfg.Harness.Namespace).To(Equal("iscsi-e2e-unit"))
@@ -104,7 +104,7 @@ var _ = Describe("Environment validation", func() {
 		values["E2E_SCENARIOS"] = "all"
 		cfg, err = FromEnvironment(lookup(values), "/checkout")
 		Expect(err).NotTo(HaveOccurred())
-		Expect(cfg.Harness.Recovery).To(BeFalse())
+		Expect(cfg.Harness.Recovery).To(BeTrue())
 	}, Entry("Btrfs", "btrfs-recovery"), Entry("removal", "removal-recovery"))
 	DescribeTable("rejects invalid identities and budgets", func(key, value string) {
 		values := base()

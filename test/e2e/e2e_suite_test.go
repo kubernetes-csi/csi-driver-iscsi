@@ -24,6 +24,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -71,6 +72,35 @@ func TestMain(m *testing.M) {
 	if *kubeconfig != "" {
 		settings.Kubeconfig = *kubeconfig
 	}
+	selection, present := os.LookupEnv("E2E_SCENARIOS")
+	if !present || selection == "all" {
+		var shared, isolated []string
+		for _, scenario := range settings.Scenarios {
+			if scenario == "btrfs-recovery" || scenario == "removal-recovery" {
+				isolated = append(isolated, scenario)
+			} else {
+				shared = append(shared, scenario)
+			}
+		}
+		groups := append([]string{strings.Join(shared, ",")}, isolated...)
+		for _, group := range groups {
+			fmt.Println("Running e2e scenarios:", group)
+			cmd := exec.Command(os.Args[0], os.Args[1:]...)
+			cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
+			for _, entry := range os.Environ() {
+				if !strings.HasPrefix(entry, "E2E_SCENARIOS=") {
+					cmd.Env = append(cmd.Env, entry)
+				}
+			}
+			cmd.Env = append(cmd.Env, "E2E_SCENARIOS="+group)
+			if err := cmd.Run(); err != nil {
+				fmt.Fprintln(os.Stderr, "e2e scenario group failed:", group, err)
+				os.Exit(1)
+			}
+		}
+		os.Exit(0)
+	}
+	registerScenarios()
 	os.Exit(m.Run())
 }
 
