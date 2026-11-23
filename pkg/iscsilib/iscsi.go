@@ -88,6 +88,7 @@ type Connector struct {
 	CheckInterval     uint     `json:"check_interval"`
 	DoDiscovery       bool     `json:"do_discovery"`
 	DoCHAPDiscovery   bool     `json:"do_chap_discovery"`
+	DoCHAPSession     bool     `json:"do_chap_session"`
 }
 
 // parseSession takes the raw stdout from the `iscsiadm -m session` command and encodes it into an iSCSI session type
@@ -380,9 +381,14 @@ func (c *Connector) discoverTarget(targetIqn string, iFace string, portal string
 		}
 	}
 
-	if c.DoCHAPDiscovery {
+	var sessionSecrets Secrets
+	if c.DoCHAPSession {
+		sessionSecrets = c.SessionSecrets
+	}
+	// Without session secrets, keep an existing node record: "-o new" would reset its settings to defaults.
+	if c.DoCHAPDiscovery || sessionSecrets.SecretsType == "chap" {
 		// Make sure we don't log the secrets
-		err := CreateDBEntry(targetIqn, portal, iFace, c.DiscoverySecrets, c.SessionSecrets)
+		err := CreateDBEntry(targetIqn, portal, iFace, sessionSecrets)
 		if err != nil {
 			klog.V(2).Infof("Error creating db entry: %s\n", err.Error())
 			return err
