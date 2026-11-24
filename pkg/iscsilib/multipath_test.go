@@ -110,8 +110,18 @@ func TestCHAPCommandDoesNotLogCredentials(t *testing.T) {
 			t.Fatalf("unsafe CHAP error: %v", err)
 		}
 	}
+	// Raw arguments must never be logged, even when the argument classifier
+	// does not identify a CHAP update.
+	execCommandContext = func(ctx context.Context, _ string, _ ...string) *exec.Cmd {
+		return exec.CommandContext(ctx, "sh", "-c", "exit 15")
+	}
+	if _, err := iscsiCmd("-m", "node", "-T", "private-argument-value"); err == nil {
+		t.Fatal("expected command failure")
+	}
 	klog.Flush()
-	if strings.Contains(logs.String(), "private-chap-value") {
-		t.Fatalf("credentials in logs: %s", logs.String())
+	for _, value := range []string{"private-chap-value", "private-argument-value"} {
+		if strings.Contains(logs.String(), value) {
+			t.Fatalf("sensitive value %q in logs: %s", value, logs.String())
+		}
 	}
 }

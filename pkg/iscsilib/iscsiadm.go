@@ -45,7 +45,6 @@ func iscsiCmd(args ...string) (string, error) {
 	stdout, err := execWithTimeout("iscsiadm", args, time.Second*3)
 
 	if !hasCHAPArguments(args) {
-		klog.V(2).Infof("Run iscsiadm command: %s", strings.Join(args, " "))
 		iscsiadmDebug(string(stdout), err)
 	}
 
