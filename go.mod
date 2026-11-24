@@ -63,7 +63,6 @@ require (
 	golang.org/x/mod v0.41.0 // indirect
 	golang.org/x/oauth2 v0.36.0 // indirect
 	golang.org/x/sync v0.24.0 // indirect
-	golang.org/x/sys v0.49.0 // indirect
 	golang.org/x/term v0.47.0 // indirect
 	golang.org/x/text v0.43.0 // indirect
 	golang.org/x/time v0.7.0 // indirect
@@ -88,6 +87,7 @@ require (
 require (
 	github.com/onsi/ginkgo/v2 v2.34.0
 	github.com/onsi/gomega v1.44.0
+	golang.org/x/sys v0.49.0
 	k8s.io/api v0.32.10
 	k8s.io/apimachinery v0.32.10
 	k8s.io/client-go v0.32.10

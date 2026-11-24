@@ -44,15 +44,18 @@ func Select(value string) ([]string, error) {
 		return nil, &Error{2, "E2E_SCENARIOS must not be empty"}
 	}
 	if value == "all" {
-		return []string{"republish", "driver-restart", "target-restart", "shared-target"}, nil
+		return []string{"republish", "driver-restart", "target-restart", "shared-target", "btrfs-recovery", "removal-recovery"}, nil
 	}
-	known := map[string]string{"baseline": "", "republish": "", "driver-restart": "", "target-restart": "", "shared-target": "",
+	known := map[string]string{"baseline": "", "republish": "", "driver-restart": "", "target-restart": "", "shared-target": "", "btrfs-recovery": "", "removal-recovery": "",
 		"chap-secret-ref": "nodePublishSecretRef support is incomplete", "stats": "NodeGetVolumeStats is not implemented",
 		"raw-block": "raw block publication is not implemented", "expansion": "NodeExpandVolume is not implemented", "multipath": "distinct paths have not been validated"}
 	selected := strings.Split(value, ",")
 	for _, name := range selected {
 		if _, ok := known[name]; !ok {
 			return nil, &Error{2, "Unknown E2E_SCENARIOS entry: " + name}
+		}
+		if (name == "btrfs-recovery" || name == "removal-recovery") && len(selected) != 1 {
+			return nil, &Error{2, name + " must run alone because it requires a fresh second LUN"}
 		}
 	}
 	for _, name := range selected {
@@ -116,8 +119,11 @@ func FromEnvironment(lookup func(string) (string, bool), repoRoot string) (Runti
 		}
 	}
 	for _, name := range result.Scenarios {
-		if name == "shared-target" {
+		if name == "shared-target" || name == "btrfs-recovery" || name == "removal-recovery" {
 			cfg.LUNCount = 2
+		}
+		if name == "btrfs-recovery" || name == "removal-recovery" {
+			cfg.Recovery = true
 		}
 	}
 	if err := cfg.Validate(); err != nil {

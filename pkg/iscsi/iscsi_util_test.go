@@ -17,14 +17,25 @@ limitations under the License.
 package iscsi
 
 import (
+	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"reflect"
+	"runtime"
+	"strings"
 	"testing"
 
 	iscsiLib "github.com/kubernetes-csi/csi-driver-iscsi/pkg/iscsilib"
 	"k8s.io/utils/mount"
 )
+
+func skipWindows(t *testing.T) {
+	t.Helper()
+	if runtime.GOOS == "windows" {
+		t.Skip("test requires Unix executables or symbolic links")
+	}
+}
 
 func TestDeviceMounted(t *testing.T) {
 	mounter := mount.NewFakeMounter([]mount.MountPoint{{Device: "/dev/sda", Path: "/other"}})
@@ -36,6 +47,416 @@ func TestDeviceMounted(t *testing.T) {
 		if err != nil || got != test.want {
 			t.Fatalf("deviceMounted(%q) = %v, %v; want %v", test.device, got, err, test.want)
 		}
+	}
+}
+
+func TestDeviceMountedWithSymlinkAliases(t *testing.T) {
+	skipWindows(t)
+	dir := t.TempDir()
+	device := filepath.Join(dir, "device")
+	if err := os.WriteFile(device, nil, 0600); err != nil {
+		t.Fatal(err)
+	}
+	first, second := filepath.Join(dir, "first"), filepath.Join(dir, "second")
+	for _, link := range []string{first, second} {
+		if err := os.Symlink(device, link); err != nil {
+			t.Fatal(err)
+		}
+	}
+	mounter := mount.NewFakeMounter([]mount.MountPoint{{Device: second, Path: "/other"}})
+	if inUse, err := deviceMounted(mounter, first); err != nil || !inUse {
+		t.Fatalf("deviceMounted with aliases = %v, %v", inUse, err)
+	}
+}
+
+func TestDetachDiskRetriesLogout(t *testing.T) {
+	skipWindows(t)
+	dir := t.TempDir()
+	infoPath := filepath.Join(dir, "iscsi-volume.json")
+	connector := &iscsiLib.Connector{TargetIqn: "iqn.test:target", TargetPortals: []string{"127.0.0.1:3260"}, DevicesDetached: true}
+	if err := persistDetachedConnector(infoPath, connector); err != nil {
+		t.Fatal(err)
+	}
+	fail := filepath.Join(dir, "fail")
+	if err := os.WriteFile(fail, nil, 0600); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	t.Setenv("ISCSI_TEST_FAIL", fail)
+	script := `#!/bin/sh
+if [ "$2" = session ]; then
+  if [ -e "$ISCSI_TEST_FAIL" ]; then echo 'tcp: [1] 127.0.0.1:3260,1 iqn.test:target'; exit 0; fi
+  exit 21
+fi
+if [ "$7" = -u ]; then
+  if [ -e "$ISCSI_TEST_FAIL" ]; then exit 1; fi
+  exit 21
+fi
+exit 0
+`
+	if err := os.WriteFile(filepath.Join(dir, "iscsiadm"), []byte(script), 0755); err != nil {
+		t.Fatal(err)
+	}
+	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
+	target := filepath.Join(dir, "missing-mount")
+	if err := detachDisk(c, target, infoPath); err == nil {
+		t.Fatal("logout failure was ignored")
+	}
+	if _, err := os.Stat(infoPath); err != nil {
+		t.Fatalf("connection record was lost: %v", err)
+	}
+	if err := os.Remove(fail); err != nil {
+		t.Fatal(err)
+	}
+	if err := detachDisk(c, target, infoPath); err != nil {
+		t.Fatalf("retry after logout completed: %v", err)
+	}
+	if _, err := os.Stat(infoPath); !os.IsNotExist(err) {
+		t.Fatalf("connection record remains after cleanup: %v", err)
+	}
+}
+
+func TestDetachDiskRejectsAmbiguousPartialCleanup(t *testing.T) {
+	dir := t.TempDir()
+	infoPath := filepath.Join(dir, "iscsi-volume.json")
+	connector := iscsiLib.Connector{TargetIqn: "iqn.test:target", TargetPortals: []string{"127.0.0.1:3260"}}
+	data, err := json.Marshal(connector)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(infoPath, data, 0600); err != nil {
+		t.Fatal(err)
+	}
+	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
+	if err := detachDisk(c, filepath.Join(dir, "missing"), infoPath); err == nil || !strings.Contains(err.Error(), "cannot safely resume") {
+		t.Fatalf("expected a safe cleanup error, got %v", err)
+	}
+	if _, err := os.Stat(infoPath); err != nil {
+		t.Fatalf("connection record was lost: %v", err)
+	}
+}
+
+func TestRecoveryTargetPath(t *testing.T) {
+	skipWindows(t)
+	for _, tc := range []struct {
+		name        string
+		change      func(*testing.T, *iscsiLib.Connector, string, string)
+		wantError   bool
+		wantMissing bool
+	}{
+		{name: "matching target"},
+		{name: "other target with same WWID", wantMissing: true, change: func(t *testing.T, c *iscsiLib.Connector, _, _ string) { c.TargetIqn = "iqn.test:other" }},
+		{name: "wrong LUN", wantMissing: true, change: func(t *testing.T, c *iscsiLib.Connector, _, _ string) { c.Lun = 2 }},
+		{name: "ambiguous devices", wantError: true, change: func(t *testing.T, _ *iscsiLib.Connector, dir, link string) {
+			other := filepath.Join(dir, "other")
+			if err := os.WriteFile(other, nil, 0600); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.Symlink(other, filepath.Join(filepath.Dir(link), "pci-0000:00:01.0-"+filepath.Base(link))); err != nil {
+				t.Fatal(err)
+			}
+		}},
+		{name: "PCI path", change: func(t *testing.T, _ *iscsiLib.Connector, _, link string) {
+			if err := os.Rename(link, filepath.Join(filepath.Dir(link), "pci-0000:00:01.0-"+filepath.Base(link))); err != nil {
+				t.Fatal(err)
+			}
+		}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			dir := t.TempDir()
+			device := filepath.Join(dir, "device")
+			if err := os.WriteFile(device, nil, 0600); err != nil {
+				t.Fatal(err)
+			}
+			info, err := os.Stat(device)
+			if err != nil {
+				t.Fatal(err)
+			}
+			byPath := filepath.Join(dir, "by-path")
+			if err := os.Mkdir(byPath, 0755); err != nil {
+				t.Fatal(err)
+			}
+			link := filepath.Join(byPath, "ip-192.0.2.1:3260-iscsi-iqn.test:target-lun-1")
+			if err := os.Symlink(device, link); err != nil {
+				t.Fatal(err)
+			}
+			connector := &iscsiLib.Connector{TargetIqn: "iqn.test:target", TargetPortals: []string{"192.0.2.1:3260"}, Lun: 1, MountTargetDevice: &iscsiLib.Device{Name: "old-device"}}
+			if tc.change != nil {
+				tc.change(t, connector, dir, link)
+			}
+			path, err := recoveryTargetPath(connector, byPath)
+			if (err != nil) != tc.wantError {
+				t.Fatalf("recoveryTargetPath() = %q, %v; want error %v", path, err, tc.wantError)
+			}
+			if err == nil && tc.wantMissing {
+				if path != "" {
+					t.Fatalf("unexpected recovery target: %s", path)
+				}
+			} else if err == nil {
+				resolved, err := os.Stat(path)
+				if err != nil || !os.SameFile(info, resolved) {
+					t.Fatalf("recovery path does not identify current device: %v", err)
+				}
+			}
+		})
+	}
+}
+
+func TestRecoverDeviceRemovalProgress(t *testing.T) {
+	skipWindows(t)
+	bin := t.TempDir()
+	if err := os.WriteFile(filepath.Join(bin, "lsblk"), []byte("#!/bin/sh\necho 'null null  2:0:0:1 disk iscsi 1G'\n"), 0755); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", bin+string(os.PathListSeparator)+os.Getenv("PATH"))
+	for _, tc := range []struct {
+		name      string
+		change    func(*iscsiLib.Connector, string, string) error
+		wantError bool
+	}{
+		{name: "removed device"},
+		{name: "removal not started", wantError: true, change: func(c *iscsiLib.Connector, _, _ string) error { c.DevicesDetaching = false; return nil }},
+		{name: "missing WWID", wantError: true, change: func(c *iscsiLib.Connector, _, _ string) error { c.DeviceWWID = ""; return nil }},
+		{name: "multipath", wantError: true, change: func(c *iscsiLib.Connector, _, _ string) error { c.MountTargetDevice.Type = "mpath"; return nil }},
+		{name: "invalid address", wantError: true, change: func(c *iscsiLib.Connector, _, _ string) error { c.MountTargetDevice.Hctl = ""; return nil }},
+		{name: "wrong LUN", wantError: true, change: func(c *iscsiLib.Connector, _, _ string) error { c.Lun = 2; return nil }},
+		{name: "unavailable sysfs", wantError: true, change: func(_ *iscsiLib.Connector, _, sysfs string) error { return os.Remove(sysfs) }},
+		{name: "device still exists", wantError: true, change: func(c *iscsiLib.Connector, _, sysfs string) error {
+			return os.Mkdir(filepath.Join(sysfs, c.MountTargetDevice.Hctl), 0700)
+		}},
+		{name: "by-path directory gone", change: func(_ *iscsiLib.Connector, byPath, _ string) error { return os.Remove(byPath) }},
+		{name: "dangling by-path link", change: func(_ *iscsiLib.Connector, byPath, _ string) error {
+			return os.Symlink(filepath.Join(byPath, "missing-device"), filepath.Join(byPath, "ip-192.0.2.1:3260-iscsi-iqn.test:target-lun-1"))
+		}},
+		{name: "invalid by-path entry", wantError: true, change: func(_ *iscsiLib.Connector, byPath, _ string) error {
+			return os.WriteFile(filepath.Join(byPath, "ip-192.0.2.1:3260-iscsi-iqn.test:target-lun-1"), nil, 0600)
+		}},
+		{name: "live path still requires device validation", wantError: true, change: func(_ *iscsiLib.Connector, byPath, _ string) error {
+			return os.Symlink("/dev/null", filepath.Join(byPath, "ip-192.0.2.1:3260-iscsi-iqn.test:target-lun-1"))
+		}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			device := iscsiLib.Device{Name: "old-device", Hctl: "2:0:0:1", Type: "disk", Transport: "iscsi"}
+			connector := &iscsiLib.Connector{
+				TargetIqn: "iqn.test:target", TargetPortals: []string{"192.0.2.1:3260"}, Lun: 1,
+				DeviceWWID: "naa.123", MountTargetDevice: &device, Devices: []iscsiLib.Device{device}, DevicesDetaching: true,
+			}
+			byPath, sysfs := t.TempDir(), t.TempDir()
+			if tc.change != nil {
+				if err := tc.change(connector, byPath, sysfs); err != nil {
+					t.Fatal(err)
+				}
+			}
+			inUse, err := recoverDevice(connector, byPath, sysfs)
+			if inUse || (err != nil) != tc.wantError || connector.DevicesDetached != !tc.wantError {
+				t.Fatalf("recoverDevice() = %v, %v, detached=%v; want error=%v", inUse, err, connector.DevicesDetached, tc.wantError)
+			}
+		})
+	}
+}
+
+func TestDetachDiskPersistsBeforeRemoval(t *testing.T) {
+	skipWindows(t)
+	for _, failPersistence := range []bool{false, true} {
+		t.Run(fmt.Sprintf("persistence failure=%v", failPersistence), func(t *testing.T) {
+			dir := t.TempDir()
+			infoPath, snapshot, target := filepath.Join(dir, "iscsi-volume.json"), filepath.Join(dir, "snapshot"), filepath.Join(dir, "target")
+			device := iscsiLib.Device{Name: "null", Type: "disk", Transport: "iscsi"}
+			connector := &iscsiLib.Connector{TargetIqn: "iqn.test:target", TargetPortals: []string{"192.0.2.1:3260"}, MountTargetDevice: &device, Devices: []iscsiLib.Device{device}}
+			if err := connector.Persist(infoPath); err != nil {
+				t.Fatal(err)
+			}
+			t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+			t.Setenv("ISCSI_TEST_RECORD", infoPath)
+			t.Setenv("ISCSI_TEST_SNAPSHOT", snapshot)
+			for name, script := range map[string]string{
+				"lsblk":    "#!/bin/sh\necho 'null null  0:0:0:1 disk iscsi 1G'\n",
+				"blockdev": "#!/bin/sh\ncat \"$ISCSI_TEST_RECORD\" > \"$ISCSI_TEST_SNAPSHOT\"\nexit 1\n",
+			} {
+				if err := os.WriteFile(filepath.Join(dir, name), []byte(script), 0755); err != nil {
+					t.Fatal(err)
+				}
+			}
+			mounter := mount.NewFakeMounter([]mount.MountPoint{{Device: "/dev/null", Path: target}})
+			if failPersistence {
+				mounter.UnmountFunc = func(string) error {
+					if err := os.Rename(infoPath, infoPath+".saved"); err != nil {
+						return err
+					}
+					return os.Mkdir(infoPath, 0700)
+				}
+			}
+			c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mounter}
+			if err := detachDisk(c, target, infoPath); err == nil {
+				t.Fatal("injected failure was ignored")
+			}
+			data, err := os.ReadFile(snapshot)
+			if failPersistence {
+				if !os.IsNotExist(err) {
+					t.Fatalf("removal ran despite failed persistence: %v", err)
+				}
+				return
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			var saved iscsiLib.Connector
+			if err := json.Unmarshal(data, &saved); err != nil {
+				t.Fatal(err)
+			}
+			if !saved.DevicesDetaching || saved.DevicesDetached {
+				t.Fatalf("removal started without saved progress: %+v", saved)
+			}
+		})
+	}
+}
+
+func TestDetachDiskRejectsMissingRecoveryTarget(t *testing.T) {
+	dir := t.TempDir()
+	infoPath := filepath.Join(dir, "iscsi-volume.json")
+	device := iscsiLib.Device{Name: "old-device", Type: "disk", Transport: "iscsi"}
+	connector := &iscsiLib.Connector{
+		TargetIqn: "iqn.test:" + filepath.Base(dir), TargetPortals: []string{"192.0.2.1:3260"}, Lun: 1,
+		DeviceWWID: "naa.123", MountTargetDevice: &device, Devices: []iscsiLib.Device{device},
+	}
+	if err := connector.Persist(infoPath); err != nil {
+		t.Fatal(err)
+	}
+	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
+	if err := detachDisk(c, filepath.Join(dir, "missing"), infoPath); err == nil {
+		t.Fatal("missing target path was accepted")
+	}
+	if _, err := os.Stat(infoPath); err != nil {
+		t.Fatalf("connection record was lost: %v", err)
+	}
+}
+
+func TestVerifyRecoveryWWID(t *testing.T) {
+	skipWindows(t)
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "scsi_id"), []byte("#!/bin/sh\nif [ \"$SCSI_TEST_OUTPUT\" = fail ]; then exit 1; fi\nprintf '%s' \"$SCSI_TEST_OUTPUT\"\n"), 0755); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	connector := &iscsiLib.Connector{DeviceWWID: "naa.123", MountTargetDevice: &iscsiLib.Device{Name: "test", Type: "disk"}}
+	for _, tc := range []struct {
+		name, output string
+		wantError    bool
+	}{{"same", "naa.123\n", false}, {"changed", "naa.456\n", true}, {"empty", "", true}, {"command failure", "fail", true}} {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Setenv("SCSI_TEST_OUTPUT", tc.output)
+			err := verifyRecoveryWWID(connector)
+			if (err != nil) != tc.wantError {
+				t.Fatalf("verifyRecoveryWWID() = %v; want error %v", err, tc.wantError)
+			}
+		})
+	}
+}
+
+func TestRecordDeviceWWID(t *testing.T) {
+	skipWindows(t)
+	dir := t.TempDir()
+	script := "#!/bin/sh\nif [ \"$SCSI_TEST_OUTPUT\" = fail ]; then exit 1; fi\nprintf '%s' \"$SCSI_TEST_OUTPUT\"\n"
+	if err := os.WriteFile(filepath.Join(dir, "scsi_id"), []byte(script), 0755); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	for _, tc := range []struct {
+		name, output, deviceType, want string
+	}{{"available", "naa.123\n", "disk", "naa.123"}, {"unavailable", "fail", "disk", ""}, {"multipath", "naa.123", "mpath", ""}} {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Setenv("SCSI_TEST_OUTPUT", tc.output)
+			device := iscsiLib.Device{Name: "test", Type: tc.deviceType}
+			connector := &iscsiLib.Connector{DeviceWWID: "stale", MountTargetDevice: &device, Devices: []iscsiLib.Device{device}}
+			recordDeviceWWID(connector)
+			path := filepath.Join(t.TempDir(), "connector.json")
+			if err := connector.Persist(path); err != nil {
+				t.Fatal(err)
+			}
+			data, err := os.ReadFile(path)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var saved iscsiLib.Connector
+			if err := json.Unmarshal(data, &saved); err != nil || saved.DeviceWWID != tc.want {
+				t.Fatalf("saved WWID = %q, %v; want %q", saved.DeviceWWID, err, tc.want)
+			}
+		})
+	}
+}
+
+func TestDetachDiskPreservesSharedPortal(t *testing.T) {
+	skipWindows(t)
+	dir := t.TempDir()
+	infoPath := filepath.Join(dir, "iscsi-volume.json")
+	connector := &iscsiLib.Connector{TargetIqn: "iqn.test:target", TargetPortals: []string{"one:3260", "two:3260"}, DevicesDetached: true}
+	if err := persistDetachedConnector(infoPath, connector); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "iscsi-other.json"), []byte(`{"target_iqn":"iqn.test:target","target_portal":["two:3260"]}`), 0600); err != nil {
+		t.Fatal(err)
+	}
+	log := filepath.Join(dir, "commands")
+	t.Setenv("ISCSI_TEST_LOG", log)
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	if err := os.WriteFile(filepath.Join(dir, "iscsiadm"), []byte("#!/bin/sh\nprintf '%s\\n' \"$*\" >> \"$ISCSI_TEST_LOG\"\n"), 0755); err != nil {
+		t.Fatal(err)
+	}
+	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
+	if err := detachDisk(c, filepath.Join(dir, "missing"), infoPath); err != nil {
+		t.Fatal(err)
+	}
+	commands, err := os.ReadFile(log)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := string(commands); !strings.Contains(got, "-p one:3260 -u") || strings.Contains(got, "two:3260") || strings.Contains(got, "-o delete") {
+		t.Fatalf("unexpected commands: %s", got)
+	}
+}
+
+func TestDetachDiskResumesPortalLogouts(t *testing.T) {
+	skipWindows(t)
+	dir := t.TempDir()
+	infoPath := filepath.Join(dir, "iscsi-volume.json")
+	connector := &iscsiLib.Connector{TargetIqn: "iqn.test:target", TargetPortals: []string{"127.0.0.1:3260", "127.0.0.2:3260"}, DevicesDetached: true}
+	if err := persistDetachedConnector(infoPath, connector); err != nil {
+		t.Fatal(err)
+	}
+	log, fail := filepath.Join(dir, "commands"), filepath.Join(dir, "fail")
+	if err := os.WriteFile(fail, nil, 0600); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("ISCSI_TEST_LOG", log)
+	t.Setenv("ISCSI_TEST_FAIL", fail)
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	script := `#!/bin/sh
+printf '%s\n' "$*" >> "$ISCSI_TEST_LOG"
+if [ "$2" = session ]; then echo 'tcp: [1] 127.0.0.2:3260,1 iqn.test:target'; exit 0; fi
+if [ "$6" = 127.0.0.1:3260 ] && [ ! -e "$ISCSI_TEST_FAIL" ]; then exit 21; fi
+if [ "$6" = 127.0.0.2:3260 ] && [ -e "$ISCSI_TEST_FAIL" ]; then exit 1; fi
+exit 0
+`
+	if err := os.WriteFile(filepath.Join(dir, "iscsiadm"), []byte(script), 0755); err != nil {
+		t.Fatal(err)
+	}
+	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
+	target := filepath.Join(dir, "missing")
+	if err := detachDisk(c, target, infoPath); err == nil {
+		t.Fatal("failed portal logout was ignored")
+	}
+	if err := os.Remove(fail); err != nil {
+		t.Fatal(err)
+	}
+	if err := detachDisk(c, target, infoPath); err != nil {
+		t.Fatalf("retry failed: %v", err)
+	}
+	commands, err := os.ReadFile(log)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := string(commands); strings.Count(got, "-p 127.0.0.1:3260 -u") != 2 || strings.Count(got, "-p 127.0.0.2:3260 -u") != 2 {
+		t.Fatalf("unexpected logout attempts: %s", got)
 	}
 }
 

@@ -17,7 +17,10 @@ limitations under the License.
 package iscsilib
 
 import (
+	"errors"
 	"fmt"
+	"net"
+	"os/exec"
 	"strings"
 	"time"
 
@@ -187,7 +190,45 @@ func Logout(tgtIQN, portal string) error {
 	klog.V(2).Infof("Begin Logout...")
 	args := []string{"-m", "node", "-T", tgtIQN, "-p", portal, "-u"}
 	_, err := iscsiCmd(args...)
-	return err
+	var exitErr *exec.ExitError
+	if errors.As(err, &exitErr) && exitErr.ExitCode() == 21 {
+		output, sessionErr := GetSessions()
+		var sessionExit *exec.ExitError
+		if errors.As(sessionErr, &sessionExit) && sessionExit.ExitCode() == 21 {
+			return nil
+		}
+		if sessionErr != nil {
+			return fmt.Errorf("logout from %s failed: %v; checking sessions: %w", portal, err, sessionErr)
+		}
+		if strings.TrimSpace(output) == "" {
+			return fmt.Errorf("logout from %s: empty session listing", portal)
+		}
+		for _, line := range strings.Split(strings.TrimSpace(output), "\n") {
+			fields := strings.Fields(line)
+			if len(fields) < 4 || !strings.Contains(fields[2], ",") {
+				return fmt.Errorf("logout from %s: invalid session listing", portal)
+			}
+			if fields[3] == tgtIQN {
+				host, port, splitErr := net.SplitHostPort(portal)
+				if splitErr != nil {
+					host = portal
+				}
+				sessionPortal, _, _ := strings.Cut(fields[2], ",")
+				sessionHost, sessionPort, sessionErr := net.SplitHostPort(sessionPortal)
+				ip, sessionIP := net.ParseIP(host), net.ParseIP(sessionHost)
+				if sessionErr == nil && ip != nil && sessionIP != nil && (!ip.Equal(sessionIP) || (port != "" && port != sessionPort)) {
+					continue
+				}
+				return fmt.Errorf("logout from %s returned no matching session, but target %s still has a session", portal, tgtIQN)
+			}
+		}
+		klog.Infof("No matching iSCSI session for %s at %s", tgtIQN, portal)
+		return nil
+	}
+	if err != nil {
+		return fmt.Errorf("logout from %s failed: %w", portal, err)
+	}
+	return nil
 }
 
 // DeleteDBEntry deletes the iscsi db entry for the specified target
@@ -195,6 +236,10 @@ func DeleteDBEntry(tgtIQN string) error {
 	klog.V(2).Infof("Begin DeleteDBEntry...")
 	args := []string{"-m", "node", "-T", tgtIQN, "-o", "delete"}
 	_, err := iscsiCmd(args...)
+	var exitErr *exec.ExitError
+	if errors.As(err, &exitErr) && exitErr.ExitCode() == 21 {
+		return nil
+	}
 	return err
 }
 

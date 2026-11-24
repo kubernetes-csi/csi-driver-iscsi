@@ -19,10 +19,12 @@ limitations under the License.
 package e2e
 
 import (
+	"bytes"
 	"errors"
 	"flag"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -70,6 +72,35 @@ func TestMain(m *testing.M) {
 	if *kubeconfig != "" {
 		settings.Kubeconfig = *kubeconfig
 	}
+	selection, present := os.LookupEnv("E2E_SCENARIOS")
+	if !present || selection == "all" {
+		var shared, isolated []string
+		for _, scenario := range settings.Scenarios {
+			if scenario == "btrfs-recovery" || scenario == "removal-recovery" {
+				isolated = append(isolated, scenario)
+			} else {
+				shared = append(shared, scenario)
+			}
+		}
+		groups := append([]string{strings.Join(shared, ",")}, isolated...)
+		for _, group := range groups {
+			fmt.Println("Running e2e scenarios:", group)
+			cmd := exec.Command(os.Args[0], os.Args[1:]...)
+			cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
+			for _, entry := range os.Environ() {
+				if !strings.HasPrefix(entry, "E2E_SCENARIOS=") {
+					cmd.Env = append(cmd.Env, entry)
+				}
+			}
+			cmd.Env = append(cmd.Env, "E2E_SCENARIOS="+group)
+			if err := cmd.Run(); err != nil {
+				fmt.Fprintln(os.Stderr, "e2e scenario group failed:", group, err)
+				os.Exit(1)
+			}
+		}
+		os.Exit(0)
+	}
+	registerScenarios()
 	os.Exit(m.Run())
 }
 
@@ -95,14 +126,33 @@ func TestDiagnostics(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	collectDiagnostics("test-ns", "kind-test", "/tmp/test-kubeconfig")
+	var diagnostics bytes.Buffer
+	collectDiagnostics(&diagnostics, "test-ns", "kind-test", "/tmp/test-kubeconfig")
+	if count := strings.Count(diagnostics.String(), "Diagnostics failed: exit status 1"); count != 5 {
+		t.Errorf("expected five reported kubectl failures, got %d: %s", count, diagnostics.String())
+	}
 	output, err := os.ReadFile(log)
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{"--context kind-test", "--kubeconfig /tmp/test-kubeconfig", "-n test-ns describe pods", "get events", "-n kube-system logs", "kind get nodes --name test", "docker exec kind-control-plane journalctl -u kubelet"} {
+	for _, want := range []string{"--context kind-test", "--kubeconfig /tmp/test-kubeconfig", "-n test-ns describe pods", "get events", "-n kube-system logs", "exec daemonset/csi-iscsi-node -c iscsi -- sh -c", "/proc/[0-9]*", "docker logs --tail 200 test-iscsid", "kind get nodes --name test", "docker exec kind-control-plane journalctl -u kubelet", "docker exec kind-control-plane ps -eo pid,ppid,stat,wchan:24,comm", "docker exec kind-control-plane ls -l /sys/class/iscsi_session"} {
 		if !strings.Contains(string(output), want) {
 			t.Errorf("missing diagnostic command %q in %s", want, output)
 		}
+	}
+	if err := os.WriteFile(log, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	diagnostics.Reset()
+	collectDiagnostics(&diagnostics, "test-ns", "other-cluster", "")
+	if count := strings.Count(diagnostics.String(), "Diagnostics failed: exit status 1"); count != 5 {
+		t.Errorf("expected five reported kubectl failures, got %d: %s", count, diagnostics.String())
+	}
+	output, err = os.ReadFile(log)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(string(output), "docker ") || strings.Contains(string(output), "kind ") {
+		t.Errorf("ran kind diagnostics for another cluster: %s", output)
 	}
 }

@@ -18,7 +18,9 @@ FROM golang:1.26.10 AS build
 WORKDIR /src
 COPY go.mod go.sum ./
 COPY vendor/ vendor/
+COPY pkg/iscsilib/ pkg/iscsilib/
 COPY test/e2e/probe/ test/e2e/probe/
+COPY test/e2e/recovery/ test/e2e/recovery/
 COPY test/e2e/workload/ test/e2e/workload/
 COPY test/e2e/cmd/e2e-tools/ test/e2e/cmd/e2e-tools/
 ARG TARGETARCH
