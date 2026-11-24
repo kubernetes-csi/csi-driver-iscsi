@@ -135,7 +135,7 @@ func TestDiagnostics(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{"--context kind-test", "--kubeconfig /tmp/test-kubeconfig", "-n test-ns describe pods", "get events", "-n kube-system logs", "exec daemonset/csi-iscsi-node -c iscsi -- sh -c", "/proc/[0-9]*", "docker logs --tail 200 test-iscsid", "kind get nodes --name test", "docker exec kind-control-plane journalctl -u kubelet", "docker exec kind-control-plane ps -eo pid,ppid,stat,wchan:24,comm", "docker exec kind-control-plane ls -l /sys/class/iscsi_session"} {
+	for _, want := range []string{"--context kind-test", "--kubeconfig /tmp/test-kubeconfig", "-n test-ns describe pods", "get events", "-n kube-system logs", "exec daemonset/csi-iscsi-node -c iscsi -- sh -c", "/proc/[0-9]*", "docker logs --timestamps --tail 200 test-iscsid", "kind get nodes --name test", "docker exec kind-control-plane journalctl -u kubelet", "docker exec kind-control-plane ps -eo pid,ppid,stat,wchan:24,comm", "docker exec kind-control-plane ls -l /sys/class/iscsi_session", "docker exec kind-control-plane iscsiadm -m session", "--timestamps=true", "/device/state", "docker exec kind-control-plane lsblk", "journalctl -k -n 200 --no-pager -o short-iso-precise"} {
 		if !strings.Contains(string(output), want) {
 			t.Errorf("missing diagnostic command %q in %s", want, output)
 		}

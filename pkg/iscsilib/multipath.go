@@ -17,6 +17,7 @@ limitations under the License.
 package iscsilib
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -30,36 +31,45 @@ import (
 
 // ExecWithTimeout execute a command with a timeout and returns an error if timeout is exceeded
 func ExecWithTimeout(command string, args []string, timeout time.Duration) ([]byte, error) {
-	klog.V(2).Infof("Executing command '%v' with args: '%v'.\n", command, args)
-
-	// Create a new context and add a timeout to it
+	// CHAP updates may echo their values on either stream. Do not log their
+	// arguments or expose their output in errors returned to higher-level logs.
+	sensitive := hasCHAPArguments(args)
+	klog.V(2).Infof("Executing command %q", command)
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
-
-	// Create command with context
 	cmd := execCommandContext(ctx, command, args...)
-
-	// This time we can simply use Output() to get the result.
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
 	out, err := cmd.Output()
-
-	// We want to check the context error to see if the timeout was executed.
-	// The error returned by cmd.Output() will be OS specific based on what
-	// happens when a process is killed.
-	if errors.Is(ctx.Err(), context.DeadlineExceeded) {
-		klog.V(2).Infof("Command '%s' timeout reached.\n", command)
-		return nil, ctx.Err()
+	if sensitive {
+		out = nil
+		stderr.Reset()
 	}
+	// Keep stderr available to callers inspecting the original typed exit error.
+	var exitErr *exec.ExitError
+	if !sensitive && errors.As(err, &exitErr) {
+		exitErr.Stderr = bytes.Clone(stderr.Bytes())
+	}
+	// Preserve context identity even when CommandContext reports a killed process.
+	if ctx.Err() != nil {
+		err = ctx.Err()
+	}
+	if err != nil && strings.TrimSpace(stderr.String()) != "" {
+		err = fmt.Errorf("%w: %s", err, strings.TrimSpace(stderr.String()))
+	}
+	klog.V(2).Infof("Finished executing command %q", command)
+	return out, err
+}
 
-	if err != nil {
-		var ee *exec.ExitError
-		if ok := errors.Is(err, ee); ok {
-			klog.V(2).Infof("Non-zero exit code: %s\n", err)
-			err = fmt.Errorf("%s", ee.Stderr)
+// hasCHAPArguments deliberately suppresses the entire update's output rather
+// than trying to redact individual values which iscsiadm may quote or escape.
+func hasCHAPArguments(args []string) bool {
+	for _, arg := range args {
+		if strings.Contains(arg, ".auth.") {
+			return true
 		}
 	}
-
-	klog.V(2).Infof("Finished executing command.")
-	return out, err
+	return false
 }
 
 // FlushMultipathDevice flushes a multipath device dm-x with command multipath -f /dev/dm-x
