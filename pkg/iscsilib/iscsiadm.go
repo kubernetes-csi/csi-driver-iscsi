@@ -269,7 +269,9 @@ func (timeouts CommandTimeouts) LogoutTarget(tgtIQN, portal string) error {
 				sessionPortal, _, _ := strings.Cut(fields[2], ",")
 				sessionHost, sessionPort, sessionErr := net.SplitHostPort(sessionPortal)
 				ip, sessionIP := net.ParseIP(host), net.ParseIP(sessionHost)
-				if sessionErr == nil && ip != nil && sessionIP != nil && (!ip.Equal(sessionIP) || (port != "" && port != sessionPort)) {
+				// An explicit port mismatch rules out this session even when a
+				// hostname cannot be compared to the numeric session address.
+				if sessionErr == nil && ((port != "" && port != sessionPort) || (ip != nil && sessionIP != nil && !ip.Equal(sessionIP))) {
 					continue
 				}
 				return fmt.Errorf("logout from %s returned no matching session, but target %s still has a session", portal, tgtIQN)
