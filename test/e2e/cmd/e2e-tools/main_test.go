@@ -116,7 +116,7 @@ var _ = Describe("Go tools command interface", func() {
 		_, err := peer.Write([]byte("closed"))
 		Expect(err).To(HaveOccurred())
 	})
-	It("installs the helper without overwriting an existing executable", func() {
+	It("installs the helper and accepts an identical executable on retry", func() {
 		dir := GinkgoT().TempDir()
 		source, target := filepath.Join(dir, "source"), filepath.Join(dir, "target")
 		Expect(os.WriteFile(source, []byte("helper"), 0600)).To(Succeed())
@@ -127,7 +127,10 @@ var _ = Describe("Go tools command interface", func() {
 		info, err := os.Stat(target)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(info.Mode().Perm() & 0111).NotTo(BeZero())
-		Expect(install(source, target)).NotTo(Succeed())
+		Expect(install(source, target)).To(Succeed())
+		after, err := os.Stat(target)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(os.SameFile(info, after)).To(BeTrue())
 	})
 	It("requires recovery identity and a positive deadline", func() {
 		for _, args := range [][]string{
@@ -142,3 +145,107 @@ var _ = Describe("Go tools command interface", func() {
 		}
 	})
 })
+
+func TestInstallRejectsExistingTargets(t *testing.T) {
+	for _, kind := range []string{"different", "partial", "non-executable", "symlink", "dangling-symlink", "directory"} {
+		t.Run(kind, func(t *testing.T) {
+			dir := t.TempDir()
+			source, target := filepath.Join(dir, "source"), filepath.Join(dir, "target")
+			if err := os.WriteFile(source, []byte("helper"), 0755); err != nil {
+				t.Fatal(err)
+			}
+			var err error
+			switch kind {
+			case "different":
+				err = os.WriteFile(target, []byte("another helper"), 0755)
+			case "partial":
+				err = os.WriteFile(target, []byte("hel"), 0755)
+			case "non-executable":
+				err = os.WriteFile(target, []byte("helper"), 0644)
+			case "symlink":
+				err = os.Symlink(source, target)
+			case "dangling-symlink":
+				err = os.Symlink(filepath.Join(dir, "missing"), target)
+			case "directory":
+				err = os.Mkdir(target, 0755)
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			before, err := os.Lstat(target)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err := install(source, target); err == nil {
+				t.Fatal("accepted an unsafe existing target")
+			}
+			after, err := os.Lstat(target)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !os.SameFile(before, after) || before.Mode() != after.Mode() || before.Size() != after.Size() {
+				t.Fatal("existing target was modified")
+			}
+			data, err := os.ReadFile(source)
+			if err != nil || string(data) != "helper" {
+				t.Fatalf("source modified: %q, %v", data, err)
+			}
+			entries, err := os.ReadDir(dir)
+			if err != nil || len(entries) != 2 {
+				t.Fatalf("temporary installation files leaked: %v, %v", entries, err)
+			}
+		})
+	}
+}
+
+func TestInstallCopyFailureCanRetry(t *testing.T) {
+	dir := t.TempDir()
+	target := filepath.Join(dir, "target")
+	// Reading a directory fails after opening it, exercising the copy error path.
+	if err := install(dir, target); err == nil {
+		t.Fatal("directory source unexpectedly installed")
+	}
+	if _, err := os.Lstat(target); !os.IsNotExist(err) {
+		t.Fatalf("failed copy published a target: %v", err)
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil || len(entries) != 0 {
+		t.Fatalf("failed copy leaked temporary files: %v, %v", entries, err)
+	}
+	source := filepath.Join(dir, "source")
+	if err := os.WriteFile(source, []byte("helper"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	// A killed installer can leave its private staging file, never the target.
+	if err := os.WriteFile(filepath.Join(dir, ".e2e-tools-interrupted"), []byte("hel"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if err := install(source, target); err != nil {
+		t.Fatalf("retry failed: %v", err)
+	}
+}
+
+func TestInstallConcurrentRetries(t *testing.T) {
+	dir := t.TempDir()
+	source, target := filepath.Join(dir, "source"), filepath.Join(dir, "target")
+	if err := os.WriteFile(source, []byte("helper"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	results := make(chan error, 8)
+	for range 8 {
+		go func() { results <- install(source, target) }()
+	}
+	for range 8 {
+		if err := <-results; err != nil {
+			t.Errorf("concurrent install: %v", err)
+		}
+	}
+	data, err := os.ReadFile(target)
+	if err != nil || string(data) != "helper" {
+		t.Fatalf("installed bytes = %q, %v", data, err)
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil || len(entries) != 2 {
+		t.Fatalf("temporary installation files leaked: %v, %v", entries, err)
+	}
+}

@@ -17,7 +17,9 @@ limitations under the License.
 package main
 
 import (
+	"bytes"
 	"context"
+	"crypto/sha256"
 	"errors"
 	"flag"
 	"fmt"
@@ -167,17 +169,69 @@ func run(args []string, stdout, stderr io.Writer) int {
 	return 0
 }
 
+// install publishes a complete executable without replacing any existing target.
+// The destination directory is the init container's private, shared emptyDir.
 func install(source, target string) (result error) {
 	input, err := os.Open(source)
 	if err != nil {
 		return err
 	}
 	defer input.Close()
-	output, err := os.OpenFile(target, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0755)
+	// Stage on the same filesystem. A killed copy can leave only a private
+	// temporary file, so the next init-container attempt can still install.
+	output, err := os.CreateTemp(filepath.Dir(target), ".e2e-tools-*")
 	if err != nil {
 		return err
 	}
-	defer func() { result = errors.Join(result, output.Close()) }()
-	_, err = io.Copy(output, input)
-	return err
+	defer func() { result = errors.Join(result, os.Remove(output.Name())) }()
+	digest := sha256.New()
+	_, copyErr := io.Copy(io.MultiWriter(output, digest), input)
+	if copyErr == nil {
+		copyErr = output.Chmod(0755)
+	}
+	if copyErr == nil {
+		copyErr = output.Sync()
+	}
+	if err := errors.Join(copyErr, output.Close()); err != nil {
+		return err
+	}
+	// Unlike Rename, Link atomically publishes without overwriting a target,
+	// including a symlink or a file installed by a concurrent retry.
+	if err := os.Link(output.Name(), target); err != nil {
+		if !errors.Is(err, os.ErrExist) {
+			return err
+		}
+		return checkInstalled(target, digest.Sum(nil))
+	}
+	return nil
+}
+
+func checkInstalled(target string, want []byte) error {
+	info, err := os.Lstat(target)
+	if err != nil {
+		return err
+	}
+	if !info.Mode().IsRegular() || info.Mode().Perm()&0111 == 0 {
+		return fmt.Errorf("installation target %s is not a regular executable", target)
+	}
+	input, err := os.Open(target)
+	if err != nil {
+		return err
+	}
+	defer input.Close()
+	opened, err := input.Stat()
+	if err != nil {
+		return err
+	}
+	if !os.SameFile(info, opened) {
+		return fmt.Errorf("installation target %s changed while opening", target)
+	}
+	digest := sha256.New()
+	if _, err := io.Copy(digest, input); err != nil {
+		return err
+	}
+	if !bytes.Equal(digest.Sum(nil), want) {
+		return fmt.Errorf("installation target %s has different contents", target)
+	}
+	return nil
 }
