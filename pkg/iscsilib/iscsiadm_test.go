@@ -186,6 +186,13 @@ func TestLogoutNoMatchingObjectsPortalIdentity(t *testing.T) {
 		{"IPv6 different address", "[2001:db8::1]:3260", "[2001:db8::2]:3260", false},
 		{"invalid session portal", "storage.example:3260", "invalid", true},
 		{"session unspecified port", "storage.example:3260", "192.0.2.1", true},
+		{"session empty port", "storage.example:3260", "192.0.2.1:", true},
+		{"session nonnumeric port", "storage.example:3260", "192.0.2.1:invalid", true},
+		{"session zero port", "storage.example:3260", "192.0.2.1:0", true},
+		{"session out of range port", "storage.example:3260", "192.0.2.1:65536", true},
+		{"session negative port", "storage.example:3260", "192.0.2.1:-1", true},
+		{"session maximum port", "storage.example:3260", "192.0.2.1:65535", false},
+		{"different address with invalid port", "192.0.2.2:3260", "192.0.2.1:invalid", true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Setenv("ISCSI_TEST_SESSIONS", "tcp: [1] "+tc.session+",1 iqn.test")

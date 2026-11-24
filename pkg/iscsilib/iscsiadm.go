@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"net"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 
@@ -268,10 +269,14 @@ func (timeouts CommandTimeouts) LogoutTarget(tgtIQN, portal string) error {
 				}
 				sessionPortal, _, _ := strings.Cut(fields[2], ",")
 				sessionHost, sessionPort, sessionErr := net.SplitHostPort(sessionPortal)
+				sessionPortNumber, portErr := strconv.ParseUint(sessionPort, 10, 16)
+				if sessionErr != nil || portErr != nil || sessionPortNumber == 0 {
+					return fmt.Errorf("logout from %s: invalid session portal %q", portal, sessionPortal)
+				}
 				ip, sessionIP := net.ParseIP(host), net.ParseIP(sessionHost)
 				// An explicit port mismatch rules out this session even when a
 				// hostname cannot be compared to the numeric session address.
-				if sessionErr == nil && ((port != "" && port != sessionPort) || (ip != nil && sessionIP != nil && !ip.Equal(sessionIP))) {
+				if (port != "" && port != sessionPort) || (ip != nil && sessionIP != nil && !ip.Equal(sessionIP)) {
 					continue
 				}
 				return fmt.Errorf("logout from %s returned no matching session, but target %s still has a session", portal, tgtIQN)
