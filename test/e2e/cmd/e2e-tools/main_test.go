@@ -159,7 +159,7 @@ func TestInstallRejectsExistingTargets(t *testing.T) {
 			case "different":
 				err = os.WriteFile(target, []byte("another helper"), 0755)
 			case "partial":
-				err = os.WriteFile(target, []byte("hel"), 0755)
+				err = os.WriteFile(target, []byte("help"), 0755)
 			case "non-executable":
 				err = os.WriteFile(target, []byte("helper"), 0644)
 			case "symlink":
@@ -217,7 +217,7 @@ func TestInstallCopyFailureCanRetry(t *testing.T) {
 		t.Fatal(err)
 	}
 	// A killed installer can leave its private staging file, never the target.
-	if err := os.WriteFile(filepath.Join(dir, ".e2e-tools-interrupted"), []byte("hel"), 0600); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, ".e2e-tools-interrupted"), []byte("help"), 0600); err != nil {
 		t.Fatal(err)
 	}
 	if err := install(source, target); err != nil {
