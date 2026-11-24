@@ -3,7 +3,7 @@ module github.com/kubernetes-csi/csi-driver-iscsi
 go 1.26.10
 
 require (
-	github.com/container-storage-interface/spec v1.13.0
+	github.com/container-storage-interface/spec v1.14.0
 	github.com/kubernetes-csi/csi-lib-utils v0.14.1
 	golang.org/x/net v0.62.0 // indirect
 	google.golang.org/grpc v1.85.0
