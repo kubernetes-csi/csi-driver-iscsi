@@ -374,13 +374,13 @@ func (c *Connector) connectTarget(targetIqn string, target string, iFace string,
 		// Exit 15 alone is not success; verify the exact target/portal and LUN.
 		exists, sessionErr := sessionExists(portal, targetIqn)
 		if sessionErr != nil {
-			return "", fmt.Errorf("%w; cannot verify existing session: %v", err, sessionErr)
+			return "", fmt.Errorf("%w; cannot verify existing session: %w", err, sessionErr)
 		}
 		if !exists {
 			return "", fmt.Errorf("%w; no matching kernel session", err)
 		}
 		if deviceErr := c.waitForUsableDevice(&devicePath, iscsiTransport); deviceErr != nil {
-			return "", fmt.Errorf("%w; existing session has no usable device: %v", err, deviceErr)
+			return "", fmt.Errorf("%w; existing session has no usable device: %w", err, deviceErr)
 		}
 		return devicePath, nil
 	}

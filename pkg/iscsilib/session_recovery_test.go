@@ -265,3 +265,62 @@ func TestConnectPreservesLoginErrorAndSharedInterface(t *testing.T) {
 		t.Fatalf("lost login error through Connect: %v", err)
 	}
 }
+
+func TestLoginVerificationPreservesBothErrors(t *testing.T) {
+	skipWindows(t)
+	noSessions, alreadyExists := exitStatus(t, 21), exitStatus(t, 15)
+	for _, stage := range []string{"session", "device"} {
+		for _, throughConnect := range []bool{false, true} {
+			t.Run(fmt.Sprintf("%s/Connect=%t", stage, throughConnect), func(t *testing.T) {
+				stat, read, eval := osStat, osReadFile, evalSymlinks
+				t.Cleanup(func() { osStat, osReadFile, evalSymlinks = stat, read, eval })
+				osStat = func(string) (os.FileInfo, error) { return blockInfo{mode: os.ModeDevice}, nil }
+				evalSymlinks = func(string) (string, error) { return "/dev/sda", nil }
+				verificationErr := fmt.Errorf("%s verification: %w", stage, context.DeadlineExceeded)
+				osReadFile = func(string) ([]byte, error) { return nil, verificationErr }
+				queries, logins := 0, 0
+				mockISCSI(t, func(_ string, args []string, _ time.Duration) ([]byte, error) {
+					call := strings.Join(args, " ")
+					switch {
+					case call == "-m iface -o show -I default":
+						return []byte("iface.transport_name = tcp\n"), nil
+					case strings.HasSuffix(call, " -R"):
+						return nil, nil
+					case call == "-m session":
+						queries++
+						if queries == 1 {
+							return nil, noSessions
+						}
+						if stage == "session" {
+							return nil, verificationErr
+						}
+						return []byte("tcp: [1] 192.0.2.1:3260,1 iqn.test"), nil
+					case strings.HasSuffix(call, " -l"):
+						logins++
+						return nil, alreadyExists
+					default:
+						t.Fatalf("unexpected/destructive command: %s", call)
+						return nil, nil
+					}
+				})
+				c := Connector{TargetIqn: "iqn.test", TargetPortals: []string{"192.0.2.1:3260"}, RetryCount: 1}
+				var err error
+				if throughConnect {
+					_, err = c.Connect()
+				} else {
+					_, err = c.connectTarget(c.TargetIqn, c.TargetPortals[0], "default", "tcp")
+				}
+				if queries != 2 || logins != 1 {
+					t.Fatalf("did not exercise login recovery: queries=%d logins=%d", queries, logins)
+				}
+				if !errors.Is(err, alreadyExists) || !errors.Is(err, verificationErr) || !errors.Is(err, context.DeadlineExceeded) {
+					t.Fatalf("lost login or verification error: %v", err)
+				}
+				var exitErr *exec.ExitError
+				if !errors.As(err, &exitErr) || exitErr.ExitCode() != 15 {
+					t.Fatalf("lost login exit status: %v", err)
+				}
+			})
+		}
+	}
+}
