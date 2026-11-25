@@ -41,13 +41,41 @@ type Secrets struct {
 	PasswordIn string `json:"passwordIn,omitempty"`
 }
 
-func iscsiCmd(args ...string) (string, error) {
-	stdout, err := execWithTimeout("iscsiadm", args, time.Second*3)
+const (
+	// DefaultLoginTimeout allows headroom over open-iscsi's default 120s login retry budget.
+	DefaultLoginTimeout = 150 * time.Second
+	// DefaultLogoutTimeout allows headroom over open-iscsi's default 15s logout timeout.
+	DefaultLogoutTimeout = 30 * time.Second
+	iscsiCommandTimeout  = 3 * time.Second
+)
 
+// CommandTimeouts bounds individual iscsiadm lifecycle commands, not an entire
+// connection or CSI RPC. Zero values use the defaults. It does not change iscsid's
+// own timeout/retry settings or cancel daemon work when the client times out.
+type CommandTimeouts struct {
+	Login  time.Duration
+	Logout time.Duration
+}
+
+// Validate rejects negative durations; zero selects the library default.
+func (timeouts CommandTimeouts) Validate() error {
+	if timeouts.Login < 0 || timeouts.Logout < 0 {
+		return errors.New("iSCSI login and logout timeouts must not be negative")
+	}
+	return nil
+}
+
+func iscsiCmd(args ...string) (string, error) {
+	return iscsiCmdWithTimeout(iscsiCommandTimeout, args...)
+}
+
+// iscsiCmdWithTimeout takes an explicit operation budget. It never interprets
+// argument values (including CHAP credentials) as timeout-selection options.
+func iscsiCmdWithTimeout(timeout time.Duration, args ...string) (string, error) {
+	stdout, err := execWithTimeout("iscsiadm", args, timeout)
 	if !hasCHAPArguments(args) {
 		iscsiadmDebug(string(stdout), err)
 	}
-
 	return string(stdout), err
 }
 
@@ -176,9 +204,21 @@ func GetSessions() (string, error) {
 
 // Login performs an iscsi login for the specified target
 func Login(tgtIQN, portal string) error {
+	return (CommandTimeouts{}).LoginTarget(tgtIQN, portal)
+}
+
+// LoginTarget performs a target login with the configured login budget.
+func (timeouts CommandTimeouts) LoginTarget(tgtIQN, portal string) error {
+	if err := timeouts.Validate(); err != nil {
+		return err
+	}
+	timeout := timeouts.Login
+	if timeout == 0 {
+		timeout = DefaultLoginTimeout
+	}
 	klog.V(2).Infof("Begin Login...")
 	baseArgs := []string{"-m", "node", "-T", tgtIQN, "-p", portal}
-	if _, err := iscsiCmd(append(baseArgs, []string{"-l"}...)...); err != nil {
+	if _, err := iscsiCmdWithTimeout(timeout, append(baseArgs, []string{"-l"}...)...); err != nil {
 		// A failed or interrupted login can leave a live session. Keep its node
 		// record so that a subsequent retry can inspect and manage that session.
 		return fmt.Errorf("failed to login to target %s at portal %s: %w", tgtIQN, portal, err)
@@ -188,9 +228,21 @@ func Login(tgtIQN, portal string) error {
 
 // Logout logs out the specified target
 func Logout(tgtIQN, portal string) error {
+	return (CommandTimeouts{}).LogoutTarget(tgtIQN, portal)
+}
+
+// LogoutTarget logs out a target with the configured logout budget.
+func (timeouts CommandTimeouts) LogoutTarget(tgtIQN, portal string) error {
+	if err := timeouts.Validate(); err != nil {
+		return err
+	}
+	timeout := timeouts.Logout
+	if timeout == 0 {
+		timeout = DefaultLogoutTimeout
+	}
 	klog.V(2).Infof("Begin Logout...")
 	args := []string{"-m", "node", "-T", tgtIQN, "-p", portal, "-u"}
-	_, err := iscsiCmd(args...)
+	_, err := iscsiCmdWithTimeout(timeout, args...)
 	var exitErr *exec.ExitError
 	if errors.As(err, &exitErr) && exitErr.ExitCode() == 21 {
 		output, sessionErr := GetSessions()

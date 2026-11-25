@@ -21,6 +21,7 @@ import (
 	"os"
 
 	"github.com/container-storage-interface/spec/lib/go/csi"
+	"github.com/kubernetes-csi/csi-driver-iscsi/pkg/iscsilib"
 	klog "k8s.io/klog/v2"
 )
 
@@ -31,6 +32,8 @@ type driver struct {
 	endpoint string
 	cap      []*csi.VolumeCapability_AccessMode
 	cscap    []*csi.ControllerServiceCapability
+
+	commandTimeouts iscsilib.CommandTimeouts
 }
 
 const (
@@ -59,6 +62,15 @@ func NewDriver(nodeID, endpoint string) *driver {
 	d.AddControllerServiceCapabilities([]csi.ControllerServiceCapability_RPC_Type{csi.ControllerServiceCapability_RPC_UNKNOWN})
 
 	return d
+}
+
+// SetCommandTimeouts configures iscsiadm before Run starts serving requests.
+func (d *driver) SetCommandTimeouts(timeouts iscsilib.CommandTimeouts) error {
+	if err := timeouts.Validate(); err != nil {
+		return err
+	}
+	d.commandTimeouts = timeouts
+	return nil
 }
 
 func NewNodeServer(d *driver) *nodeServer {

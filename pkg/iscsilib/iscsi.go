@@ -92,6 +92,9 @@ type Connector struct {
 	DevicesDetaching  bool     `json:"devices_detaching,omitempty"`
 	DevicesDetached   bool     `json:"devices_detached,omitempty"`
 	DeviceWWID        string   `json:"device_wwid,omitempty"`
+
+	// CommandTimeouts is runtime configuration, not persisted connection state.
+	CommandTimeouts CommandTimeouts `json:"-"`
 }
 
 // parseSession takes the raw stdout from the `iscsiadm -m session` command and encodes it into an iSCSI session type
@@ -364,7 +367,7 @@ func (c *Connector) connectTarget(targetIqn string, target string, iFace string,
 	}
 
 	// perform the login
-	err = Login(targetIqn, portal)
+	err = c.CommandTimeouts.LoginTarget(targetIqn, portal)
 	if err != nil {
 		var exitErr *exec.ExitError
 		if !errors.As(err, &exitErr) || exitErr.ExitCode() != 15 {
@@ -454,7 +457,12 @@ func Disconnect(targetIqn string, targets []string) {
 // Disconnect performs a disconnect operation from an appliance.
 // Be sure to disconnect all devices properly before doing this as it can result in data loss.
 func (c *Connector) Disconnect() {
-	Disconnect(c.TargetIqn, c.TargetPortals)
+	for _, target := range c.TargetPortals {
+		if err := c.CommandTimeouts.LogoutTarget(c.TargetIqn, target); err != nil {
+			return
+		}
+	}
+	_ = DeleteDBEntry(c.TargetIqn)
 }
 
 // DisconnectVolume removes a volume from a Linux host.

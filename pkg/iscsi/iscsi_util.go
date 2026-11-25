@@ -33,7 +33,9 @@ import (
 	"k8s.io/utils/mount"
 )
 
-type ISCSIUtil struct{}
+type ISCSIUtil struct {
+	CommandTimeouts iscsiLib.CommandTimeouts
+}
 
 var iscsiOperations sync.Mutex
 
@@ -44,6 +46,7 @@ func (util *ISCSIUtil) AttachDisk(b iscsiDiskMounter) (string, error) {
 		return "", fmt.Errorf("connector is nil")
 	}
 
+	b.connector.CommandTimeouts = util.CommandTimeouts
 	devicePath, err := (*b.connector).Connect()
 	if err != nil {
 		return "", err
@@ -110,10 +113,10 @@ func recordDeviceWWID(connector *iscsiLib.Connector) {
 func (util *ISCSIUtil) DetachDisk(c iscsiDiskUnmounter, targetPath string) error {
 	iscsiOperations.Lock()
 	defer iscsiOperations.Unlock()
-	return detachDisk(c, targetPath, getIscsiInfoPath(c.VolName))
+	return util.detachDisk(c, targetPath, getIscsiInfoPath(c.VolName))
 }
 
-func detachDisk(c iscsiDiskUnmounter, targetPath, iscsiInfoPath string) error {
+func (util *ISCSIUtil) detachDisk(c iscsiDiskUnmounter, targetPath, iscsiInfoPath string) error {
 	device, _, err := mount.GetDeviceNameFromMount(c.mounter, targetPath)
 	if err != nil {
 		klog.Errorf("iscsi detach disk: failed to get device from mnt: %s\nError: %v", targetPath, err)
@@ -184,7 +187,7 @@ func detachDisk(c iscsiDiskUnmounter, targetPath, iscsiInfoPath string) error {
 	}
 
 	for _, portal := range portals {
-		if err := iscsiLib.Logout(connector.TargetIqn, portal); err != nil {
+		if err := util.CommandTimeouts.LogoutTarget(connector.TargetIqn, portal); err != nil {
 			return err
 		}
 	}
