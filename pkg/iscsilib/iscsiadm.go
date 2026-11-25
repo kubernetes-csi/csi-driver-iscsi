@@ -44,8 +44,9 @@ type Secrets struct {
 func iscsiCmd(args ...string) (string, error) {
 	stdout, err := execWithTimeout("iscsiadm", args, time.Second*3)
 
-	klog.V(2).Infof("Run iscsiadm command: %s", strings.Join(append([]string{"iscsiadm"}, args...), " ")) // nolint
-	iscsiadmDebug(string(stdout), err)
+	if !hasCHAPArguments(args) {
+		iscsiadmDebug(string(stdout), err)
+	}
 
 	return string(stdout), err
 }
@@ -109,7 +110,7 @@ func Discoverydb(tp, iface string, discoverySecrets Secrets, chapDiscovery bool)
 	baseArgs := []string{"-m", "discoverydb", "-t", "sendtargets", "-p", tp, "-I", iface}
 	out, err := iscsiCmd(append(baseArgs, []string{"-o", "new"}...)...)
 	if err != nil {
-		return fmt.Errorf("failed to create new entry of target in discoverydb, output: %v, err: %v", out, err)
+		return fmt.Errorf("failed to create new entry of target in discoverydb, output: %v, err: %w", out, err)
 	}
 
 	if chapDiscovery {
@@ -122,7 +123,7 @@ func Discoverydb(tp, iface string, discoverySecrets Secrets, chapDiscovery bool)
 	if err != nil {
 		// delete the discoverydb record
 		_, _ = iscsiCmd(append(baseArgs, []string{"-o", "delete"}...)...)
-		return fmt.Errorf("failed to sendtargets to portal %s, err: %v", tp, err)
+		return fmt.Errorf("failed to discover targets at portal %s: %w", tp, err)
 	}
 	return nil
 }
@@ -160,7 +161,7 @@ func createCHAPEntries(baseArgs []string, secrets Secrets, discovery bool) error
 
 	_, err := iscsiCmd(args...)
 	if err != nil {
-		return fmt.Errorf("failed to update discoverydb with CHAP, err: %v", err)
+		return fmt.Errorf("failed to configure CHAP (discovery=%t): %w", discovery, err)
 	}
 
 	return nil
@@ -178,9 +179,9 @@ func Login(tgtIQN, portal string) error {
 	klog.V(2).Infof("Begin Login...")
 	baseArgs := []string{"-m", "node", "-T", tgtIQN, "-p", portal}
 	if _, err := iscsiCmd(append(baseArgs, []string{"-l"}...)...); err != nil {
-		// delete the node record from database
-		_, _ = iscsiCmd(append(baseArgs, []string{"-o", "delete"}...)...)
-		return fmt.Errorf("failed to sendtargets to portal %s, err: %v", portal, err)
+		// A failed or interrupted login can leave a live session. Keep its node
+		// record so that a subsequent retry can inspect and manage that session.
+		return fmt.Errorf("failed to login to target %s at portal %s: %w", tgtIQN, portal, err)
 	}
 	return nil
 }

@@ -17,6 +17,7 @@ limitations under the License.
 package iscsilib
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -26,7 +27,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"syscall"
 	"time"
 
 	klog "k8s.io/klog/v2"
@@ -39,6 +39,8 @@ var (
 	execCommandContext = exec.CommandContext
 	execWithTimeout    = ExecWithTimeout
 	osStat             = os.Stat
+	osReadFile         = os.ReadFile
+	evalSymlinks       = filepath.EvalSymlinks
 	filepathGlob       = filepath.Glob
 	osOpenFile         = os.OpenFile
 	sleep              = time.Sleep
@@ -151,8 +153,8 @@ func extractTransportName(output string) string {
 func getCurrentSessions() ([]iscsiSession, error) {
 	out, err := GetSessions()
 	if err != nil {
-		exitErr, ok := err.(*exec.ExitError)
-		if ok && exitErr.ProcessState.Sys().(syscall.WaitStatus).ExitStatus() == 21 {
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) && exitErr.ExitCode() == 21 {
 			return []iscsiSession{}, nil
 		}
 		return nil, err
@@ -200,7 +202,7 @@ func pathExists(devicePath *string, deviceTransport string) error {
 		if err != nil {
 			return err
 		}
-		if fpath == nil {
+		if len(fpath) == 0 {
 			return os.ErrNotExist
 		}
 		// There might be a case that fpath contains multiple device paths if
@@ -287,8 +289,12 @@ func (c *Connector) Connect() (string, error) {
 	}
 
 	if len(c.Devices) < 1 {
-		_, _ = iscsiCmd([]string{"-m", "iface", "-I", iFace, "-o", "delete"}...)
-		return "", fmt.Errorf("failed to find device path: %s, last error seen: %v", devicePaths, lastErr)
+		// Connect did not create this interface and cannot know whether other
+		// sessions use it. Keep it intact when a connection attempt fails.
+		if lastErr != nil {
+			return "", fmt.Errorf("failed to find device path: %s, last error seen: %w", devicePaths, lastErr)
+		}
+		return "", fmt.Errorf("failed to find device path: %s", devicePaths)
 	}
 
 	mountTargetDevice, err := c.getMountTargetDevice()
@@ -326,13 +332,10 @@ func (c *Connector) connectTarget(targetIqn string, target string, iFace string,
 	// to avoid establishing additional sessions to the same target.
 	if _, err := iscsiCmd(append(baseArgs, []string{"-R"}...)...); err != nil {
 		klog.V(2).Infof("Failed to rescan session, err: %v", err)
-		if os.IsTimeout(err) {
-			klog.V(2).Infof("iscsiadm timeout, logging out")
-			cmd := execCommand("iscsiadm", append(baseArgs, []string{"-u"}...)...)
-			out, err := cmd.CombinedOutput()
-			if err != nil {
-				return "", fmt.Errorf("could not logout from target: %s", out)
-			}
+		if os.IsTimeout(err) || errors.Is(err, context.DeadlineExceeded) {
+			// A timed-out rescan does not prove that this session is unused.
+			// Leave it intact and let the caller retry instead of logging it out.
+			return "", fmt.Errorf("failed to rescan target %s at portal %s: %w", targetIqn, target, err)
 		}
 	}
 
@@ -344,11 +347,14 @@ func (c *Connector) connectTarget(targetIqn string, target string, iFace string,
 		devicePath = strings.Join([]string{"/dev/disk/by-path/pci", "*", "ip", portal, "iscsi", targetIqn, "lun", fmt.Sprint(c.Lun)}, "-")
 	}
 
-	exists, _ := sessionExists(portal, targetIqn)
+	exists, err := sessionExists(portal, targetIqn)
+	if err != nil {
+		return "", fmt.Errorf("failed to check sessions for target %s at portal %s: %w", targetIqn, portal, err)
+	}
 	if exists {
 		klog.V(2).Infof("Session already exists, checking if device path %q exists", devicePath)
-		if err := waitForPathToExist(&devicePath, c.RetryCount, c.CheckInterval, iscsiTransport); err != nil {
-			return "", err
+		if err := c.waitForUsableDevice(&devicePath, iscsiTransport); err != nil {
+			return "", fmt.Errorf("existing session for target %s at portal %s has no usable device: %w", targetIqn, portal, err)
 		}
 		return devicePath, nil
 	}
@@ -358,10 +364,25 @@ func (c *Connector) connectTarget(targetIqn string, target string, iFace string,
 	}
 
 	// perform the login
-	err := Login(targetIqn, portal)
+	err = Login(targetIqn, portal)
 	if err != nil {
-		klog.V(2).Infof("Failed to login: %v", err)
-		return "", err
+		var exitErr *exec.ExitError
+		if !errors.As(err, &exitErr) || exitErr.ExitCode() != 15 {
+			return "", err
+		}
+		// iscsid can report "session exists" while the kernel has no session.
+		// Exit 15 alone is not success; verify the exact target/portal and LUN.
+		exists, sessionErr := sessionExists(portal, targetIqn)
+		if sessionErr != nil {
+			return "", fmt.Errorf("%w; cannot verify existing session: %w", err, sessionErr)
+		}
+		if !exists {
+			return "", fmt.Errorf("%w; no matching kernel session", err)
+		}
+		if deviceErr := c.waitForUsableDevice(&devicePath, iscsiTransport); deviceErr != nil {
+			return "", fmt.Errorf("%w; existing session has no usable device: %w", err, deviceErr)
+		}
+		return devicePath, nil
 	}
 
 	klog.V(2).Infof("Waiting for device path %q to exist", devicePath)
@@ -370,6 +391,33 @@ func (c *Connector) connectTarget(targetIqn string, target string, iFace string,
 	}
 
 	return devicePath, nil
+}
+
+// waitForUsableDevice rejects stale symlinks, regular files and offline SCSI
+// devices before reusing a session. This is not a guarantee of target I/O health.
+func (c *Connector) waitForUsableDevice(devicePath *string, transport string) error {
+	if err := waitForPathToExist(devicePath, c.RetryCount, c.CheckInterval, transport); err != nil {
+		return err
+	}
+	info, err := osStat(*devicePath)
+	if err != nil {
+		return err
+	}
+	if info.Mode()&os.ModeDevice == 0 || info.Mode()&os.ModeCharDevice != 0 {
+		return fmt.Errorf("%s is not a block device", *devicePath)
+	}
+	resolved, err := evalSymlinks(*devicePath)
+	if err != nil {
+		return err
+	}
+	state, err := osReadFile(filepath.Join("/sys/class/block", filepath.Base(resolved), "device/state"))
+	if err != nil {
+		return err
+	}
+	if strings.TrimSpace(string(state)) != "running" {
+		return fmt.Errorf("device %s is not running", *devicePath)
+	}
+	return nil
 }
 
 func (c *Connector) discoverTarget(targetIqn string, iFace string, portal string) error {

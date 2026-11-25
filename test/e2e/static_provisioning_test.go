@@ -138,7 +138,7 @@ func collectDiagnostics(w io.Writer, namespace, currentContext, kubeconfig strin
 	defer cancel()
 	if strings.HasPrefix(currentContext, "kind-") {
 		commandCtx, cancelCommand := context.WithTimeout(ctx, 5*time.Second)
-		out, err := exec.CommandContext(commandCtx, "docker", "logs", "--tail", "200", strings.TrimPrefix(currentContext, "kind-")+"-iscsid").CombinedOutput()
+		out, err := exec.CommandContext(commandCtx, "docker", "logs", "--timestamps", "--tail", "200", strings.TrimPrefix(currentContext, "kind-")+"-iscsid").CombinedOutput()
 		cancelCommand()
 		fmt.Fprintf(w, "\nDiagnostics: iscsid logs\n%s", out)
 		if err != nil {
@@ -153,7 +153,7 @@ func collectDiagnostics(w io.Writer, namespace, currentContext, kubeconfig strin
 		{"-n", namespace, "get", "pods", "-o", "wide"},
 		{"-n", namespace, "describe", "pods"},
 		{"-n", namespace, "get", "events", "--sort-by=.lastTimestamp"},
-		{"-n", testsuites.DriverNamespace, "logs", "-l", "app=" + testsuites.DriverDaemonSet, "-c", "iscsi", "--tail=200", "--prefix=true"},
+		{"-n", testsuites.DriverNamespace, "logs", "-l", "app=" + testsuites.DriverDaemonSet, "-c", "iscsi", "--tail=200", "--prefix=true", "--timestamps=true"},
 		{"-n", testsuites.DriverNamespace, "exec", "daemonset/" + testsuites.DriverDaemonSet, "-c", "iscsi", "--", "sh", "-c", `for p in /proc/[0-9]*; do cat "$p/stat" 2>/dev/null; printf 'wchan '; cat "$p/wchan" 2>/dev/null; printf '\n'; done`},
 	} {
 		command := append(append([]string{}, base...), args...)
@@ -182,6 +182,12 @@ func collectDiagnostics(w io.Writer, namespace, currentContext, kubeconfig strin
 			{"journalctl", "-u", "kubelet", "-n", "200", "--no-pager"},
 			{"ps", "-eo", "pid,ppid,stat,wchan:24,comm"},
 			{"ls", "-l", "/sys/class/iscsi_session"},
+			// Session mode without -P avoids dumping CHAP configuration. Read
+			// only explicitly selected sysfs fields, never node DB or cmdline.
+			{"iscsiadm", "-m", "session"},
+			{"sh", "-c", `for f in /sys/class/iscsi_session/session*/targetname /sys/class/iscsi_connection/connection*/address /sys/class/iscsi_connection/connection*/port /sys/class/scsi_device/*/device/state; do [ ! -f "$f" ] || { printf '%s: ' "$f"; cat "$f"; }; done`},
+			{"lsblk", "-o", "NAME,TYPE,HCTL,TRAN,SIZE,STATE"},
+			{"journalctl", "-k", "-n", "200", "--no-pager", "-o", "short-iso-precise"},
 		} {
 			command := append([]string{"exec", node}, args...)
 			commandCtx, cancelCommand := context.WithTimeout(ctx, 5*time.Second)

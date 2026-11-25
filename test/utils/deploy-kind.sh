@@ -48,7 +48,7 @@ for ((i = 0; i < 30; i++)); do
 		exit 0
 	fi
 	if [ "$(docker inspect --format '{{.State.Running}}' "${cluster}-iscsid")" != true ]; then
-		docker logs "${cluster}-iscsid" >&2
+		docker logs --timestamps "${cluster}-iscsid" >&2
 		exit 1
 	fi
 	sleep 1
