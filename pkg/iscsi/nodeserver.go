@@ -46,7 +46,7 @@ func (ns *nodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 	}
 	diskMounter := getISCSIDiskMounter(iscsiInfo, req)
 
-	util := &ISCSIUtil{}
+	util := &ISCSIUtil{CommandTimeouts: ns.Driver.commandTimeouts}
 	if _, err := util.AttachDisk(*diskMounter); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -65,7 +65,7 @@ func (ns *nodeServer) NodeUnpublishVolume(ctx context.Context, req *csi.NodeUnpu
 
 	diskUnmounter := getISCSIDiskUnmounter(req)
 
-	iscsiutil := &ISCSIUtil{}
+	iscsiutil := &ISCSIUtil{CommandTimeouts: ns.Driver.commandTimeouts}
 	if err := iscsiutil.DetachDisk(*diskUnmounter, targetPath); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

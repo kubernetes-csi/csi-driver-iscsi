@@ -21,12 +21,15 @@ import (
 	"os"
 
 	"github.com/kubernetes-csi/csi-driver-iscsi/pkg/iscsi"
+	"github.com/kubernetes-csi/csi-driver-iscsi/pkg/iscsilib"
 	klog "k8s.io/klog/v2"
 )
 
 var (
-	endpoint = flag.String("endpoint", "unix:///csi/csi.sock", "CSI endpoint")
-	nodeID   = flag.String("nodeid", "", "node id")
+	endpoint      = flag.String("endpoint", "unix:///csi/csi.sock", "CSI endpoint")
+	nodeID        = flag.String("nodeid", "", "node id")
+	loginTimeout  = flag.Duration("iscsi-login-timeout", iscsilib.DefaultLoginTimeout, "Timeout for each iscsiadm login command (0 uses the default)")
+	logoutTimeout = flag.Duration("iscsi-logout-timeout", iscsilib.DefaultLogoutTimeout, "Timeout for each iscsiadm logout command (0 uses the default)")
 )
 
 func init() {
@@ -41,5 +44,8 @@ func main() {
 
 func handle() {
 	d := iscsi.NewDriver(*nodeID, *endpoint)
+	if err := d.SetCommandTimeouts(iscsilib.CommandTimeouts{Login: *loginTimeout, Logout: *logoutTimeout}); err != nil {
+		klog.Exitf("Invalid iSCSI command timeouts: %v", err)
+	}
 	d.Run()
 }

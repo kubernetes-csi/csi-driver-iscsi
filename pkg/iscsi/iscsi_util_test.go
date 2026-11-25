@@ -17,7 +17,9 @@ limitations under the License.
 package iscsi
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -25,6 +27,7 @@ import (
 	"runtime"
 	"strings"
 	"testing"
+	"time"
 
 	iscsiLib "github.com/kubernetes-csi/csi-driver-iscsi/pkg/iscsilib"
 	"k8s.io/utils/mount"
@@ -99,7 +102,7 @@ exit 0
 	}
 	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
 	target := filepath.Join(dir, "missing-mount")
-	if err := detachDisk(c, target, infoPath); err == nil {
+	if err := (&ISCSIUtil{}).detachDisk(c, target, infoPath); err == nil {
 		t.Fatal("logout failure was ignored")
 	}
 	if _, err := os.Stat(infoPath); err != nil {
@@ -108,7 +111,7 @@ exit 0
 	if err := os.Remove(fail); err != nil {
 		t.Fatal(err)
 	}
-	if err := detachDisk(c, target, infoPath); err != nil {
+	if err := (&ISCSIUtil{}).detachDisk(c, target, infoPath); err != nil {
 		t.Fatalf("retry after logout completed: %v", err)
 	}
 	if _, err := os.Stat(infoPath); !os.IsNotExist(err) {
@@ -128,7 +131,7 @@ func TestDetachDiskRejectsAmbiguousPartialCleanup(t *testing.T) {
 		t.Fatal(err)
 	}
 	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
-	if err := detachDisk(c, filepath.Join(dir, "missing"), infoPath); err == nil || !strings.Contains(err.Error(), "cannot safely resume") {
+	if err := (&ISCSIUtil{}).detachDisk(c, filepath.Join(dir, "missing"), infoPath); err == nil || !strings.Contains(err.Error(), "cannot safely resume") {
 		t.Fatalf("expected a safe cleanup error, got %v", err)
 	}
 	if _, err := os.Stat(infoPath); err != nil {
@@ -287,7 +290,7 @@ func TestDetachDiskPersistsBeforeRemoval(t *testing.T) {
 				}
 			}
 			c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mounter}
-			if err := detachDisk(c, target, infoPath); err == nil {
+			if err := (&ISCSIUtil{}).detachDisk(c, target, infoPath); err == nil {
 				t.Fatal("injected failure was ignored")
 			}
 			data, err := os.ReadFile(snapshot)
@@ -323,7 +326,7 @@ func TestDetachDiskRejectsMissingRecoveryTarget(t *testing.T) {
 		t.Fatal(err)
 	}
 	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
-	if err := detachDisk(c, filepath.Join(dir, "missing"), infoPath); err == nil {
+	if err := (&ISCSIUtil{}).detachDisk(c, filepath.Join(dir, "missing"), infoPath); err == nil {
 		t.Fatal("missing target path was accepted")
 	}
 	if _, err := os.Stat(infoPath); err != nil {
@@ -403,7 +406,7 @@ func TestDetachDiskPreservesSharedPortal(t *testing.T) {
 		t.Fatal(err)
 	}
 	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
-	if err := detachDisk(c, filepath.Join(dir, "missing"), infoPath); err != nil {
+	if err := (&ISCSIUtil{}).detachDisk(c, filepath.Join(dir, "missing"), infoPath); err != nil {
 		t.Fatal(err)
 	}
 	commands, err := os.ReadFile(log)
@@ -442,13 +445,13 @@ exit 0
 	}
 	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
 	target := filepath.Join(dir, "missing")
-	if err := detachDisk(c, target, infoPath); err == nil {
+	if err := (&ISCSIUtil{}).detachDisk(c, target, infoPath); err == nil {
 		t.Fatal("failed portal logout was ignored")
 	}
 	if err := os.Remove(fail); err != nil {
 		t.Fatal(err)
 	}
-	if err := detachDisk(c, target, infoPath); err != nil {
+	if err := (&ISCSIUtil{}).detachDisk(c, target, infoPath); err != nil {
 		t.Fatalf("retry failed: %v", err)
 	}
 	commands, err := os.ReadFile(log)
@@ -477,5 +480,71 @@ func TestUnsharedPortals(t *testing.T) {
 	}
 	if _, _, err := unsharedPortals(current, connector); err == nil {
 		t.Fatal("invalid connection record was accepted")
+	}
+}
+
+func TestDetachDiskUsesCurrentLogoutTimeout(t *testing.T) {
+	skipWindows(t)
+	dir := t.TempDir()
+	infoPath := filepath.Join(dir, "iscsi-volume.json")
+	connector := &iscsiLib.Connector{
+		TargetIqn: "iqn.test:target", TargetPortals: []string{"127.0.0.1:3260"}, DevicesDetached: true,
+		CommandTimeouts: iscsiLib.CommandTimeouts{Logout: time.Hour},
+	}
+	if err := persistDetachedConnector(infoPath, connector); err != nil {
+		t.Fatal(err)
+	}
+	// Only the logout waits. exec avoids leaving a shell child behind on timeout.
+	script := "#!/bin/sh\nif [ \"$7\" = -u ]; then exec sleep 1; fi\nexit 0\n"
+	if err := os.WriteFile(filepath.Join(dir, "iscsiadm"), []byte(script), 0755); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
+	util := &ISCSIUtil{CommandTimeouts: iscsiLib.CommandTimeouts{Logout: 100 * time.Millisecond}}
+	err := util.detachDisk(c, filepath.Join(dir, "missing-mount"), infoPath)
+	if !errors.Is(err, context.DeadlineExceeded) {
+		t.Fatalf("current logout budget not applied: %v", err)
+	}
+	if _, err := os.Stat(infoPath); err != nil {
+		t.Fatalf("timeout lost cleanup progress: %v", err)
+	}
+}
+
+func TestAttachDiskUsesCurrentLoginTimeout(t *testing.T) {
+	skipWindows(t)
+	dir := t.TempDir()
+	script := `#!/bin/sh
+if [ "$2" = iface ]; then echo 'iface.transport_name = tcp'; exit 0; fi
+if [ "$2" = session ]; then exit 21; fi
+if [ "$7" = -l ]; then exec sleep 1; fi
+exit 0
+`
+	if err := os.WriteFile(filepath.Join(dir, "iscsiadm"), []byte(script), 0755); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	connector := &iscsiLib.Connector{TargetIqn: "iqn.test", TargetPortals: []string{"192.0.2.1:3260"}}
+	util := &ISCSIUtil{CommandTimeouts: iscsiLib.CommandTimeouts{Login: 100 * time.Millisecond}}
+	_, err := util.AttachDisk(iscsiDiskMounter{connector: connector})
+	if !errors.Is(err, context.DeadlineExceeded) {
+		t.Fatalf("current login budget not applied: %v", err)
+	}
+}
+
+func TestDriverCommandTimeouts(t *testing.T) {
+	d := &driver{}
+	want := iscsiLib.CommandTimeouts{Login: time.Minute, Logout: 20 * time.Second}
+	if err := d.SetCommandTimeouts(want); err != nil {
+		t.Fatal(err)
+	}
+	if NewNodeServer(d).Driver.commandTimeouts != want {
+		t.Fatal("node server lost timeout configuration")
+	}
+	if err := d.SetCommandTimeouts(iscsiLib.CommandTimeouts{Logout: -1}); err == nil {
+		t.Fatal("negative timeout accepted")
+	}
+	if d.commandTimeouts != want {
+		t.Fatal("invalid configuration replaced valid timeouts")
 	}
 }
