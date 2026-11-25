@@ -462,6 +462,7 @@ func (c *Connector) Disconnect() {
 			return
 		}
 	}
+	_ = DeleteDBEntry(c.TargetIqn)
 }
 
 // DisconnectVolume removes a volume from a Linux host.

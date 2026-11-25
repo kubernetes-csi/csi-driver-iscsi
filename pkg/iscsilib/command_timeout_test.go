@@ -173,18 +173,52 @@ func TestConfiguredLogoutVerificationStaysShort(t *testing.T) {
 	}
 }
 
-func TestConnectorDisconnectUsesLogoutTimeout(t *testing.T) {
-	calls := 0
-	mockISCSI(t, func(_ string, args []string, timeout time.Duration) ([]byte, error) {
-		calls++
-		if args[len(args)-1] != "-u" || timeout != 17*time.Second {
-			t.Fatalf("logout %v with budget %v", args, timeout)
-		}
-		return nil, context.DeadlineExceeded
-	})
-	c := Connector{TargetIqn: "iqn.test", TargetPortals: []string{"192.0.2.1:3260", "192.0.2.2:3260"}, CommandTimeouts: CommandTimeouts{Logout: 17 * time.Second}}
-	c.Disconnect()
-	if calls != 1 {
-		t.Fatalf("disconnect continued after timeout: %d commands", calls)
+func TestConnectorDisconnectCleanup(t *testing.T) {
+	portals := []string{"192.0.2.1:3260", "192.0.2.2:3260", "192.0.2.3:3260"}
+	for _, tc := range []struct {
+		name       string
+		failLogout int
+	}{
+		{"all logouts succeed", -1},
+		{"first logout fails", 0},
+		{"later logout fails", 1},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var wantCommands [][]string
+			var wantBudgets []time.Duration
+			for i, portal := range portals {
+				wantCommands = append(wantCommands, []string{"-m", "node", "-T", "iqn.test", "-p", portal, "-u"})
+				wantBudgets = append(wantBudgets, 17*time.Second)
+				if i == tc.failLogout {
+					break
+				}
+			}
+			if tc.failLogout < 0 {
+				wantCommands = append(wantCommands, []string{"-m", "node", "-T", "iqn.test", "-o", "delete"})
+				wantBudgets = append(wantBudgets, 3*time.Second)
+			}
+
+			var commands [][]string
+			var budgets []time.Duration
+			mockISCSI(t, func(command string, args []string, timeout time.Duration) ([]byte, error) {
+				if command != "iscsiadm" {
+					t.Fatalf("unexpected command %s", command)
+				}
+				commands = append(commands, append([]string(nil), args...))
+				budgets = append(budgets, timeout)
+				if tc.failLogout >= 0 && args[len(args)-1] == "-u" && args[5] == portals[tc.failLogout] {
+					return nil, context.DeadlineExceeded
+				}
+				return nil, nil
+			})
+			c := Connector{TargetIqn: "iqn.test", TargetPortals: portals, CommandTimeouts: CommandTimeouts{Logout: 17 * time.Second}}
+			c.Disconnect()
+			if !reflect.DeepEqual(commands, wantCommands) {
+				t.Errorf("disconnect commands = %v, want %v", commands, wantCommands)
+			}
+			if !reflect.DeepEqual(budgets, wantBudgets) {
+				t.Errorf("disconnect budgets = %v, want %v", budgets, wantBudgets)
+			}
+		})
 	}
 }
