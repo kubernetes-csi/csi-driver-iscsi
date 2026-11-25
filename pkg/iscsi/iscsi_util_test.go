@@ -420,46 +420,56 @@ func TestDetachDiskPreservesSharedPortal(t *testing.T) {
 
 func TestDetachDiskResumesPortalLogouts(t *testing.T) {
 	skipWindows(t)
-	dir := t.TempDir()
-	infoPath := filepath.Join(dir, "iscsi-volume.json")
-	connector := &iscsiLib.Connector{TargetIqn: "iqn.test:target", TargetPortals: []string{"127.0.0.1:3260", "127.0.0.2:3260"}, DevicesDetached: true}
-	if err := persistDetachedConnector(infoPath, connector); err != nil {
-		t.Fatal(err)
-	}
-	log, fail := filepath.Join(dir, "commands"), filepath.Join(dir, "fail")
-	if err := os.WriteFile(fail, nil, 0600); err != nil {
-		t.Fatal(err)
-	}
-	t.Setenv("ISCSI_TEST_LOG", log)
-	t.Setenv("ISCSI_TEST_FAIL", fail)
-	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
-	script := `#!/bin/sh
+	for _, tc := range []struct{ name, first, second, session string }{
+		{"different IPs", "127.0.0.1:3260", "127.0.0.2:3260", "127.0.0.2:3260"},
+		{"hostname different ports", "storage.example:3260", "storage.example:3261", "127.0.0.1:3261"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			dir := t.TempDir()
+			infoPath := filepath.Join(dir, "iscsi-volume.json")
+			connector := &iscsiLib.Connector{TargetIqn: "iqn.test:target", TargetPortals: []string{tc.first, tc.second}, DevicesDetached: true}
+			if err := persistDetachedConnector(infoPath, connector); err != nil {
+				t.Fatal(err)
+			}
+			log, fail := filepath.Join(dir, "commands"), filepath.Join(dir, "fail")
+			if err := os.WriteFile(fail, nil, 0600); err != nil {
+				t.Fatal(err)
+			}
+			t.Setenv("ISCSI_TEST_LOG", log)
+			t.Setenv("ISCSI_TEST_FIRST", tc.first)
+			t.Setenv("ISCSI_TEST_SECOND", tc.second)
+			t.Setenv("ISCSI_TEST_SESSION", tc.session)
+			t.Setenv("ISCSI_TEST_FAIL", fail)
+			t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+			script := `#!/bin/sh
 printf '%s\n' "$*" >> "$ISCSI_TEST_LOG"
-if [ "$2" = session ]; then echo 'tcp: [1] 127.0.0.2:3260,1 iqn.test:target'; exit 0; fi
-if [ "$6" = 127.0.0.1:3260 ] && [ ! -e "$ISCSI_TEST_FAIL" ]; then exit 21; fi
-if [ "$6" = 127.0.0.2:3260 ] && [ -e "$ISCSI_TEST_FAIL" ]; then exit 1; fi
+if [ "$2" = session ]; then echo "tcp: [1] $ISCSI_TEST_SESSION,1 iqn.test:target"; exit 0; fi
+if [ "$6" = "$ISCSI_TEST_FIRST" ] && [ ! -e "$ISCSI_TEST_FAIL" ]; then exit 21; fi
+if [ "$6" = "$ISCSI_TEST_SECOND" ] && [ -e "$ISCSI_TEST_FAIL" ]; then exit 1; fi
 exit 0
 `
-	if err := os.WriteFile(filepath.Join(dir, "iscsiadm"), []byte(script), 0755); err != nil {
-		t.Fatal(err)
-	}
-	c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
-	target := filepath.Join(dir, "missing")
-	if err := (&ISCSIUtil{}).detachDisk(c, target, infoPath); err == nil {
-		t.Fatal("failed portal logout was ignored")
-	}
-	if err := os.Remove(fail); err != nil {
-		t.Fatal(err)
-	}
-	if err := (&ISCSIUtil{}).detachDisk(c, target, infoPath); err != nil {
-		t.Fatalf("retry failed: %v", err)
-	}
-	commands, err := os.ReadFile(log)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if got := string(commands); strings.Count(got, "-p 127.0.0.1:3260 -u") != 2 || strings.Count(got, "-p 127.0.0.2:3260 -u") != 2 {
-		t.Fatalf("unexpected logout attempts: %s", got)
+			if err := os.WriteFile(filepath.Join(dir, "iscsiadm"), []byte(script), 0755); err != nil {
+				t.Fatal(err)
+			}
+			c := iscsiDiskUnmounter{iscsiDisk: &iscsiDisk{VolName: "volume"}, mounter: mount.NewFakeMounter(nil)}
+			target := filepath.Join(dir, "missing")
+			if err := (&ISCSIUtil{}).detachDisk(c, target, infoPath); err == nil {
+				t.Fatal("failed portal logout was ignored")
+			}
+			if err := os.Remove(fail); err != nil {
+				t.Fatal(err)
+			}
+			if err := (&ISCSIUtil{}).detachDisk(c, target, infoPath); err != nil {
+				t.Fatalf("retry failed: %v", err)
+			}
+			commands, err := os.ReadFile(log)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if got := string(commands); strings.Count(got, "-p "+tc.first+" -u") != 2 || strings.Count(got, "-p "+tc.second+" -u") != 2 {
+				t.Fatalf("unexpected logout attempts: %s", got)
+			}
+		})
 	}
 }
 

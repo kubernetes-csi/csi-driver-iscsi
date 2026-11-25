@@ -158,3 +158,65 @@ func TestDeviceWWID(t *testing.T) {
 		})
 	}
 }
+
+func TestLogoutNoMatchingObjectsPortalIdentity(t *testing.T) {
+	skipWindows(t)
+	dir := t.TempDir()
+	t.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	script := "#!/bin/sh\nif [ \"$2\" = session ]; then printf '%s\\n' \"$ISCSI_TEST_SESSIONS\"; exit 0; fi\nexit 21\n"
+	if err := os.WriteFile(filepath.Join(dir, "iscsiadm"), []byte(script), 0755); err != nil {
+		t.Fatal(err)
+	}
+	for _, tc := range []struct {
+		name, portal, session string
+		wantError             bool
+	}{
+		{"hostname different port", "storage.example:3260", "192.0.2.1:3261", false},
+		{"hostname same port", "storage.example:3260", "192.0.2.1:3260", true},
+		{"hostname padded requested port", "storage.example:03260", "192.0.2.1:3260", true},
+		{"hostname padded session port", "storage.example:3260", "192.0.2.1:03260", true},
+		{"hostname differently padded ports", "storage.example:03260", "192.0.2.1:003260", true},
+		{"hostname padded different port", "storage.example:03260", "192.0.2.1:03261", false},
+		{"hostname empty requested port", "storage.example:", "192.0.2.1:3260", true},
+		{"hostname nonnumeric requested port", "storage.example:invalid", "192.0.2.1:3260", true},
+		{"hostname zero requested port", "storage.example:0", "192.0.2.1:3260", true},
+		{"hostname out of range requested port", "storage.example:65536", "192.0.2.1:3260", true},
+		{"hostname negative requested port", "storage.example:-1", "192.0.2.1:3260", true},
+		{"hostname malformed requested portal", "storage.example:3260:3261", "192.0.2.1:3260", true},
+		{"hostname padded maximum port", "storage.example:065535", "192.0.2.1:65535", true},
+		{"hostname IPv6 different port", "storage.example:3260", "[2001:db8::1]:3261", false},
+		{"hostname IPv6 same port", "storage.example:3260", "[2001:db8::1]:3260", true},
+		{"hostname session different port", "storage.example:3260", "other.example:3261", false},
+		{"hostname session same port", "storage.example:3260", "other.example:3260", true},
+		{"hostname unspecified port", "storage.example", "192.0.2.1:3261", true},
+		{"IPv4 different port", "192.0.2.1:3260", "192.0.2.1:3261", false},
+		{"IPv4 same endpoint", "192.0.2.1:3260", "192.0.2.1:3260", true},
+		{"IPv4 different address", "192.0.2.1:3260", "192.0.2.2:3260", false},
+		{"IPv4 padded requested port", "192.0.2.1:03260", "192.0.2.1:3260", true},
+		{"IPv4 padded session port", "192.0.2.1:3260", "192.0.2.1:03260", true},
+		{"IPv4 different address padded port", "192.0.2.1:03260", "192.0.2.2:3260", false},
+		{"IPv4 same address invalid requested port", "192.0.2.1:invalid", "192.0.2.1:3260", true},
+		{"IPv4 different address invalid requested port", "192.0.2.1:invalid", "192.0.2.2:3260", false},
+		{"IPv6 different port", "[2001:db8::1]:3260", "[2001:db8::1]:3261", false},
+		{"IPv6 equivalent address", "[2001:db8::1]:3260", "[2001:0db8:0:0:0:0:0:1]:3260", true},
+		{"IPv6 different address", "[2001:db8::1]:3260", "[2001:db8::2]:3260", false},
+		{"IPv6 equivalent address padded port", "[2001:db8::1]:03260", "[2001:0db8:0:0:0:0:0:1]:3260", true},
+		{"IPv6 different address padded port", "[2001:db8::1]:03260", "[2001:db8::2]:3260", false},
+		{"invalid session portal", "storage.example:3260", "invalid", true},
+		{"session unspecified port", "storage.example:3260", "192.0.2.1", true},
+		{"session empty port", "storage.example:3260", "192.0.2.1:", true},
+		{"session nonnumeric port", "storage.example:3260", "192.0.2.1:invalid", true},
+		{"session zero port", "storage.example:3260", "192.0.2.1:0", true},
+		{"session out of range port", "storage.example:3260", "192.0.2.1:65536", true},
+		{"session negative port", "storage.example:3260", "192.0.2.1:-1", true},
+		{"session maximum port", "storage.example:3260", "192.0.2.1:65535", false},
+		{"different address with invalid port", "192.0.2.2:3260", "192.0.2.1:invalid", true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Setenv("ISCSI_TEST_SESSIONS", "tcp: [1] "+tc.session+",1 iqn.test")
+			if err := Logout("iqn.test", tc.portal); (err != nil) != tc.wantError {
+				t.Fatalf("Logout(%q), session %q: %v; want error %v", tc.portal, tc.session, err, tc.wantError)
+			}
+		})
+	}
+}
