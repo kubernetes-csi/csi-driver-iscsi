@@ -36,6 +36,10 @@ CSI_PROW_SANITY_VERSION=v5.6.0
 ## This repo supports and wants sanity testing.
 #CSI_PROW_TESTS_SANITY=sanity
 
+# Debian base images from bookworm-v1.0.9 no longer support 32-bit ARM.
+# Keep all other release-tools platforms, including arm64 and Windows.
+: "${CSI_PROW_BUILD_PLATFORMS:=linux amd64 amd64; linux ppc64le ppc64le -ppc64le; linux s390x s390x -s390x; linux arm64 arm64 -arm64; windows amd64 amd64 .exe nanoserver:1809 servercore:ltsc2019; windows amd64 amd64 .exe nanoserver:ltsc2022 servercore:ltsc2022}"
+
 . release-tools/prow.sh
 
 
